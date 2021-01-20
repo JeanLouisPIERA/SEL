@@ -2,7 +2,7 @@
 * L'énumération RoleEnum permet d'identifier les différents profils d'autorisation donnés à l'entité Role
 */
 
-package com.seladherent.seladherent.entities;
+package com.microseladherent.entities;
 
 public enum RoleEnum {
 	

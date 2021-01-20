@@ -1,4 +1,4 @@
-package com.seladherent.seladherent.entities;
+package com.microseladherent.entities;
 
 import java.io.Serializable;
 import java.util.HashSet;

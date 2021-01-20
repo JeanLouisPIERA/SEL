@@ -1,4 +1,4 @@
-package com.seladherent.seladherent.entities;
+package com.microseladherent.entities;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -28,7 +28,7 @@ public class User implements Serializable {
 	@ApiModelProperty(notes = "ID de l'utilisateur generee dans la base de donnees")
 	private Long idUser;
 	@ApiModelProperty(notes= "Nom de l'utilisateur")
-	@Column(nullable=false)
+	@Column(nullable=false, unique=true)
 	private String username;
 	@JsonIgnore
 	@Column(nullable=false, unique=true)

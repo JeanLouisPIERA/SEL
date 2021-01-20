@@ -1,4 +1,4 @@
-package com.seladherent.seladherent;
+package com.microseladherent;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

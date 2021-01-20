@@ -1,4 +1,4 @@
-package com.seladherent.seladherent;
+package com.microseladherent;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
