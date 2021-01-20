@@ -18,29 +18,29 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idRole;
     private RoleEnum name;
     @JsonIgnore
     @ManyToMany(mappedBy = "users")
     private Set<User> users = new HashSet<>();
-    
-	public Role() {
+	
+    public Role() {
 		super();
 	}
 
-	public Role(Long id, RoleEnum name, Set<User> users) {
+	public Role(Long idRole, RoleEnum name, Set<User> users) {
 		super();
-		this.id = id;
+		this.idRole = idRole;
 		this.name = name;
 		this.users = users;
 	}
 
-	public Long getId() {
-		return id;
+	public Long getIdRole() {
+		return idRole;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setIdRole(Long idRole) {
+		this.idRole = idRole;
 	}
 
 	public RoleEnum getName() {
@@ -58,12 +58,7 @@ public class Role implements Serializable {
 	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
-
-	@Override
-	public String toString() {
-		return "Role [id=" + id + ", name=" + name + ", users=" + users + "]";
-	}
- 
+    
 	
     
     

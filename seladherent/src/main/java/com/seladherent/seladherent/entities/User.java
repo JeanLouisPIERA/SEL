@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,20 +28,24 @@ public class User implements Serializable {
 	@ApiModelProperty(notes = "ID de l'utilisateur generee dans la base de donnees")
 	private Long idUser;
 	@ApiModelProperty(notes= "Nom de l'utilisateur")
+	@Column(nullable=false)
 	private String username;
 	@JsonIgnore
+	@Column(nullable=false, unique=true)
 	private String password;
 	@Transient
 	@JsonIgnore
+	@Column(nullable=false)
 	private String passwordConfirm;
 	@ApiModelProperty(notes= "Adresse mail de l'utilisateur")
+	@Column(nullable=false, unique=true)
 	private String adresseMail;
 	@JsonIgnore
 	@ManyToMany
 	@JoinTable(
-	        name = "User_Role", 
-	        joinColumns = { @JoinColumn(name = "user_id") }, 
-	        inverseJoinColumns = { @JoinColumn(name = "role_id") }
+	        name = "user_role", 
+	        joinColumns = { @JoinColumn(name = "idUser") }, 
+	        inverseJoinColumns = { @JoinColumn(name = "idRole") }
 	    )
 	private Set<Role> roles = new HashSet<>();
 	
