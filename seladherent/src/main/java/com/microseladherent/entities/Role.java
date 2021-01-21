@@ -1,14 +1,18 @@
 package com.microseladherent.entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,30 +22,35 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idRole;
+    @Column(name = "role_id")
+    private Long id;
     private RoleEnum name;
     @JsonIgnore
-    @ManyToMany(mappedBy = "users")
-    private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy="role", fetch=FetchType.LAZY)
+    private Collection<User> users;
 	
     public Role() {
 		super();
 	}
 
-	public Role(Long idRole, RoleEnum name, Set<User> users) {
+
+	public Role(Long id, RoleEnum name) {
 		super();
-		this.idRole = idRole;
+		this.id = id;
 		this.name = name;
-		this.users = users;
 	}
 
-	public Long getIdRole() {
-		return idRole;
+	
+
+	public Long getId() {
+		return id;
 	}
 
-	public void setIdRole(Long idRole) {
-		this.idRole = idRole;
+
+	public void setId(Long id) {
+		this.id = id;
 	}
+
 
 	public RoleEnum getName() {
 		return name;
@@ -51,14 +60,17 @@ public class Role implements Serializable {
 		this.name = name;
 	}
 
-	public Set<User> getUsers() {
+
+	public Collection<User> getUsers() {
 		return users;
 	}
 
-	public void setUsers(Set<User> users) {
+
+	public void setUsers(Collection<User> users) {
 		this.users = users;
 	}
-    
+
+	
 	
     
     

@@ -60,7 +60,7 @@ public class SecurityServiceImpl implements ISecurityService{
 	 * Cette méthode permet à un visiteur de se logger automatiquement avec le role USER
 	*/
 	@Override
-	public User autologin(String username, String password) {
+	public Optional<User> autologin(String username, String password) {
 	    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 	    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken 
 	    = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
@@ -70,7 +70,7 @@ public class SecurityServiceImpl implements ISecurityService{
 	    if (authenticated.isAuthenticated()){
 	        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 	        logger.debug(String.format("Auto login %s successfully!", username));
-	        User userAuthenticated = userRepository.findByUsername(username).get();	
+	        Optional<User> userAuthenticated = userRepository.findByUsername(username);	
 	        return userAuthenticated; 
 	    }
 	    return null;

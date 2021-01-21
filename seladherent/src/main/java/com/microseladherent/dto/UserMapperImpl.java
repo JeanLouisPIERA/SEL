@@ -15,7 +15,7 @@ public class UserMapperImpl{
         UserDTO userDTO = new UserDTO();
 
         userDTO.setPassword( entity.getPassword() );
-        userDTO.setAdresseMail( entity.getAdresseMail() );
+        userDTO.setAdresseMail( entity.getEmail() );
         userDTO.setUsername( entity.getUsername() );
         userDTO.setPasswordConfirm( entity.getPasswordConfirm() );
         
@@ -31,7 +31,7 @@ public class UserMapperImpl{
 
         user.setUsername( dto.getUsername() );
         user.setPassword( dto.getPassword() );
-        user.setAdresseMail( dto.getAdresseMail() );
+        user.setEmail( dto.getAdresseMail() );
         user.setPasswordConfirm( dto.getPasswordConfirm() );
 
         return user;

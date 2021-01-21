@@ -1,5 +1,7 @@
 package com.microseladherent.service;
 
+import java.util.Optional;
+
 import com.microseladherent.entities.User;
 
 public interface ISecurityService {
@@ -8,6 +10,6 @@ public interface ISecurityService {
 	
 	User findLoggedInUser();
 	
-	User autologin(String username, String password);
+	Optional<User> autologin(String username, String password);
 
 }

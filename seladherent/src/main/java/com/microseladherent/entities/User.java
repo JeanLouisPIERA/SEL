@@ -11,7 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -26,50 +26,50 @@ public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@ApiModelProperty(notes = "ID de l'utilisateur generee dans la base de donnees")
-	private Long idUser;
+	@Column(name = "user_id", length=5)
+	private Long id;
 	@ApiModelProperty(notes= "Nom de l'utilisateur")
-	@Column(nullable=false, unique=true)
+	@Column(length = 25, nullable=false, unique=true)
 	private String username;
 	@JsonIgnore
-	@Column(nullable=false, unique=true)
+	@Column(length= 255, nullable=false)
 	private String password;
 	@Transient
 	@JsonIgnore
-	@Column(nullable=false)
 	private String passwordConfirm;
 	@ApiModelProperty(notes= "Adresse mail de l'utilisateur")
-	@Column(nullable=false, unique=true)
-	private String adresseMail;
-	@JsonIgnore
-	@ManyToMany
-	@JoinTable(
-	        name = "user_role", 
-	        joinColumns = { @JoinColumn(name = "idUser") }, 
-	        inverseJoinColumns = { @JoinColumn(name = "idRole") }
-	    )
-	private Set<Role> roles = new HashSet<>();
+	@Column(length = 25, nullable=false, unique=true)
+	private String email;
+	@ManyToOne
+	@JoinColumn(name="role_id")
+    private Role role;
 	
 	public User() {
 		super();
 	}
 	
-	public User(Long idUser, String username, String password, String passwordConfirm, String adresseMail,
-			Set<Role> roles) {
+
+
+	
+
+	public User(Long id, String username, String password, String email) {
 		super();
-		this.idUser = idUser;
+		this.id = id;
 		this.username = username;
 		this.password = password;
-		this.passwordConfirm = passwordConfirm;
-		this.adresseMail = adresseMail;
-		this.roles = roles;
+		this.email = email;
 	}
 
-	public Long getIdUser() {
-		return idUser;
+
+
+
+
+	public Long getId() {
+		return id;
 	}
 
-	public void setIdUser(Long idUser) {
-		this.idUser = idUser;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getUsername() {
@@ -96,27 +96,51 @@ public class User implements Serializable {
 		this.passwordConfirm = passwordConfirm;
 	}
 
-	public String getAdresseMail() {
-		return adresseMail;
+	
+
+	public String getEmail() {
+		return email;
 	}
 
-	public void setAdresseMail(String adresseMail) {
-		this.adresseMail = adresseMail;
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-	public Set<Role> getRoles() {
-		return roles;
+
+
+
+
+	public Role getRole() {
+		return role;
 	}
 
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
+
+
+
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
+
+
+
+
 
 	@Override
 	public String toString() {
-		return "User [idUser=" + idUser + ", username=" + username + ", password=" + password + ", passwordConfirm="
-				+ passwordConfirm + ", adresseMail=" + adresseMail + ", roles=" + roles + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", passwordConfirm="
+				+ passwordConfirm + ", email=" + email + ", role=" + role + "]";
 	}
+
+
+
+
+
+	
+
+	
+	
     
 	
 }
