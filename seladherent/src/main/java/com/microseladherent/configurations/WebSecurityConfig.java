@@ -102,11 +102,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
         http
         	.csrf().disable()
         	.authorizeRequests()
-        	.antMatchers(HttpMethod.POST, "/sel/users/adhesion", "/sel/users/login" ).permitAll()
-        	.antMatchers(HttpMethod.POST, "/sel/users/login" ).permitAll()
-        	.antMatchers(HttpMethod.GET, "/sel/users/all").hasAnyAuthority(RoleEnum.ADMIN.toString(), RoleEnum.BUREAU.toString())
-        	.antMatchers(HttpMethod.GET, "/sel/users/account/**").hasAnyAuthority(RoleEnum.ADHERENT.toString())
-        	.antMatchers(HttpMethod.POST, "/sel/users/users/bureau").hasAnyAuthority(RoleEnum.ADMIN.toString())
+        	.antMatchers(HttpMethod.POST, "/sel/users/accounts", "/sel/users/login" ).permitAll()
+				/* .antMatchers(HttpMethod.POST, "/sel/users/login" ).permitAll() */
+        	.antMatchers(HttpMethod.GET, "/sel/bureau/accounts").hasAnyAuthority(RoleEnum.ADMIN.toString(), RoleEnum.BUREAU.toString())
+        	.antMatchers(HttpMethod.GET, "/sel/users/accounts").hasAnyAuthority(RoleEnum.ADHERENT.toString())
+        	.antMatchers(HttpMethod.POST, "/sel//admin/accounts").hasAnyAuthority(RoleEnum.ADMIN.toString())
             .antMatchers("/**").authenticated()
             .anyRequest().authenticated()
             .and()

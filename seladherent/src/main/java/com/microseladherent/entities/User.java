@@ -28,18 +28,37 @@ public class User implements Serializable {
 	@ApiModelProperty(notes = "ID de l'utilisateur generee dans la base de donnees")
 	@Column(name = "user_id", length=5)
 	private Long id;
+	
+	/*
+	 * @ApiModelProperty(notes= "ID du SEL d'adhésion")
+	 * 
+	 * @Column(name = "sel_id", length = 5, nullable=false, unique=true) private
+	 * Long sel;
+	 */
+	
 	@ApiModelProperty(notes= "Nom de l'utilisateur")
 	@Column(length = 25, nullable=false, unique=true)
 	private String username;
+	
 	@JsonIgnore
 	@Column(length= 255, nullable=false)
 	private String password;
+	
 	@Transient
 	@JsonIgnore
 	private String passwordConfirm;
+	
 	@ApiModelProperty(notes= "Adresse mail de l'utilisateur")
 	@Column(length = 25, nullable=false, unique=true)
 	private String email;
+	
+	/*
+	 * @ApiModelProperty(notes= "Statut du compte de l'utilisateur")
+	 * 
+	 * @Column(nullable=false) private UserEnum accountStatut;
+	 */
+	
+	
 	@ManyToOne
 	@JoinColumn(name="role_id")
     private Role role;
