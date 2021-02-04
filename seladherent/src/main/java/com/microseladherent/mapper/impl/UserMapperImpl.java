@@ -1,13 +1,15 @@
-package com.microseladherent.dto;
+package com.microseladherent.mapper.impl;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import com.microseladherent.dto.UserDTO;
 import com.microseladherent.entities.User;
+import com.microseladherent.mapper.IUserMapper;
 
-@Component
-public class UserMapperImpl{
-
-    public UserDTO userTouserDTO(User entity) {
+@Service
+public class UserMapperImpl implements IUserMapper{
+	
+	public UserDTO userTouserDTO(User entity) {
         if ( entity == null ) {
             return null;
         }
@@ -36,4 +38,5 @@ public class UserMapperImpl{
 
         return user;
     }
+
 }

@@ -23,7 +23,7 @@ public class SpringFoxConfig {
     public Docket api() {
 
         return new Docket(DocumentationType.SWAGGER_2)
-        		.groupName("Biblio")
+        		.groupName("SEL")
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
                 .paths(PathSelectors.any())
@@ -35,15 +35,15 @@ public class SpringFoxConfig {
 	
 	 private ApiInfo getApiInfo() {
 
-         Contact contact = new Contact("Jean-Louis PIERA", "https://github.com/JeanLouisPIERA/Biblio", "jeanlouispiera@yahoo.fr");
+         Contact contact = new Contact("Jean-Louis PIERA", "https://github.com/JeanLouisPIERA/SEL", "jeanlouispiera@yahoo.fr");
 
          return new ApiInfoBuilder()
 
-                 .title("Biblio")
+                 .title("SEL")
 
-                 .description("Projet 10 Openclassrooms Springboot REST API pour la gestion des prets et réservations d'une bibliothèque municipale")
+                 .description("Microservice de gestion des adhérenst à une association de bourse d'échanges SEL")
 
-                 .version("1.1.2")
+                 .version("0.0.1")
 
                  .license("Apache 2.0")
 

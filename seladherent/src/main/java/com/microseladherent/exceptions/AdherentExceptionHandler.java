@@ -13,6 +13,7 @@ public class AdherentExceptionHandler {
 	
 	/**
 	 * Cette méthode permet de gérer l'exception métier personnalisée "Entity Not Found"
+	 * Https Status NOT FOUND 413
 	 * @param ex
 	 * @return
 	 */
@@ -27,56 +28,18 @@ public class AdherentExceptionHandler {
 		return exceptionReponse;
 	}
 	
-	/**
-	 * Cette méthode permet de gérer l'exception métier personnalisée " nom déjà utilisé par un autre adhérent "
-	 * Voir LivreMetier
-	 * @param ex1
-	 * @return
-	 */
-	@ExceptionHandler(UsernameNotAvailableException.class)
-	@ResponseBody
-	@ResponseStatus(code = HttpStatus.LOCKED)
-	public AdherentExceptionReponse handleCustomException(UsernameNotAvailableException ex2) {
-		AdherentExceptionReponse exceptionReponse = new AdherentExceptionReponse();
-		exceptionReponse.setLocalDate(LocalDate.now());
-		exceptionReponse.setMessageErreur(ex2.getMessage());
-		exceptionReponse.setStatusCode(HttpStatus.LOCKED.value());
-		return exceptionReponse;
-	}
-	
-	/**
-	 * Cette méthode permet de gérer l'exception personnalisée 
-	 * " Tous les champs pour la création d'un utilisateur ne sont pas remplis "
-	 * Voir CategorieMetier et LivreMetier
-	 * @param ex2
-	 * @return
-	 */
-	
-	
-	@ExceptionHandler (MissingRequiredInformationException.class)
-	@ResponseBody
-	@ResponseStatus(code = HttpStatus.PRECONDITION_FAILED)
-	public AdherentExceptionReponse handleCustomException(MissingRequiredInformationException ex3) {
-		AdherentExceptionReponse exceptionReponse = new AdherentExceptionReponse();
-		exceptionReponse.setLocalDate(LocalDate.now());
-		exceptionReponse.setMessageErreur(ex3.getMessage());
-		exceptionReponse.setStatusCode(HttpStatus.PRECONDITION_FAILED.value());
-		return exceptionReponse;
 		
-	}
-	
-	
 	/**
 	 * Cette méthode permet de gérer l'exception personnalisée " Entity Already Exists "
-	 * Voir CategorieMetier et LivreMetier
+	 *HttpStatus CONFLICT 409
 	 * @param ex2
 	 * @return
 	 */
 	
-	@ExceptionHandler (AdresseMailAlreadyExistsException.class)
+	@ExceptionHandler (EntityAlreadyExistsException.class)
 	@ResponseBody
 	@ResponseStatus(code = HttpStatus.CONFLICT)
-	public AdherentExceptionReponse handleCustomException(AdresseMailAlreadyExistsException ex4) {
+	public AdherentExceptionReponse handleCustomException(EntityAlreadyExistsException ex4) {
 		AdherentExceptionReponse exceptionReponse = new AdherentExceptionReponse();
 		exceptionReponse.setLocalDate(LocalDate.now());
 		exceptionReponse.setMessageErreur(ex4.getMessage());
@@ -86,20 +49,21 @@ public class AdherentExceptionHandler {
 	}
 	
 	/**
-	 * Cette méthode permet de gérer l'exception personnalisée " Entity Already Exists "
-	 * Voir CategorieMetier et LivreMetier
+	 * Cette méthode permet de gérer l'exception personnalisée " Entity Already Exists"
+	 * Http Status LOCKED CODE 423
+	 * L’opération ne peut avoir lieu, car la ressource est verrouillée
 	 * @param ex2
 	 * @return
 	 */
 	
 	@ExceptionHandler (DeniedAccessException.class)
 	@ResponseBody
-	@ResponseStatus(code = HttpStatus.FORBIDDEN)
+	@ResponseStatus(code = HttpStatus.LOCKED)
 	public AdherentExceptionReponse handleCustomException(DeniedAccessException ex5) {
 		AdherentExceptionReponse exceptionReponse = new AdherentExceptionReponse();
 		exceptionReponse.setLocalDate(LocalDate.now());
 		exceptionReponse.setMessageErreur(ex5.getMessage());
-		exceptionReponse.setStatusCode(HttpStatus.FORBIDDEN.value());
+		exceptionReponse.setStatusCode(HttpStatus.LOCKED.value());
 		return exceptionReponse;
 		
 	}

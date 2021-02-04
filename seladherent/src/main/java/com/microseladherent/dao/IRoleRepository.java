@@ -9,6 +9,6 @@ import com.microseladherent.entities.RoleEnum;
 @Repository
 public interface IRoleRepository extends JpaRepository<Role, Long>{
 	
-	Role findByName(RoleEnum name);
+	Role findByRoleEnum(RoleEnum roleEnum);
 
 }

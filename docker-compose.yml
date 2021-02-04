@@ -1,0 +1,67 @@
+version: '3'
+
+services: 
+
+  mysqladherent:
+   image: mysql:latest
+   environment:
+    MYSQL_DATABASE: microsel_adherent
+    MYSQL_ROOT_PASSWORD: mysql
+    MYSQL_USER: root
+    MYSQL_PASSWORD: mysql
+   ports:
+   - "1306:3306"
+   volumes:
+   - ./data/:/var/lib/mysql
+   networks: 
+   - microsel-network
+   restart: always
+
+  adherent:
+    image: microsel-adherent:latest  
+    ports:
+      - "8080:9001"
+    networks: 
+      - microsel-network
+    restart: always
+    depends_on: 
+      - mysqladherent # This service depends on mysql. Start that first.
+      - eureka-server
+      - zuul-server
+      - config-server  
+    environment: # Pass environment variables to the service
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/microsel_adherent?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: mysql     
+
+   
+  eureka-server:
+      image: eureka-server:latest
+      networks: 
+         - microsel-network
+      ports:
+         - 8761:9102
+
+  zuul-server:
+      image: zuul-server:latest  
+      networks: 
+         - microsel-network
+      ports:
+         - 8765:9004
+      depends_on:
+         - eureka-server
+      logging :
+         driver : json-file    
+     
+
+  config-server:
+      image: config-server:latest  
+      networks: 
+         - microsel-network
+      ports:
+         - 8888:9101
+      
+
+networks:
+   microsel-network:
+      driver : bridge
