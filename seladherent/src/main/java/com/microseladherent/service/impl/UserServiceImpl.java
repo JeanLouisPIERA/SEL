@@ -70,6 +70,7 @@ public class UserServiceImpl implements IUserService
 	    return userRepository.save(userToCreate);
 	}
 	
+
 	
 	/**
 	 * Cette méthode permet à un adhérent de consulter son compte
@@ -378,6 +379,11 @@ public class UserServiceImpl implements IUserService
 			return userRepository.save(userFound.get());
 		  
 		  }
+
+
+
+
+	
 		 
 	
 }

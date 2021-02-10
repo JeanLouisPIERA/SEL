@@ -21,7 +21,6 @@ public interface IUserService {
 	 */
 	User createAccount(UserDTO userDTO) throws EntityAlreadyExistsException;
 	
-	
 	/**
 	 * Cette méthode permet à un adhérent de consulter son compte
 	 * Seul un adhérent peut consulter les données de son compte quel que soit son statut ACTIVE, LOCKED ou CLOSED

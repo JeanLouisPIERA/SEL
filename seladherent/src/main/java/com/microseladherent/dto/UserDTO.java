@@ -1,5 +1,6 @@
 package com.microseladherent.dto;
 
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -36,6 +37,9 @@ public class UserDTO {
 	@ApiModelProperty(notes= "Confirmation du mot de passe de l'utilisateur (Confirmation obligatoire)")
 	@NotEmpty(message="Merci de confirmer votre mot de passe")
 	private String passwordConfirm;
+	
+	@AssertTrue 
+	private Boolean terms;
 	
 	public UserDTO() {
 		super();
@@ -77,6 +81,16 @@ public class UserDTO {
 	public void setPasswordConfirm(String passwordConfirm) {
 		this.passwordConfirm = passwordConfirm;
 	}
+
+	public Boolean getTerms() {
+		return terms;
+	}
+
+	public void setTerms(Boolean terms) {
+		this.terms = terms;
+	}
+	
+	
 
 	
 }

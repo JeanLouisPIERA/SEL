@@ -19,6 +19,8 @@ public interface IUserRepository extends JpaRepository<User, Long>{
 	
 	Optional<User> findByUsernameAndPassword(String username, String password);
 	
+	Optional<User> findByEmailAndPassword(String email, String password);
+	
 	Optional<List<User>> findByDateAdhesion(LocalDate dateAdhesion);
 	
 	Optional<User> findByIdAndStatut(Long id, UserStatutEnum userStatutEnum);

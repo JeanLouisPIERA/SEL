@@ -1,3 +1,0 @@
-ALTER TABLE users
-ADD COLUMN sel_id INT(10)
-GO
