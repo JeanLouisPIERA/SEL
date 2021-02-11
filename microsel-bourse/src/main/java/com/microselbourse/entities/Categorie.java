@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
-@Table(name="categories")
+@Table(name="categorie")
 public class Categorie implements Serializable {
 	
 	@Id
@@ -35,7 +35,7 @@ public class Categorie implements Serializable {
 	 */
 	
 	@JsonIgnore
-	@OneToMany(mappedBy="categories", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="categorie")
 	private Collection<Proposition> propositions;
 
 	public Categorie() {

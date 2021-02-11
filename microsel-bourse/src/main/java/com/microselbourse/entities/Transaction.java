@@ -20,7 +20,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="wallets")
+@Table(name="wallet")
 public class Transaction implements Serializable {
 	
 	@Id
@@ -63,7 +63,7 @@ public class Transaction implements Serializable {
 	@JsonIgnore 
 	@ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-        name = "wallets_transactions", 
+        name = "wallet_transaction", 
         joinColumns = { @JoinColumn(name = "wallet_id") }, 
         inverseJoinColumns = { @JoinColumn(name = "transaction_id") }
     )

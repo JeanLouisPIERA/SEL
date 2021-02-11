@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.microselwebui.microselwebui.beans.UserBean;
 import com.microselwebui.microselwebui.dto.UserDTO;
+import com.microselwebui.microselwebui.errors.CustomErrorDecoder;
 import com.microselwebui.microselwebui.proxies.IMicroselAdherentsProxy;
 
 @Controller
@@ -28,7 +30,8 @@ public class ClientController {
 	
 	 @Autowired
 	    private IMicroselAdherentsProxy adherentsProxy;
-	 
+	 @Autowired
+	 	private CustomErrorDecoder errorDecoder;
 
     @GetMapping("/accueil")
     public String accueil(){
@@ -50,7 +53,16 @@ public class ClientController {
             return "registration";
         }
         
-        ResponseEntity<UserBean> reponseAdherentCreated = adherentsProxy.enregistrerCompteAdherent(userDTO);
+        try {
+			ResponseEntity<UserBean> reponseAdherentCreated = adherentsProxy.enregistrerCompteAdherent(userDTO);
+		} catch (HttpClientErrorException e) {
+			/*
+			 * String errorMessage = errorDecoder.decode(null, null);
+			 * //reservationExceptionMessage.convertCodeStatusToExceptionMessage(e.
+			 * getRawStatusCode()); model.addAttribute("error", errorMessage);
+			 * return"/error";
+			 */
+		}
         
         return "redirect:/registration?success";
     }

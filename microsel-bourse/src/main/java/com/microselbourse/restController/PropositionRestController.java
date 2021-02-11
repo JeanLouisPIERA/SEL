@@ -1,8 +1,11 @@
 package com.microselbourse.restController;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -12,8 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.microselbourse.criteria.PropositionCriteria;
 import com.microselbourse.dto.PropositionDTO;
 import com.microselbourse.entities.Proposition;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
@@ -46,9 +51,31 @@ public class PropositionRestController {
 	  public ResponseEntity<Proposition> createProposition(@Valid @RequestBody PropositionDTO propositionDTO) throws EntityAlreadyExistsException, EntityNotFoundException {
 	    return new ResponseEntity<Proposition>(propositionService.createProposition(propositionDTO), HttpStatus.OK);
 	  }
+	  
+	  
+		/*
+		 * @ApiOperation(value =
+		 * "Recherche multi-critères d'une ou plusieurs propositions", response =
+		 * Proposition.class)
+		 * 
+		 * @ApiResponses(value = {
+		 * 
+		 * @ApiResponse(code = 200, message =
+		 * "La recherche a été réalisée avec succés"),
+		 * 
+		 * @ApiResponse(code = 413, message = "Ressource inexistante"), })
+		 * 
+		 * @GetMapping(value="/propositions", produces="application/json") public
+		 * ResponseEntity<Page<Proposition>>
+		 * searchAllPropositionsByCriteria(@PathParam("propositionCriteria")
+		 * PropositionCriteria propositionCriteria, @RequestParam int
+		 * page, @RequestParam int size ) { Page<Proposition> propositions =
+		 * propositionService.searchAllPropositionsByCriteria(propositionCriteria,
+		 * PageRequest.of(page, size)); return new
+		 * ResponseEntity<Page<Proposition>>(propositions, HttpStatus.OK); }
+		 */
+		  
 	 
-	 
-		
 	@ApiOperation(value = "Consultation d'une proposition par un adhérent", response = Proposition.class)  
 		  @ApiResponses(value = {
 			  @ApiResponse(code = 201, message =

@@ -1,15 +1,21 @@
 package com.microselbourse.mapper.impl;
 
+import org.springframework.stereotype.Service;
 
 import com.microselbourse.dto.PropositionDTO;
 import com.microselbourse.entities.EnumTradeType;
 import com.microselbourse.entities.Proposition;
 import com.microselbourse.mapper.IPropositionMapper;
 
+
+
+@Service
 public class PropositionMapperImpl implements IPropositionMapper{
 
+	
 	@Override
 	public PropositionDTO propositionTopropositionDTO(Proposition entity) {
+		
 		if ( entity == null ) {
             return null;
         }
@@ -25,7 +31,8 @@ public class PropositionMapperImpl implements IPropositionMapper{
         propositionDTO.setVille(entity.getVille());
         
         return propositionDTO;
-    }
+		
+	}
 
 
 	@Override

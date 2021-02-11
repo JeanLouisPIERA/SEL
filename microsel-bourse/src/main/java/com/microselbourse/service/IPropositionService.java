@@ -1,6 +1,10 @@
 package com.microselbourse.service;
 
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.microselbourse.criteria.PropositionCriteria;
 import com.microselbourse.dto.PropositionDTO;
 import com.microselbourse.entities.Proposition;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
@@ -14,6 +18,10 @@ public interface IPropositionService {
 	
 	Proposition updateProposition(Long id, PropositionDTO propositionDTO);
 	
+	/*
+	 * Page<Proposition> searchAllPropositionsByCriteria(PropositionCriteria
+	 * propositionCriteria, Pageable pageable);
+	 */
 	
 
 }

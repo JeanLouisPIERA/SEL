@@ -6,7 +6,8 @@ public enum EnumEchangeAvis {
 	ANOMALIE ("ANOMALIE", "ANOMALIE"),
 	VALIDE ("VALIDE", "VALIDE"),
 	SANS ("SANS", "SANS"),
-	REFUSE ("REFUSE", "REFUSE");
+	REFUSE ("REFUSE", "REFUSE"), 
+	INCONNU ("INCONNU", "INCONNU");
 	
 	 private String code;
 	  private String text;
@@ -54,5 +55,13 @@ public enum EnumEchangeAvis {
 		}
 		return super.toString();
 	}   
+	
+	public static EnumEchangeAvis fromValueCode(String code) {
+		try {
+	        return valueOf(code);
+	    } catch (IllegalArgumentException e) {
+	        return EnumEchangeAvis.INCONNU;
+	    }
+	}
 
 }

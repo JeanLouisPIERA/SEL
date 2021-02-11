@@ -11,7 +11,8 @@ public enum EnumStatutEchange {
 	SUPPRIME ("SUPPRIME", "SUPPRIME"),
 	FORCEVALID ("FORCEVALID", "FORCEVALID"),
 	FORCEREFUS ("FORCEREFUS", "FORCEREFUS"),
-	CONFLIT ("CONFLIT", "CONFLIT")
+	CONFLIT ("CONFLIT", "CONFLIT"), 
+	INCONNUE ("INCONNUE", "INCONNUE")
 	;
 	
 	 private String code;
@@ -70,5 +71,13 @@ public enum EnumStatutEchange {
 		}
 		return super.toString();
 	}   
+	
+	public static EnumStatutEchange fromValueCode(String code) {
+		try {
+	        return valueOf(code);
+	    } catch (IllegalArgumentException e) {
+	        return EnumStatutEchange.INCONNUE;
+	    }
+	}
 
 }

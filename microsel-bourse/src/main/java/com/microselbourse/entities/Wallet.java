@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.microselbourse.beans.UserBean;
 
 @Entity
-@Table(name="wallets")
+@Table(name="wallet")
 public class Wallet implements Serializable {
 	
 	@Id
@@ -55,7 +55,7 @@ public class Wallet implements Serializable {
 	@JsonIgnore 
 	@ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-        name = "wallets_transactions", 
+        name = "wallet_transaction", 
         joinColumns = { @JoinColumn(name = "wallet_id") }, 
         inverseJoinColumns = { @JoinColumn(name = "transaction_id") }
     )

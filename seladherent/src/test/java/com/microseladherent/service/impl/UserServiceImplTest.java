@@ -162,7 +162,6 @@ public class UserServiceImplTest {
 	  
 	  Assert.assertTrue(userTest.equals(adherentActive)); }
 	  
-	  
 	  // Tests READ ADHERENT*************************************************************************
 	  
 	  

@@ -19,7 +19,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="echanges")
+@Table(name="echange")
 public class Echange implements Serializable {
 	
 	@Id
@@ -71,6 +71,9 @@ public class Echange implements Serializable {
 	@Column(name="avis_recepteur")
 	private EnumEchangeAvis avisRecepteur;
 	
+	@Column(name="date_debut")
+	private LocalDate dateDebut;
+	
 	@Column(name="date_fin")
 	private LocalDate dateFin;
 	
@@ -105,7 +108,7 @@ public class Echange implements Serializable {
     @JoinColumn(name = "reponse_id", referencedColumnName = "reponse_id")
     private Reponse reponse;
 	
-	@OneToOne(mappedBy = "echanges")
+	@OneToOne(mappedBy = "echange")
     private Transaction transaction;
 	
 	

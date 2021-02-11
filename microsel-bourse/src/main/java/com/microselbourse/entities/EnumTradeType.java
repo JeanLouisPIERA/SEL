@@ -4,7 +4,8 @@ package com.microselbourse.entities;
 public enum EnumTradeType {
 	
 	OFFRE ("OFFRE", "OFFRE"),
-	DEMANDE ("DEMANDE", "DEMANDE");
+	DEMANDE ("DEMANDE", "DEMANDE"),
+	INCONNU ("INCONNU", "INCONNU");
 	
 	 private String code;
 	  private String text;
@@ -48,5 +49,13 @@ public enum EnumTradeType {
 		}
 		return super.toString();
 	}   
+	
+	public static EnumTradeType fromValueCode(String code) {
+		try {
+	        return valueOf(code);
+	    } catch (IllegalArgumentException e) {
+	        return EnumTradeType.INCONNU;
+	    }
+	}
 
 }

@@ -2,16 +2,19 @@ package com.microselbourse.service.impl;
 
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.microselbourse.beans.UserBean;
+import com.microselbourse.criteria.PropositionCriteria;
 import com.microselbourse.dao.ICategorieRepository;
 import com.microselbourse.dao.IPropositionRepository;
+import com.microselbourse.dao.specs.PropositionSpecification;
 import com.microselbourse.dto.PropositionDTO;
 import com.microselbourse.entities.Categorie;
 import com.microselbourse.entities.EnumTradeType;
@@ -41,19 +44,26 @@ public class PropositionServiceImpl implements IPropositionService {
 		//TODO : Voir comment récupérer l'id du user loggé qui va créer la proposition. Par défaut userId = 1
 		UserBean emetteurProposition = microselAdherentsProxy.consulterCompteAdherent((long)1);
 		if(emetteurProposition.getId()!= (long) 1)
-			throw new EntityNotFoundException("Vous n'êtes pas identifié comme adhérent de l'association");
+			throw new EntityNotFoundException(
+					"Vous n'êtes pas identifié comme adhérent de l'association");
 		
 		Optional<Proposition> titreAlreadyExists = propositionRepository.findByIdAndTitre((long)1, propositionDTO.getTitre());
 		if (titreAlreadyExists.isPresent()) 
-			throw new EntityAlreadyExistsException("Vous avez déjà créé une proposition avec le même titre"); 
+			throw new EntityAlreadyExistsException(
+					"Vous avez déjà créé une proposition avec le même titre"); 
 		
-		Optional<Categorie> categorieNotFound = categorieRepository.findById(propositionDTO.getIdCategorie());
-		if(!categorieNotFound.isPresent())
-			throw new EntityNotFoundException("La catégorie dans laquelle vous avez choisi de publier n'existe pas");
+		
+		  Optional<Categorie> categorieNotFound = categorieRepository.findById(propositionDTO.getIdCategorie());
+		  if(!categorieNotFound.isPresent()) 
+			  throw new EntityNotFoundException(
+					  "La catégorie dans laquelle vous avez choisi de publier n'existe pas");
+		 
 		
 		if(EnumTradeType.getEnumTradeTypeByCode(propositionDTO.getEnumTradeTypeCode())==null)
-				throw new EntityNotFoundException("La saisie du type OFFRE ou DEMANDE de votre proposition est incorrecte");
-			
+				throw new EntityNotFoundException(
+						"La saisie du type OFFRE ou DEMANDE de votre proposition est incorrecte");
+		
+		
 		Proposition propositionToCreate = propositionMapper.propositionDTOToProposition(propositionDTO);
 			
 	    propositionToCreate.setEmetteurId(emetteurProposition.getId());
@@ -62,7 +72,16 @@ public class PropositionServiceImpl implements IPropositionService {
 	    return propositionRepository.save(propositionToCreate);
 		
 	}
-
+	
+	/*
+	 * @Override public Page<Proposition>
+	 * searchAllPropositionsByCriteria(PropositionCriteria propositionCriteria,
+	 * Pageable pageable) { Specification<Proposition> propositionSpecification =
+	 * new PropositionSpecification(propositionCriteria); Page<Proposition>
+	 * propositions = propositionRepository.findAll(propositionSpecification,
+	 * pageable); return propositions; }
+	 */
+	
 	@Override
 	public Proposition readProposition(Long id) {
 		
@@ -74,6 +93,10 @@ public class PropositionServiceImpl implements IPropositionService {
 		
 		return null;
 	}
+
+
+
+
 	
 	
 

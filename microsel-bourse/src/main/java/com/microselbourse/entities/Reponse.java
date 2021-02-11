@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name="reponses")
+@Table(name="reponse")
 public class Reponse {
 	
 	@Id
@@ -67,7 +67,7 @@ public class Reponse {
 	private String ville; 
 	
 	@Column(name = "codePostal", length = 6, nullable=false)
-	private String codePostal;
+	private Integer codePostal;
 	
 	@Column(name = "valeur", length = 10, nullable=false)
 	private Integer valeur;
@@ -97,7 +97,7 @@ public class Reponse {
 	@JoinColumn(name="proposition_id")
 	private Proposition proposition;
 	
-	@OneToOne(mappedBy = "reponses")
+	@OneToOne(mappedBy = "reponse")
     private Echange echange;
 	
 

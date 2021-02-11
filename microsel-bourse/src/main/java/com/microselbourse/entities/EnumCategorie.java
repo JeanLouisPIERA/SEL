@@ -10,7 +10,8 @@ public enum EnumCategorie {
 	LANGUE ("LANGUE", "LANGUE"),
 	ACCOMPAGNEMENT ("ACCOMPAGNEMENT", "ACCOMPAGNEMENT"),
 	COVOITURAGE ("COVOITURAGE", "COVOITURAGE"),
-	PRET ("PRET", "PRET")
+	PRET ("PRET", "PRET"), 
+	INCONNUE ("INCONNUE","INCONNUE")
 	;
 	
 	 private String code;
@@ -69,5 +70,13 @@ public enum EnumCategorie {
 		}
 		return super.toString();
 	}   
+	
+	public static EnumCategorie fromValueCode(String code) {
+		try {
+	        return valueOf(code);
+	    } catch (IllegalArgumentException e) {
+	        return EnumCategorie.INCONNUE;
+	    }
+	}
 
 }

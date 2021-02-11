@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
-@Table(name="propositions")
+@Table(name="proposition")
 public class Proposition implements Serializable {
 	
 	@Id
@@ -103,7 +103,7 @@ public class Proposition implements Serializable {
 	 */
 	
 	@JsonIgnore
-	@OneToMany(mappedBy="propositions", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="proposition", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
 	private Collection<Reponse> reponses;
 
 
@@ -156,8 +156,7 @@ public class Proposition implements Serializable {
 		this.dateDebut = dateDebut;
 		this.reponses = reponses;
 	}
-
-
+	
 	public Long getId() {
 		return id;
 	}

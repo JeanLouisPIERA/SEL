@@ -7,7 +7,8 @@ public enum EnumNoteEchange {
 	PEUSATISFAISANT ("PEUSATISFAISANT", "PEUSATISFAISANT"),
 	CORRECT ("CORRECT", "CORRECT"),
 	SATISFAISANT ("SATISFAISANT", "SATISFAISANT"),
-	TRESSATISFAISANT ("TRESATISFAISANT", "TRESATISFAISANT");
+	TRESSATISFAISANT ("TRESATISFAISANT", "TRESATISFAISANT"),
+	INCONNUE ("INCONNUE", "INCONNUE");
 	
 	 private String code;
 	  private String text;
@@ -57,5 +58,13 @@ public enum EnumNoteEchange {
 		}
 		return super.toString();
 	}   
+	
+	public static EnumNoteEchange fromValueCode(String code) {
+		try {
+	        return valueOf(code);
+	    } catch (IllegalArgumentException e) {
+	        return EnumNoteEchange.INCONNUE;
+	    }
+	}
 
 }
