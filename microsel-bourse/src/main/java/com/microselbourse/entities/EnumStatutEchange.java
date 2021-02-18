@@ -5,7 +5,8 @@ public enum EnumStatutEchange {
 	
 	ENREGISTRE ("ENREGISTRE", "ENREGISTRE"),
 	CONFIRME ("CONFIRME", "CONFIRME"),  
-	ANNULE ("ANNULE", "ANNULE"),		
+	ANNULE ("ANNULE", "ANNULE"),
+	ECHU("ECHU", "ECHU"),
 	CLOTURE ("CLOTURE", "CLOTURE"),		
 	LITIGE ("LITIGE", "LITIGE"),
 	SUPPRIME ("SUPPRIME", "SUPPRIME"),
@@ -56,6 +57,8 @@ public enum EnumStatutEchange {
 			return"Echange confirmé";
 		}else if (this==ANNULE) {
 			return"Echange annulé";
+		}else if (this==ECHU) {
+			return"Echange échu sans confirmation ni annulation";	
 		}else if (this==CLOTURE) {
 			return"Echange clôturé";
 		}else if (this==LITIGE) {

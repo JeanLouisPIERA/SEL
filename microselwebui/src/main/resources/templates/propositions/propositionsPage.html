@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title th:utext="#{pages.titleAdherents}">Fragments</title>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/main.css}" rel="stylesheet">
+</head>
+
+<body>
+
+<nav th:replace="fragments :: navigationAdherent"> </nav>
+
+<div class="col-md-5 p-lg-2 mx-auto my-5 top-2 text-center bg-light">
+	<h3 class="display-4 font-weight-normal" th:utext="#{pages.titleAdherents}">Heading</h3>
+	<p class="lead font-weight-normal" th:text="'Liste a jour'"></p>
+</div>
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+    
+    <div class="product-device shadow-sm d-none d-md-block">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Description</th>
+					<th>Image</th>
+					<th>Code Postal</th>
+					<th>Ville</th>
+					<th>Valeur</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="proposition: ${propositions}">
+					<td th:text= "${proposition.titre}"/>
+					<td th:text= "${proposition.description}"/>
+					<td th:text= "${proposition.image}"/>
+					<td th:text= "${proposition.codePostal}"/>
+					<td th:text= "${proposition.ville}"/>
+					<td th:text= "${proposition.valeur}"/>		
+                </tr>               
+            </tbody>
+            </table>
+          <div class="row">
+        <div th:if="${totalPages > 1}">
+            <div>
+                Total Items: [[${totalPages}]]
+            </div>
+            <div>
+                <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                    <a th:href="@{'/bourse/propositions'}"
+                       th:if="${page != i}">[[${i}]]</a>
+                    <span th:unless="${page != i}">[[${i}]]</span>
+                </span>
+            </div>
+            <div>
+                <a th:href="@{'/bourse/propositions'}"
+                   th:if="${ page< totalPages}">
+                    Next
+                </a>
+                <span th:unless="${page < totalPages}">Next</span>
+            </div>
+            <div>
+                <a th:href="@{'/bourse/propositions'}"
+                   th:if="${page< totalPages}">
+                    Last
+                </a>
+                <span th:unless="${page< totalPages}">Last</span>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+</div>
+
+
+<footer th:replace="fragments :: footer">
+
+</footer>
+<script th:src="@{/js/vendor/jquery.slim.min.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

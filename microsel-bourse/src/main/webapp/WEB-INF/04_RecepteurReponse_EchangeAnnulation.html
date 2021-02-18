@@ -1,0 +1,51 @@
+<!-- DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml"-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Mail d'information d'envoi de la réponse</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="http://fonts.googleapis.com/css?family=Roboto"
+	rel="stylesheet" type="text/css" />
+<!-- use the font -->
+<style>
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: 20px;
+}
+</style>
+</head>
+
+<body>
+	<p>
+		Objet: refus de l'échange suite à votre reponse Numero <span th:text="${echange_id}"></span> enregistree le
+		<span
+			th:text="${#temporals.format(dateEnregistrement, 'dd-MMMM-yyyy', new java.util.Locale('fr', 'FR'))}"></span>
+	</p>
+
+	<p th:text="${'Bonjour ' + destinataire_username}"></p>
+
+	<p>
+		Votre réponse envoyée sous le titre "<span th:text="${titre}"></span>" n'a malheureusement pas été acceptée 
+		par l'adhérent qui avait publié la proposition d'échange.
+
+		Désolé : l'échange n'aura pas lieu.
+
+		Vous ne pouvez plus intervenir sur l'échange sous rubrique qui a été annulé.
+		
+	<p>
+		Vous pouvez toutefois modifier certains éléments de votre proposition et faire une nouvelle réponse si vous le souhaitez.
+	</p>
+	
+	<p>
+		Nous vous souhaitons d'excellents échanges collaboratifs <br />
+	</p>
+
+	<p>La SEL Team</p>
+
+
+</body>
+
+
+</html>

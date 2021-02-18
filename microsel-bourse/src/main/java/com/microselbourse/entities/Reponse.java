@@ -2,8 +2,7 @@ package com.microselbourse.entities;
 
 import java.time.LocalDate;
 
-
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,12 +11,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 
 
 @Entity
-@Table(name="reponse")
+@Table(name="reponses")
 public class Reponse {
 	
 	@Id
@@ -32,7 +32,7 @@ public class Reponse {
 	 * Cet id est vérifié avec le UserBean en consommant le microservice adhérent*****************************************************
 	 */
 	
-	@Column(name = "recepteurId", length = 10, nullable=false)
+	@Column(name = "recepteur_id", length = 10, nullable=false)
 	private Long recepteurId; 
 	
 
@@ -41,7 +41,7 @@ public class Reponse {
 	 * L'enumTradeType gère 2 positions pour la proposition : OFFRE ou DEMANDE *******************************************************
 	 */
 	
-	@Column(name="type")
+	@Column(name="trade_type")
 	private EnumTradeType enumTradeType; 
 	
 	/*
@@ -72,6 +72,9 @@ public class Reponse {
 	@Column(name = "valeur", length = 10, nullable=false)
 	private Integer valeur;
 	
+	@Column(name = "date_echeance", length = 25, nullable=false)
+	private LocalDate dateEcheance; 
+	
 	/*
 	 * @Column(name = "monnaie", length = 10, nullable=false) private MonnaieBean
 	 * monnaie;
@@ -97,8 +100,144 @@ public class Reponse {
 	@JoinColumn(name="proposition_id")
 	private Proposition proposition;
 	
-	@OneToOne(mappedBy = "reponse")
+	@OneToOne(cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private Echange echange;
+
+	public Reponse() {
+		super();
+		
+	}
+	
+	
+
+	public Reponse(Long id, Long recepteurId, EnumTradeType enumTradeType, String titre, String description,
+			String image, String ville, Integer codePostal, Integer valeur, LocalDate dateEcheance,
+			LocalDate dateReponse, Proposition proposition, Echange echange) {
+		super();
+		this.id = id;
+		this.recepteurId = recepteurId;
+		this.enumTradeType = enumTradeType;
+		this.titre = titre;
+		this.description = description;
+		this.image = image;
+		this.ville = ville;
+		this.codePostal = codePostal;
+		this.valeur = valeur;
+		this.dateEcheance = dateEcheance;
+		this.dateReponse = dateReponse;
+		this.proposition = proposition;
+		this.echange = echange;
+	}
+
+
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getRecepteurId() {
+		return recepteurId;
+	}
+
+	public void setRecepteurId(Long recepteurId) {
+		this.recepteurId = recepteurId;
+	}
+
+	public EnumTradeType getEnumTradeType() {
+		return enumTradeType;
+	}
+
+	public void setEnumTradeType(EnumTradeType enumTradeType) {
+		this.enumTradeType = enumTradeType;
+	}
+
+	public String getTitre() {
+		return titre;
+	}
+
+	public void setTitre(String titre) {
+		this.titre = titre;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public String getVille() {
+		return ville;
+	}
+
+	public void setVille(String ville) {
+		this.ville = ville;
+	}
+
+	public Integer getCodePostal() {
+		return codePostal;
+	}
+
+	public void setCodePostal(Integer codePostal) {
+		this.codePostal = codePostal;
+	}
+
+	public Integer getValeur() {
+		return valeur;
+	}
+
+	public void setValeur(Integer valeur) {
+		this.valeur = valeur;
+	}
+
+	public LocalDate getDateEcheance() {
+		return dateEcheance;
+	}
+
+	public void setDateEcheance(LocalDate dateEcheance) {
+		this.dateEcheance = dateEcheance;
+	}
+
+	public LocalDate getDateReponse() {
+		return dateReponse;
+	}
+
+	public void setDateReponse(LocalDate dateReponse) {
+		this.dateReponse = dateReponse;
+	}
+
+	public Proposition getProposition() {
+		return proposition;
+	}
+
+	public void setProposition(Proposition proposition) {
+		this.proposition = proposition;
+	}
+
+	public Echange getEchange() {
+		return echange;
+	}
+
+	public void setEchange(Echange echange) {
+		this.echange = echange;
+	}
+	
+	
+	
 	
 
 }

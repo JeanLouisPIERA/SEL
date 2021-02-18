@@ -1,0 +1,148 @@
+databaseChangeLog:
+ - changeSet:
+      id: script01
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          endDelimiter: \nGO
+          path: scripts/01_create_categories.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+ - changeSet:
+      id: script02
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          endDelimiter: \nGO
+          path: scripts/02_create_propositions.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+ - changeSet:
+      id: script03
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          endDelimiter: \nGO
+          path: scripts/03_create_reponses.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+ - changeSet:
+      id: script04
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          endDelimiter: \nGO
+          path: scripts/04_create_echanges.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true                           
+ - changeSet:
+      id: script05
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/05_insert_categories_propositions_reponses_echanges.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+ - changeSet:
+      id: script06
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/06_create_transactions.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true 
+ - changeSet:
+      id: script07
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/07_create_wallets.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true 
+ - changeSet:
+      id: script08
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/08_create_transactions_wallets_joint_table.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true   
+ - changeSet:
+      id: script09
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/09_alter_table_echanges.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true  
+ - changeSet:
+      id: script10
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/10_alter_table_echanges.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true        
+ - changeSet:
+      id: script11
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/11_alter_table_echanges.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true         
+ - changeSet:
+      id: script12
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/12_alter_table_echanges.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true 
+ - changeSet:
+      id: script13
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/13_alter_table_echanges.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true                                                                 

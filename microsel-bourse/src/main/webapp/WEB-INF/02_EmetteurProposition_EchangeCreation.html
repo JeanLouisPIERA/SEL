@@ -1,0 +1,46 @@
+<!-- DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml"-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Mail information réponse</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="http://fonts.googleapis.com/css?family=Roboto"
+	rel="stylesheet" type="text/css" />
+<!-- use the font -->
+<style>
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: 20px;
+}
+</style>
+</head>
+
+<body>
+	<p>
+		Objet: votre proposition Numero <span th:text="${proposition_id}"></span> enregistree le
+		<span
+			th:text="${#temporals.format(dateDebutPublication, 'dd-MMMM-yyyy', new java.util.Locale('fr', 'FR'))}"></span>
+	</p>
+
+	<p th:text="${'Bonjour ' + destinataire_username}"></p>
+
+	<p>
+		Votre <span th:text="${enum_trade_type_proposition}"></span> : "<span th:text="${titre_proposition}"></span>" vient de recevoir 
+		une réponse d'un adhérent du SEL.
+	</p>
+	<p>
+		Vous pouvez refuser ou valider l'échange qu'il vous propose en y accédant sur le site sous la référence " Echange N° <span th:text="${reponse_id}"></span>"".
+	</p>
+	
+	<p>
+		Nous vous souhaitons d'excellents échanges collaboratifs <br />
+	</p>
+
+	<p>La SEL Team</p>
+
+
+</body>
+
+</html>

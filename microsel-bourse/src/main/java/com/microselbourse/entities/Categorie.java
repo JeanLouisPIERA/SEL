@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
-@Table(name="categorie")
+@Table(name="categories")
 public class Categorie implements Serializable {
 	
 	@Id
@@ -25,7 +25,7 @@ public class Categorie implements Serializable {
 	@Column(name = "categorie_id", length=5)
 	private Long id;
 
-	@Column(name = "selId", length = 25, nullable=false)
+	@Column(name = "name", length = 25, nullable=false)
 	private EnumCategorie name;
 	
 	/*

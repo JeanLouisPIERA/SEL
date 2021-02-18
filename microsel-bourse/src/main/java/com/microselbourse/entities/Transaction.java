@@ -20,11 +20,10 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="wallet")
+@Table(name="transactions")
 public class Transaction implements Serializable {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "transaction_id", length=5)
 	private Long id;
 	
@@ -36,7 +35,7 @@ public class Transaction implements Serializable {
 	 * ***************************************************************************************************************************
 	 */
 	
-	@Column(name="montant")
+	@Column(name="montant", length = 3)
 	private Integer montant;
 	
 	/*
@@ -45,7 +44,7 @@ public class Transaction implements Serializable {
 	 * ****************************************************************************************************************************
 	 */
 	
-	@Column(name="dateTransaction")
+	@Column(name="date_transaction")
 	private LocalDate dateTransaction;
 	
 	/*
@@ -56,14 +55,17 @@ public class Transaction implements Serializable {
 	 * du wallet de l'autre partie @OneToMany
 	 */
 	
-	@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "echange_id", referencedColumnName = "echange_id")
-    private Echange echange;
+	/*
+	 * @OneToOne(cascade = CascadeType.ALL)
+	 * 
+	 * @JoinColumn(name = "echange_id", referencedColumnName = "echange_id") private
+	 * Echange echange;
+	 */
 	
 	@JsonIgnore 
 	@ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-        name = "wallet_transaction", 
+        name = "transactions_wallets", 
         joinColumns = { @JoinColumn(name = "wallet_id") }, 
         inverseJoinColumns = { @JoinColumn(name = "transaction_id") }
     )

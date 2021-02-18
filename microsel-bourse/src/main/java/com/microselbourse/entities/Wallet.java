@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.microselbourse.beans.UserBean;
 
 @Entity
-@Table(name="wallet")
+@Table(name="wallets")
 public class Wallet implements Serializable {
 	
 	@Id
@@ -34,17 +34,17 @@ public class Wallet implements Serializable {
 	 * et un mot de passe qui peut être différent de celui de son compte adhérent
 	 * Il existe un seul wallet COUNTERPART ouvert pour le compte du SEL pour enregistrer la contrepartie d'échanges en anomalie
 	 */
-	@Column(name="titulaire_email")
+	@Column(name="titulaire_email", length = 50)
 	private String titulaire_email;
 	
-	@Column(name="titulaire_password")
+	@Column(name="titulaire_password", length = 30)
 	private String titulaire_password;
 	
 	/*
 	 * Un wallet se définit comme un solde modifié par des opérations au débit ou au crédit
 	 */
 	
-	@Column(name="soldeWallet")
+	@Column(name="solde_wallet", length=6)
 	private Integer soldeWallet;
 	
 	/*
@@ -55,7 +55,7 @@ public class Wallet implements Serializable {
 	@JsonIgnore 
 	@ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-        name = "wallet_transaction", 
+        name = "transactions_wallets", 
         joinColumns = { @JoinColumn(name = "wallet_id") }, 
         inverseJoinColumns = { @JoinColumn(name = "transaction_id") }
     )

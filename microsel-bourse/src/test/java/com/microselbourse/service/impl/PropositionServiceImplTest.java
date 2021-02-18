@@ -6,14 +6,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.websocket.server.PathParam;
-
-
-import org.assertj.core.util.Arrays;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,8 +33,10 @@ import com.microselbourse.dao.IPropositionRepository;
 import com.microselbourse.dao.specs.PropositionSpecification;
 import com.microselbourse.dto.PropositionDTO;
 import com.microselbourse.entities.Categorie;
+import com.microselbourse.entities.EnumStatutProposition;
 import com.microselbourse.entities.EnumTradeType;
 import com.microselbourse.entities.Proposition;
+import com.microselbourse.exceptions.DeniedAccessException;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.mapper.IPropositionMapper;
@@ -71,32 +70,37 @@ public class PropositionServiceImplTest {
 	  private List<Proposition> propositionList;
 	  private Page<Proposition> propositionPage;
 	  private PropositionCriteria propositionCriteria;
+	  private Pageable pageable;
 	  
 	  @Before 
 	  public void setUp() {
 		  
 		  propositionTest = new Proposition();
+		  
 		  user = new UserBean();
+		  
+		  
 		  categorie = new Categorie();
 		  propositionDTO = new PropositionDTO();
 		  proposition = new Proposition();
-		  
-			/* propositionPage = new PageImpl<Proposition>(propositionList); */
-		 
+
 		 //Mocks CREATE 
 		 when(adherentProxy.consulterCompteAdherent((long)1)).thenReturn(user);
-		 when(propositionRepository.findByIdAndTitre((long)1,"Wrong")).thenReturn(Optional.of(proposition));
-		 when(categorieRepository.findById((long)0)).thenReturn(Optional.empty());
+		 when(propositionRepository.findByEmetteurIdAndTitreAndEnumTradeTypeAndStatutEnCours((long)1,"Wrong", EnumTradeType.OFFRE, EnumStatutProposition.ENCOURS)).thenReturn(Optional.of(proposition));
+		 when(propositionRepository.findByEmetteurIdAndTitreAndEnumTradeTypeAndStatutEnCours((long)1,"Correct", EnumTradeType.OFFRE, EnumStatutProposition.ENCOURS)).thenReturn(Optional.of(proposition));
+		 when(propositionRepository.findByEmetteurIdAndTitreAndEnumTradeTypeAndStatutEnCours((long)1,"Correct", EnumTradeType.DEMANDE, EnumStatutProposition.ENCOURS)).thenReturn(Optional.of(proposition));
+		 when(propositionRepository.findByEmetteurIdAndTitreAndEnumTradeTypeAndStatutEnCours((long)1,"Correct", EnumTradeType.OFFRE, EnumStatutProposition.ENCOURS)).thenReturn(Optional.empty());
+		 when(propositionRepository.findByEmetteurIdAndTitreAndEnumTradeTypeAndStatutEnCours((long)1,"Correct", EnumTradeType.DEMANDE, EnumStatutProposition.ENCOURS)).thenReturn(Optional.empty());
+		 when(categorieRepository.findById((long)0)).thenReturn(Optional.empty()); //UPDATE
 		 when(categorieRepository.findById((long)1)).thenReturn(Optional.of(categorie));
 		 when(propositionMapper.propositionDTOToProposition(propositionDTO)).thenReturn(proposition);
 		 when(propositionRepository.save(any(Proposition.class))).thenReturn(proposition);
 		 
-			/*
-			 * //Mocks READ
-			 * when(propositionRepository.findAll(any(PropositionSpecification.class),
-			 * any(Pageable.class))).thenReturn(propositionPage); propositionCriteria = new
-			 * PropositionCriteria();
-			 */
+		 //Mocks READ 
+		 when(propositionRepository.findById((long)0)).thenReturn(Optional.empty()); // Mock UPDATE
+		 when(propositionRepository.findById((long)1)).thenReturn(Optional.of(proposition));
+		 
+		
 	  }
 	  
 	  //TESTS CREATE PROPOSITION **********************************************************************************************
@@ -105,6 +109,7 @@ public class PropositionServiceImplTest {
 		public void testCreateProposition_whenEntityNotFoundException_withWrongUser() {
 		  
 		  user.setId((long)0);
+		  propositionDTO.setEmetteurId((long)1);
 	  
 		  try {
 				propositionTest = propositionService.createProposition(propositionDTO);
@@ -113,17 +118,33 @@ public class PropositionServiceImplTest {
 			}
 	  }
 	  
+	  @Test
+	  	public void testCreateProposition_whenEntityNotFoundException_withWrongTradeType() {
+		  
+		  user.setId((long)1);
+		  propositionDTO.setEmetteurId((long)1);
+		  propositionDTO.setEnumTradeTypeCode("Erreur");
+	  
+		  try {
+				propositionTest = propositionService.createProposition(propositionDTO);
+			} catch (Exception e) {
+				assertThat(e).isInstanceOf(EntityNotFoundException.class).hasMessage("Votre proposition ne peut être qu'une OFFRE ou une DEMANDE : merci de renseigner une des 2 valeurs");
+			}
+	  }
+	  
 	  
 	  @Test
 		public void testCreateProposition_whenEntityAlreadyExistsException_withWrongTitre() {
 		  
 		  user.setId((long)1);
+		  propositionDTO.setEmetteurId((long)1);
+		  propositionDTO.setEnumTradeTypeCode("OFFRE");
 		  propositionDTO.setTitre("Wrong");
 		  
 		  try {
 				propositionTest = propositionService.createProposition(propositionDTO);
 			} catch (Exception e) {
-				assertThat(e).isInstanceOf(EntityAlreadyExistsException.class).hasMessage("Vous avez déjà créé une proposition avec le même titre");
+				assertThat(e).isInstanceOf(EntityAlreadyExistsException.class).hasMessage("Vous avez déjà une OFFRE ou une DEMANDE encours de publication avec le même titre");
 			}
 	  }
 	  
@@ -132,9 +153,11 @@ public class PropositionServiceImplTest {
 	  testCreateProposition_whenEntityNotFoundException_withWrongCategorie() {
 		  
 		  user.setId((long)1);
+		  propositionDTO.setEmetteurId((long)1);
+		  propositionDTO.setEnumTradeTypeCode("OFFRE");
 		  propositionDTO.setTitre("Correct");
 		  categorie.setId((long)0);
-		  propositionDTO.setIdCategorie(categorie.getId());
+		  propositionDTO.setCategorieId(categorie.getId());
 		  
 		  try {
 				propositionTest = propositionService.createProposition(propositionDTO);
@@ -143,33 +166,22 @@ public class PropositionServiceImplTest {
 			}
 	  }
 	 
-	  @Test public void
-	  testCreateProposition_whenEntityAlreadyExistsException_withWrongTradeType() {
-		  
-		  user.setId((long)1);
-		  propositionDTO.setTitre("Correct");
-		  categorie.setId((long)1);
-		  propositionDTO.setIdCategorie(categorie.getId());
-		  propositionDTO.setEnumTradeTypeCode("Wrong");
-		  
-		  try {
-				propositionTest = propositionService.createProposition(propositionDTO);
-			} catch (Exception e) {
-				assertThat(e).isInstanceOf(EntityNotFoundException.class).hasMessage("La saisie du type OFFRE ou DEMANDE de votre proposition est incorrecte");
-			}
-	  }
 	  
 	  @Test public void testCreateProposition_withoutException() throws Exception {
 		  
 		  user.setId((long)1);
+		  propositionDTO.setEmetteurId((long)1);
+		  propositionDTO.setEnumTradeTypeCode("OFFRE");
 		  propositionDTO.setTitre("Correct");
 		  categorie.setId((long)1);
-		  propositionDTO.setIdCategorie(categorie.getId());
+		  propositionDTO.setCategorieId(categorie.getId());
 		  
 		  propositionDTO.setEnumTradeTypeCode(EnumTradeType.OFFRE.getCode());
 			  propositionTest = propositionService.createProposition(propositionDTO);
 			  verify(propositionRepository, times(1)).save(any(Proposition.class));
 			  Assert.assertTrue(propositionTest.equals(proposition));
+			  
+			  propositionDTO.setEnumTradeTypeCode("DEMANDE");	  
 		  
 		  propositionDTO.setEnumTradeTypeCode(EnumTradeType.DEMANDE.getCode());
 			  propositionTest = propositionService.createProposition(propositionDTO);
@@ -180,26 +192,239 @@ public class PropositionServiceImplTest {
 	  
 	  //TESTS READ PROPOSITION ****************************************************************************************************
 	  
-		/*
-		 * @Test public void searchAllPropositionsByCriteria( ) {
-		 * 
-		 * propositionTest.setId((long)1); proposition.setId((long)2);
-		 * propositionList.add(propositionTest); propositionList.add(proposition);
-		 * Pageable pageable = PageRequest.of(0,6);
-		 * 
-		 * Page<Proposition> propositionPageTest =
-		 * propositionService.searchAllPropositionsByCriteria(propositionCriteria,
-		 * pageable); verify(propositionRepository,
-		 * times(1)).findAll(any(PropositionSpecification.class), any(Pageable.class));
-		 * Assertions.assertTrue(propositionPageTest.getNumberOfElements()==2);
-		 * Assertions.assertTrue(propositionPageTest.getTotalPages()==1);
-		 * Assertions.assertTrue(propositionPageTest.getContent().get(0).getId()==
-		 * (long)1);
-		 * Assertions.assertTrue(propositionPageTest.getContent().get(1).getId()==(long)
-		 * 2); }
-		 */
+	  @Test public void searchAllPropositionsByCriteria( ) {
+		  
+		  propositionList = new ArrayList<Proposition>();
+		  propositionTest.setId((long)1); 
+		  proposition.setId((long)2);
+		  propositionList.add(propositionTest); 
+		  propositionList.add(proposition);
+		  pageable = PageRequest.of(0,6);
+		  propositionCriteria = new PropositionCriteria();	
+		  propositionPage = new PageImpl<Proposition>(propositionList); 
+		  
+		  when(propositionRepository.findAll(any(PropositionSpecification.class), any(Pageable.class))).thenReturn(propositionPage); 
+		  
+		  Page<Proposition> propositionPageTest = propositionService.searchAllPropositionsByCriteria(propositionCriteria,pageable); 
+		  verify(propositionRepository,times(1)).findAll(any(PropositionSpecification.class), any(Pageable.class));
+		  Assertions.assertTrue(propositionPageTest.getNumberOfElements()==2);
+		  Assertions.assertTrue(propositionPageTest.getTotalPages()==1);
+		  Assertions.assertTrue(propositionPageTest.getContent().get(0).getId()== (long)1);
+		  Assertions.assertTrue(propositionPageTest.getContent().get(1).getId()==(long)2); 
+		  }
+
+	   @Test public void readProposition_whenEntitityNotFoundException() {
+		  
+		   try {
+				propositionTest = propositionService.readProposition((long)0);
+			} catch (Exception e) {
+				assertThat(e).isInstanceOf(EntityNotFoundException.class).hasMessage("L'offre ou la demande que vous voulez consulter n'existe pas");
+			}
+	   }
+	   
+	   @Test public void testReadProposition_withoutException() throws Exception{
+		   
+		   propositionTest = propositionService.readProposition((long) 1);
+		   Assert.assertTrue(propositionTest.equals(proposition));
+	   }
+	   
+	   // TESTS UPDATE ***********************************************************************************************************
 	  
+	   
+	   @Test public void testUpdateProposition_whenEntityNotFoundException_withUnknownPropositionToUpdate() {
+		   
+		   
+		   try {
+				propositionTest = propositionService.updateProposition((long)0, propositionDTO);
+			} catch (Exception e) {
+				assertThat(e).isInstanceOf(EntityNotFoundException.class).hasMessage("L'Offre ou la Demande que vous souhaitez modifier n'existe pas.");
+			}
+		   
+	   }
+	   
+	   @Test public void testUpdateProposition_whenDeniedAccessException_withAnotherUserProposition() {
+		   
+		   user.setId((long)1);
+		   propositionDTO.setEmetteurId((long)1);
+		   proposition.setEmetteurId((long)0);
+		   
+		   try {
+				propositionTest = propositionService.updateProposition((long)1, propositionDTO);
+			} catch (Exception e) {
+				assertThat(e).isInstanceOf(DeniedAccessException.class).hasMessage("Vous ne pouvez pas modifier la proposition d'un autre adhérent");
+			}
+	   }
+	   
+	   @Test public void testUpdateProposition_whenDeniedAccessException_withStatutEchue() {
+		   
+		   user.setId((long)1);
+		   propositionDTO.setEmetteurId((long)1);
+		   proposition.setEmetteurId((long)1);
+		   proposition.setDateFin(LocalDate.of(2020, 12, 31));
+		   
+		   try {
+				propositionTest = propositionService.updateProposition((long)1, propositionDTO);
+			} catch (Exception e) {
+				assertThat(e).isInstanceOf(DeniedAccessException.class).hasMessage("Vous ne pouvez pas modifier une OFFRE ou une DEMANDE dont la date de fin de publication est échue");
+			}
+	   }
+	   
+	   @Test public void testUpdateProposition_whenDeniedAccessException_withStatutCloturee() {
+		   
+		   user.setId((long)1);
+		   propositionDTO.setEmetteurId((long)1);
+		   proposition.setEmetteurId((long)1);
+		   proposition.setDateFin(LocalDate.of(2200, 12, 31));
+		   proposition.setStatut(EnumStatutProposition.CLOTUREE);
+		   
+		   try {
+				propositionTest = propositionService.updateProposition((long)1, propositionDTO);
+			} catch (Exception e) {
+				assertThat(e).isInstanceOf(DeniedAccessException.class).hasMessage("Vous ne pouvez pas modifier une OFFRE ou une DEMANDE déjà clôturée");
+			}
+	   }
+	   
+	   
+	   @Test public void testUpdateProposition_whenEntityNotFoundException_withUnknownCategorie() {
+		   
+		   user.setId((long)1);
+		   propositionDTO.setEmetteurId((long)1);
+		   proposition.setEmetteurId((long)1);
+		   proposition.setDateFin(LocalDate.of(2200, 12, 31));
+		   proposition.setStatut(EnumStatutProposition.ENCOURS);
+		   propositionDTO.setCategorieId((long)0);
+		   
+		   try {
+				propositionTest = propositionService.updateProposition((long)1, propositionDTO);
+			} catch (Exception e) {
+				assertThat(e).isInstanceOf(EntityNotFoundException.class).hasMessage("Votre modification est impossible : cette catégorie n'existe pas");
+			}   
+	   }
+	   
+	   @Test
+	  	public void testUpdateProposition_whenEntityNotFoundException_withWrongTradeType() {
+		  
+		  user.setId((long)1);
+		  propositionDTO.setEmetteurId((long)1);
+		  proposition.setEmetteurId((long)1);
+		  proposition.setDateFin(LocalDate.of(2200, 12, 31));
+		  proposition.setStatut(EnumStatutProposition.ENCOURS);
+		  propositionDTO.setCategorieId((long)1);
+		  propositionDTO.setEnumTradeTypeCode("Erreur");
 	  
-		 
-	  
+		  try {
+				propositionTest = propositionService.updateProposition((long)1, propositionDTO);
+			} catch (Exception e) {
+				assertThat(e).isInstanceOf(EntityNotFoundException.class).hasMessage("Votre proposition ne peut être qu'une OFFRE ou une DEMANDE : merci de renseigner une des 2 valeurs");
+			}
+	  }
+	   
+	   @Test public void testUpdateProposition_whenEntityAlreadyExistsException_withSameUserAndSameTitle() {
+		   
+		   user.setId((long)1);
+		   propositionDTO.setEmetteurId((long)1);
+		   proposition.setEmetteurId((long)1);
+		   proposition.setDateFin(LocalDate.of(2200, 12, 31));
+		   proposition.setStatut(EnumStatutProposition.ENCOURS);
+		   propositionDTO.setCategorieId((long)1);
+		   propositionDTO.setEnumTradeTypeCode("OFFRE");
+		   propositionDTO.setTitre("Wrong");
+		   proposition.setTitre("Wrong");
+		   
+		   try {
+				propositionTest = propositionService.updateProposition((long)1, propositionDTO);
+			} catch (Exception e) {
+				assertThat(e).isInstanceOf(EntityAlreadyExistsException.class).hasMessage("Vous avez déjà une OFFRE ou une DEMANDE encours de publication avec le même titre");
+			}   
+		   
+		   propositionDTO.setTitre("Correct"); 
+		   
+		   try {
+				propositionTest = propositionService.updateProposition((long)1, propositionDTO);
+			} catch (Exception e) {
+				assertThat(e).isInstanceOf(EntityAlreadyExistsException.class).hasMessage("Vous avez déjà une OFFRE ou une DEMANDE encours de publication avec le même titre");
+			}   
+		   
+		   propositionDTO.setTitre("Wrong");
+		   proposition.setTitre("Correct");
+		   
+		   try {
+				propositionTest = propositionService.updateProposition((long)1, propositionDTO);
+			} catch (Exception e) {
+				assertThat(e).isInstanceOf(EntityAlreadyExistsException.class).hasMessage("Vous avez déjà une OFFRE ou une DEMANDE encours de publication avec le même titre");
+			}   
+		   
+	   }
+	   
+	   @Test public void testUpdateProposition_withoutException() throws Exception {
+		   
+		   user.setId((long)1);
+		   propositionDTO.setEmetteurId((long)1);
+		   proposition.setEmetteurId((long)1);
+		   proposition.setDateFin(LocalDate.of(2200, 12, 31));
+		   proposition.setStatut(EnumStatutProposition.ENCOURS);
+		   propositionDTO.setCategorieId((long)1);
+		   propositionDTO.setEnumTradeTypeCode("OFFRE");
+		   propositionDTO.setTitre("Correct");
+		   proposition.setTitre("Wrong");
+		   
+		   propositionTest = propositionService.updateProposition((long)1, propositionDTO);
+		   verify(propositionRepository, times(1)).save(any(Proposition.class));
+		   Assert.assertTrue(propositionTest.equals(proposition));
+			
+	   }
+	   
+	   // TESTS CLOSE *******************************************************************************************************
+	   
+	   @Test public void testCloseProposition_whenEntityNotFoundException_withUnknownPropositionToUpdate() {
+		   
+		   
+		   try {
+				propositionTest = propositionService.closeProposition((long)0);
+			} catch (Exception e) {
+				assertThat(e).isInstanceOf(EntityNotFoundException.class).hasMessage("L'Offre ou la Demande que vous souhaitez clôturer n'existe pas.");
+			}
+		   
+	   }
+	   	   
+	   @Test public void testCloseProposition_whenDeniedAccessException_withStatutEchue() {
+		   
+		   user.setId((long)1);
+		   proposition.setEmetteurId((long)1);
+		   proposition.setDateFin(LocalDate.of(2020, 12, 31));
+		   
+		   try {
+				propositionTest = propositionService.closeProposition((long)1);
+			} catch (Exception e) {
+				assertThat(e).isInstanceOf(DeniedAccessException.class).hasMessage("Vous ne pouvez pas clôturer une OFFRE ou une DEMANDE dont la date de fin de publication est échue");
+			}
+	   }
+	   
+	   @Test public void testCloseProposition_whenDeniedAccessException_withStatutCloturee() {
+		   
+		   user.setId((long)1);
+		   proposition.setEmetteurId((long)1);
+		   proposition.setDateFin(LocalDate.of(2200, 12, 31));
+		   proposition.setStatut(EnumStatutProposition.CLOTUREE);
+		   
+		   try {
+				propositionTest = propositionService.closeProposition((long)1);
+			} catch (Exception e) {
+				assertThat(e).isInstanceOf(DeniedAccessException.class).hasMessage("Vous ne pouvez pas clôturer une OFFRE ou une DEMANDE déjà clôturée");
+			}
+	   }
+	   
+	   @Test public void testCloseProposition_withoutException() throws Exception {
+		   
+		   user.setId((long)1);
+		   proposition.setEmetteurId((long)1);
+		   proposition.setDateFin(LocalDate.of(2200, 12, 31));
+		   proposition.setStatut(EnumStatutProposition.ENCOURS);
+		   
+		   propositionTest = propositionService.closeProposition((long)1);
+		   verify(propositionRepository, times(1)).save(any(Proposition.class));
+		   Assert.assertTrue(propositionTest.equals(proposition));
+			
+	   }	 
 }
+		  

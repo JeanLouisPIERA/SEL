@@ -1,5 +1,6 @@
 package com.microselbourse.entities;
 
+import java.util.Optional;
 
 public enum EnumTradeType {
 	
@@ -15,13 +16,13 @@ public enum EnumTradeType {
 		this.text = text;
 	}
 	
-	public static EnumTradeType getEnumTradeTypeByCode(String code) {
+	public static Optional<EnumTradeType> getEnumTradeTypeByCode(String code) {
 		for (EnumTradeType enumTradeType : EnumTradeType.values()) {
 			if(enumTradeType.code.equals(code)){
-				return enumTradeType;
+				return Optional.of(enumTradeType);
 			}
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	public String getCode() {

@@ -12,18 +12,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="echange")
+@Table(name="echanges")
 public class Echange implements Serializable {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "echange_id", length=5)
 	private Long id;
 	
@@ -44,6 +45,30 @@ public class Echange implements Serializable {
 	 * a été enregistré et qu'il est VALID (statut échange = FORCEVALID), si un seul avis a été enregistré et qu'il est REFUS
 	 *  (statut échange = FORCEREFUS) ou si le solde minimum du compte du payeur est atteint (CONFLIT) 
 	 */
+	
+	@Column(name="emetteur_id")
+	private Long emetteurId;
+	
+	@Column(name="recepteur_id")
+	private Long recepteurId;
+	
+	@Column(name="emetteur_username")
+	private String emetteurUsername;
+	
+	@Column(name="recepteur_username")
+	private String recepteurUsername;
+	
+	@Column(name="date_echeance")
+	private LocalDate dateEcheance;
+	
+	@Column(name="titre")
+	private String titre;
+	
+	@Column(name="emetteur_mail")
+	private String emetteurMail;
+	
+	@Column(name="recepteur_mail")
+	private String recepteurMail;
 	
 	@Column(name="statut")
 	private EnumStatutEchange statutEchange;
@@ -71,9 +96,6 @@ public class Echange implements Serializable {
 	@Column(name="avis_recepteur")
 	private EnumEchangeAvis avisRecepteur;
 	
-	@Column(name="date_debut")
-	private LocalDate dateDebut;
-	
 	@Column(name="date_fin")
 	private LocalDate dateFin;
 	
@@ -82,10 +104,10 @@ public class Echange implements Serializable {
 	 * enregistrent leur avis (VALID ou REFUSE)
 	 */
 	
-	@Column(name="comment_emetteur")
+	@Column(name="comment_emetteur", length= 130)
 	private String commentaireEmetteur;
 	
-	@Column(name="comment_recepteur")
+	@Column(name="comment_recepteur", length = 130)
 	private String commentaireRecepteur;
 	
 	@Column(name="note_emetteur")
@@ -104,16 +126,237 @@ public class Echange implements Serializable {
 	 * Certains échanges n'ont aboutis ne donnent pas lieu à la création d'une transaction
 	 */
 	
-	@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "reponse_id", referencedColumnName = "reponse_id")
-    private Reponse reponse;
 	
-	@OneToOne(mappedBy = "echange")
-    private Transaction transaction;
+	/*
+	 * @OneToOne
+	 * 
+	 * @MapsId
+	 * 
+	 * @JoinColumn(name = "reponse_id") private Reponse reponse;
+	 */
+	 
 	
-	
-	
-	
-	
+	  @OneToOne(cascade = CascadeType.ALL)
+	  @PrimaryKeyJoinColumn	
+	  /* @OneToOne(mappedBy = "echange") */
+	  private Transaction transaction;
 
+	  
+	public Echange() {
+		super();
+		
+	}
+
+
+	public Echange(Long id, LocalDate dateEnregistrement, Long emetteurId, Long recepteurId, String emetteurUsername,
+			String recepteurUsername, LocalDate dateEcheance, String titre, String emetteurMail, String recepteurMail,
+			EnumStatutEchange statutEchange, LocalDate dateConfirmation, LocalDate dateAnnulation,
+			EnumEchangeAvis avisEmetteur, EnumEchangeAvis avisRecepteur, LocalDate dateFin, String commentaireEmetteur,
+			String commentaireRecepteur, EnumEchangeAvis noteEmetteur, EnumEchangeAvis noteRecepteur,
+			Transaction transaction) {
+		super();
+		this.id = id;
+		this.dateEnregistrement = dateEnregistrement;
+		this.emetteurId = emetteurId;
+		this.recepteurId = recepteurId;
+		this.emetteurUsername = emetteurUsername;
+		this.recepteurUsername = recepteurUsername;
+		this.dateEcheance = dateEcheance;
+		this.titre = titre;
+		this.emetteurMail = emetteurMail;
+		this.recepteurMail = recepteurMail;
+		this.statutEchange = statutEchange;
+		this.dateConfirmation = dateConfirmation;
+		this.dateAnnulation = dateAnnulation;
+		this.avisEmetteur = avisEmetteur;
+		this.avisRecepteur = avisRecepteur;
+		this.dateFin = dateFin;
+		this.commentaireEmetteur = commentaireEmetteur;
+		this.commentaireRecepteur = commentaireRecepteur;
+		this.noteEmetteur = noteEmetteur;
+		this.noteRecepteur = noteRecepteur;
+		this.transaction = transaction;
+	}
+
+
+
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public LocalDate getDateEnregistrement() {
+		return dateEnregistrement;
+	}
+
+	public void setDateEnregistrement(LocalDate dateEnregistrement) {
+		this.dateEnregistrement = dateEnregistrement;
+	}
+
+	public EnumStatutEchange getStatutEchange() {
+		return statutEchange;
+	}
+
+	public void setStatutEchange(EnumStatutEchange statutEchange) {
+		this.statutEchange = statutEchange;
+	}
+
+	public LocalDate getDateConfirmation() {
+		return dateConfirmation;
+	}
+
+	public void setDateConfirmation(LocalDate dateConfirmation) {
+		this.dateConfirmation = dateConfirmation;
+	}
+
+	public LocalDate getDateAnnulation() {
+		return dateAnnulation;
+	}
+
+	public void setDateAnnulation(LocalDate dateAnnulation) {
+		this.dateAnnulation = dateAnnulation;
+	}
+
+	public EnumEchangeAvis getAvisEmetteur() {
+		return avisEmetteur;
+	}
+
+	public void setAvisEmetteur(EnumEchangeAvis avisEmetteur) {
+		this.avisEmetteur = avisEmetteur;
+	}
+
+	public EnumEchangeAvis getAvisRecepteur() {
+		return avisRecepteur;
+	}
+
+	public void setAvisRecepteur(EnumEchangeAvis avisRecepteur) {
+		this.avisRecepteur = avisRecepteur;
+	}
+
+	public LocalDate getDateFin() {
+		return dateFin;
+	}
+
+	public void setDateFin(LocalDate dateFin) {
+		this.dateFin = dateFin;
+	}
+
+	public String getCommentaireEmetteur() {
+		return commentaireEmetteur;
+	}
+
+	public void setCommentaireEmetteur(String commentaireEmetteur) {
+		this.commentaireEmetteur = commentaireEmetteur;
+	}
+
+	public String getCommentaireRecepteur() {
+		return commentaireRecepteur;
+	}
+
+	public void setCommentaireRecepteur(String commentaireRecepteur) {
+		this.commentaireRecepteur = commentaireRecepteur;
+	}
+
+	public EnumEchangeAvis getNoteEmetteur() {
+		return noteEmetteur;
+	}
+
+	public void setNoteEmetteur(EnumEchangeAvis noteEmetteur) {
+		this.noteEmetteur = noteEmetteur;
+	}
+
+	public EnumEchangeAvis getNoteRecepteur() {
+		return noteRecepteur;
+	}
+
+	public void setNoteRecepteur(EnumEchangeAvis noteRecepteur) {
+		this.noteRecepteur = noteRecepteur;
+	}
+
+	public Transaction getTransaction() {
+		return transaction;
+	}
+
+	public void setTransaction(Transaction transaction) {
+		this.transaction = transaction;
+	}
+
+
+	public Long getEmetteurId() {
+		return emetteurId;
+	}
+
+
+	public void setEmetteurId(Long emetteurId) {
+		this.emetteurId = emetteurId;
+	}
+
+
+	public Long getRecepteurId() {
+		return recepteurId;
+	}
+
+
+	public void setRecepteurId(Long recepteurId) {
+		this.recepteurId = recepteurId;
+	}
+
+
+	public String getEmetteurUsername() {
+		return emetteurUsername;
+	}
+
+
+	public void setEmetteurUsername(String emetteurUsername) {
+		this.emetteurUsername = emetteurUsername;
+	}
+
+
+	public String getRecepteurUsername() {
+		return recepteurUsername;
+	}
+
+
+	public void setRecepteurUsername(String recepteurUsername) {
+		this.recepteurUsername = recepteurUsername;
+	}
+
+	public LocalDate getDateEcheance() {
+		return dateEcheance;
+	}
+
+	public void setDateEcheance(LocalDate dateEcheance) {
+		this.dateEcheance = dateEcheance;
+	}
+
+	public String getTitre() {
+		return titre;
+	}
+
+	public void setTitre(String titre) {
+		this.titre = titre;
+	}
+
+	public String getEmetteurMail() {
+		return emetteurMail;
+	}
+
+	public void setEmetteurMail(String emetteurMail) {
+		this.emetteurMail = emetteurMail;
+	}
+
+	public String getRecepteurMail() {
+		return recepteurMail;
+	}
+
+	public void setRecepteurMail(String recepteurMail) {
+		this.recepteurMail = recepteurMail;
+	}
+	
+	
+	 
 }

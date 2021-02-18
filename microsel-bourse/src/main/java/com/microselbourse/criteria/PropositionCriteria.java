@@ -13,29 +13,23 @@ public class PropositionCriteria {
 	
 	private Integer codePostal;
 	
-	private LocalDate dateDebut;
-	
-	private LocalDate dateFin; 
-	
-	private LocalDate dateEcheance;
-	
 	private String nomCategorie;
+	
+	private String statut;
 
 	public PropositionCriteria() {
 		super();
 	}
 
 	public PropositionCriteria(String codeEnumTradeType, String titre, String ville, Integer codePostal,
-			LocalDate dateDebut, LocalDate dateFin, LocalDate dateEcheance, String nomCategorie) {
+			String nomCategorie, String statut) {
 		super();
 		this.codeEnumTradeType = codeEnumTradeType;
 		this.titre = titre;
 		this.ville = ville;
 		this.codePostal = codePostal;
-		this.dateDebut = dateDebut;
-		this.dateFin = dateFin;
-		this.dateEcheance = dateEcheance;
 		this.nomCategorie = nomCategorie;
+		this.statut = statut;
 	}
 
 	public String getCodeEnumTradeType() {
@@ -70,22 +64,6 @@ public class PropositionCriteria {
 		this.codePostal = codePostal;
 	}
 
-	public LocalDate getDateFin() {
-		return dateFin;
-	}
-
-	public void setDateFin(LocalDate dateFin) {
-		this.dateFin = dateFin;
-	}
-
-	public LocalDate getDateEcheance() {
-		return dateEcheance;
-	}
-
-	public void setDateEcheance(LocalDate dateEcheance) {
-		this.dateEcheance = dateEcheance;
-	}
-
 	public String getNomCategorie() {
 		return nomCategorie;
 	}
@@ -93,28 +71,22 @@ public class PropositionCriteria {
 	public void setNomCategorie(String nomCategorie) {
 		this.nomCategorie = nomCategorie;
 	}
-	
-	
 
-	public LocalDate getDateDebut() {
-		return dateDebut;
+	public String getStatut() {
+		return statut;
 	}
 
-
-
-	public void setDateDebut(LocalDate dateDebut) {
-		this.dateDebut = dateDebut;
+	public void setStatut(String statut) {
+		this.statut = statut;
 	}
 
 	@Override
 	public String toString() {
 		return "PropositionCriteria [codeEnumTradeType=" + codeEnumTradeType + ", titre=" + titre + ", ville=" + ville
-				+ ", codePostal=" + codePostal + ", dateDebut=" + dateDebut + ", dateFin=" + dateFin + ", dateEcheance="
-				+ dateEcheance + ", nomCategorie=" + nomCategorie + "]";
+				+ ", codePostal=" + codePostal + ", nomCategorie=" + nomCategorie + ", statut=" + statut + "]";
 	}
-
-
 
 	
 
+	
 }

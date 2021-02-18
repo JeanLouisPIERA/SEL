@@ -21,7 +21,8 @@ public class PropositionMapperImpl implements IPropositionMapper{
         }
 
         PropositionDTO propositionDTO = new PropositionDTO();
-
+        
+        propositionDTO.setEmetteurId(entity.getEmetteurId());
         propositionDTO.setCodePostal( entity.getCodePostal() );
         propositionDTO.setDescription( entity.getDescription() );
         propositionDTO.setEnumTradeTypeCode( entity.getEnumTradeType().getCode() );
@@ -29,6 +30,8 @@ public class PropositionMapperImpl implements IPropositionMapper{
         propositionDTO.setTitre(entity.getTitre());
         propositionDTO.setValeur(entity.getValeur());
         propositionDTO.setVille(entity.getVille());
+        propositionDTO.setDateFin(entity.getDateFin());
+        propositionDTO.setDateEcheance(entity.getDateEcheance());
         
         return propositionDTO;
 		
@@ -42,14 +45,17 @@ public class PropositionMapperImpl implements IPropositionMapper{
 	        }
 
 	        Proposition proposition = new Proposition();
-
+	        
+	        proposition.setEmetteurId(dto.getEmetteurId());
 	        proposition.setCodePostal( dto.getCodePostal() );
 	        proposition.setDescription( dto.getDescription() );
-	        proposition.setEnumTradeType(EnumTradeType.getEnumTradeTypeByCode(dto.getEnumTradeTypeCode()));
+	        proposition.setEnumTradeType(EnumTradeType.getEnumTradeTypeByCode(dto.getEnumTradeTypeCode()).get());
 	        proposition.setImage( dto.getImage() );
 	        proposition.setTitre(dto.getTitre());
 	        proposition.setValeur(dto.getValeur());
 	        proposition.setVille(dto.getVille());
+	        proposition.setDateFin(dto.getDateFin());
+	        proposition.setDateEcheance(dto.getDateEcheance());
 
 	        return proposition;
 	}

@@ -1,0 +1,55 @@
+<!-- DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml"-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Mail de confirmation de l'echange a l'auteur de la reponse a une proposition</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="http://fonts.googleapis.com/css?family=Roboto"
+	rel="stylesheet" type="text/css" />
+<!-- use the font -->
+<style>
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: 20px;
+}
+</style>
+</head>
+
+<body>
+	<p>
+		Objet: confirmation de l'échange suite à votre reponse Numero <span th:text="${echange_id}"></span> enregistree le
+		<span
+			th:text="${#temporals.format(dateEnregistrement, 'dd-MMMM-yyyy', new java.util.Locale('fr', 'FR'))}"></span>
+	</p>
+
+	<p th:text="${'Bonjour ' + destinataire_username}"></p>
+
+	<p>
+		Votre réponse envoyée sous le titre "<span th:text="${titre}"></span>" a été acceptée par l'adhérent qui avait publié 
+		la proposition d'échange.
+
+		Félicitations : l'échange va pouvoir avoir lieu.
+		
+	<p>
+		Vous pouvez le contacter à l'adresse mail suivante : <span th:text="${emetteur_mail}"></span>
+	</p>
+	<p>
+		Une fois l'échange réalisé, nous vous remercions de bien vouloir prendre quelques instants pour renseigner la fiche de suivi
+		de l'échange. 
+		Votre validation permettra de réaliser la transaction monétaire.
+		Vous avez aussi la possibilité d'apporter vos commentaires et une note sur la qualité de l'échange : ils seront consultables
+		par tous les adhérents et visiteurs du site.
+	</p>
+	
+	<p>
+		Nous vous souhaitons d'excellents échanges collaboratifs <br />
+	</p>
+
+	<p>La SEL Team</p>
+
+
+</body>
+
+</html>

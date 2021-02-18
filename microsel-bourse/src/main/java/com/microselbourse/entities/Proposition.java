@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
-@Table(name="proposition")
+@Table(name="propositions")
 public class Proposition implements Serializable {
 	
 	@Id
@@ -35,7 +35,7 @@ public class Proposition implements Serializable {
 	 * Cet id est vérifié avec le UserBean en consommant le microservice adhérent****************************************************
 	 */
 	
-	@Column(name = "emetteurId", length = 10, nullable=false)
+	@Column(name = "emetteur_id", length = 5, nullable=false)
 	private Long emetteurId; 
 	
 	/*
@@ -43,7 +43,7 @@ public class Proposition implements Serializable {
 	 * L'enumTradeType gère 2 positions pour la proposition : OFFRE ou DEMANDE ******************************************************
 	 */
 	
-	@Column(name="type")
+	@Column(name="trade_type")
 	private EnumTradeType enumTradeType; 
 	
 	/*
@@ -66,7 +66,7 @@ public class Proposition implements Serializable {
 	@Column(name = "ville", length = 50, nullable=false)
 	private String ville; 
 	
-	@Column(name = "codePostal", length = 6, nullable=false)
+	@Column(name = "code_postal", length = 6, nullable=false)
 	private Integer codePostal;
 	
 	@Column(name = "valeur", length = 3, nullable=false)
@@ -77,11 +77,14 @@ public class Proposition implements Serializable {
 	 * monnaie;
 	 */
 	
-	@Column(name = "dateFin", length = 25, nullable=false)
+	@Column(name = "date_fin", length = 25, nullable=false)
 	private LocalDate dateFin; 
 	
-	@Column(name = "dateEcheance", length = 25, nullable=false)
+	@Column(name = "date_echeance", length = 25, nullable=false)
 	private LocalDate dateEcheance; 
+	
+	@Column(name = "statut", length = 25, nullable=false)
+	private EnumStatutProposition statut;; 
 	
 	@ManyToOne 
 	@JoinColumn(name="categorie_id")
@@ -91,7 +94,7 @@ public class Proposition implements Serializable {
 	 * Le système renseigne la date de publication de la proposition ***************************************************************
 	 */
 	
-	@Column(name = "dateDebut", length = 25, nullable=false)
+	@Column(name = "date_debut", length = 25, nullable=false)
 	private LocalDate dateDebut; 
 	
 	
@@ -130,11 +133,34 @@ public class Proposition implements Serializable {
 		this.categorie = categorie;
 		this.dateDebut = dateDebut;
 	}
+	
+	
 
 
 
 
 
+
+
+	public Proposition(Long id, Long emetteurId, EnumTradeType enumTradeType, String titre, String description,
+			String image, String ville, Integer codePostal, Integer valeur, LocalDate dateFin, LocalDate dateEcheance,
+			EnumStatutProposition statut, Categorie categorie, LocalDate dateDebut) {
+		super();
+		this.id = id;
+		this.emetteurId = emetteurId;
+		this.enumTradeType = enumTradeType;
+		this.titre = titre;
+		this.description = description;
+		this.image = image;
+		this.ville = ville;
+		this.codePostal = codePostal;
+		this.valeur = valeur;
+		this.dateFin = dateFin;
+		this.dateEcheance = dateEcheance;
+		this.statut = statut;
+		this.categorie = categorie;
+		this.dateDebut = dateDebut;
+	}
 
 
 	public Proposition(Long id, Long emetteurId, EnumTradeType enumTradeType, String titre, String description,
@@ -280,6 +306,16 @@ public class Proposition implements Serializable {
 
 	public void setDateDebut(LocalDate dateDebut) {
 		this.dateDebut = dateDebut;
+	}
+	
+	
+	public EnumStatutProposition getStatut() {
+		return statut;
+	}
+
+
+	public void setStatut(EnumStatutProposition statut) {
+		this.statut = statut;
 	}
 
 
