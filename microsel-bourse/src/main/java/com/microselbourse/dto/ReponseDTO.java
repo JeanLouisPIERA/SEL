@@ -2,11 +2,21 @@ package com.microselbourse.dto;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.microselbourse.entities.EnumTradeType;
+
+import io.swagger.annotations.ApiModelProperty;
 
 public class ReponseDTO {
 	
+	
+	@ApiModelProperty(notes= "indique l'identifiant de l'adhérent récepteur - saisie obligatoire")
+	@NotNull(message="Merci d'indiquer l'identifiant de l'adhérent qui répond à l'OFFRE ou à la DEMANDE d'origine")
 	private Long recepteurId; 
+
 	private String titre; 
 	private String description; 
 	private String image; 

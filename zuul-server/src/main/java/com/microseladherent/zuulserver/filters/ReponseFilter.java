@@ -10,37 +10,28 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 
-@Component
-public class ReponseFilter extends ZuulFilter {
+/*@Component*/
+public class ReponseFilter /* extends ZuulFilter */{
 
-    Logger log = LoggerFactory.getLogger(this.getClass());
-
-    @Override
-    public String filterType() {
-        return "post";
-    }
-
-    @Override
-    public int filterOrder() {
-        return 1;
-    }
-
-    @Override	
-	public boolean shouldFilter() {
-		return false;
-	}
-    
-    @Override
-	public Object run() throws ZuulException {
-		HttpServletResponse response = RequestContext.getCurrentContext().getResponse();
-				  
-				 response.setStatus(400);
-				  
-				 log.info(" CODE HTTP {} ", response.getStatus());
-				  
-				  
-				 return null;
-	}
+	/*
+	 * Logger log = LoggerFactory.getLogger(this.getClass());
+	 * 
+	 * @Override public String filterType() { return "post"; }
+	 * 
+	 * @Override public int filterOrder() { return 1; }
+	 * 
+	 * @Override public boolean shouldFilter() { return false; }
+	 * 
+	 * @Override public Object run() throws ZuulException { HttpServletResponse
+	 * response = RequestContext.getCurrentContext().getResponse();
+	 * 
+	 * response.setStatus(400);
+	 * 
+	 * log.info(" CODE HTTP {} ", response.getStatus());
+	 * 
+	 * 
+	 * return null; }
+	 */
 
 	
 }

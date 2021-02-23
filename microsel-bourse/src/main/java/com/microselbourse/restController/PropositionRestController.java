@@ -68,7 +68,7 @@ public class PropositionRestController {
 		  @GetMapping(value="/propositions", produces="application/json") 
 		  public ResponseEntity<Page<Proposition>> searchAllPropositionsByCriteria(
 				  @PathParam("propositionCriteria") PropositionCriteria propositionCriteria, @RequestParam(name = "page", defaultValue= "0") int page, @RequestParam(name="size", defaultValue= "6") int size) { 
-	System.out.println("criteria" + propositionCriteria.getCodePostal());
+	System.out.println("criteria" + propositionCriteria);
 		  	  Page<Proposition> propositions = propositionService.searchAllPropositionsByCriteria(propositionCriteria, PageRequest.of(page, size)); 
 	//System.out.println("test"+ propositions.getContent().get(1).getTitre());	
 		  	  List<Proposition> propositionsList = propositions.getContent();

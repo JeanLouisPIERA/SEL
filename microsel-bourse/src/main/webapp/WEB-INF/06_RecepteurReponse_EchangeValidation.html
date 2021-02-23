@@ -1,0 +1,43 @@
+<!-- DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml"-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Mail d'information d'envoi de la réponse</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="http://fonts.googleapis.com/css?family=Roboto"
+	rel="stylesheet" type="text/css" />
+<!-- use the font -->
+<style>
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: 20px;
+}
+</style>
+</head>
+
+<body>
+	<p>
+		Objet: validation de l'échange Numero <span th:text="${echange_id}"></span> 
+	</p>
+
+	<p th:text="${'Bonjour ' + destinataire_username}"></p>
+
+	<p>
+		Nous sommes heureux de vous confirmer que l'échange sous rubirque publié sous le titre "<span th:text="${titre}"></span>" 
+		a été validé par votre contrepartie l'adhérent <span th:text="${recepteur_username}"></span>
+
+	</p>
+	
+	<p>
+		Nous vous souhaitons d'excellents échanges collaboratifs <br />
+	</p>
+
+	<p>La SEL Team</p>
+
+
+</body>
+
+
+</html>

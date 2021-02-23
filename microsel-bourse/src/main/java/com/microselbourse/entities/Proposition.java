@@ -3,6 +3,7 @@ package com.microselbourse.entities;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -107,7 +108,7 @@ public class Proposition implements Serializable {
 	
 	@JsonIgnore
 	@OneToMany(mappedBy="proposition", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
-	private Collection<Reponse> reponses;
+	private List<Reponse> reponses;
 
 
 	public Proposition() {
@@ -163,25 +164,7 @@ public class Proposition implements Serializable {
 	}
 
 
-	public Proposition(Long id, Long emetteurId, EnumTradeType enumTradeType, String titre, String description,
-			String image, String ville, Integer codePostal, Integer valeur, LocalDate dateFin, LocalDate dateEcheance,
-			Categorie categorie, LocalDate dateDebut, Collection<Reponse> reponses) {
-		super();
-		this.id = id;
-		this.emetteurId = emetteurId;
-		this.enumTradeType = enumTradeType;
-		this.titre = titre;
-		this.description = description;
-		this.image = image;
-		this.ville = ville;
-		this.codePostal = codePostal;
-		this.valeur = valeur;
-		this.dateFin = dateFin;
-		this.dateEcheance = dateEcheance;
-		this.categorie = categorie;
-		this.dateDebut = dateDebut;
-		this.reponses = reponses;
-	}
+	
 	
 	public Long getId() {
 		return id;
@@ -319,22 +302,17 @@ public class Proposition implements Serializable {
 	}
 
 
-	public Collection<Reponse> getReponses() {
+	public List<Reponse> getReponses() {
 		return reponses;
 	}
 
 
-	public void setReponses(Collection<Reponse> reponses) {
+	public void setReponses(List<Reponse> reponses) {
 		this.reponses = reponses;
 	}
 
-	@Override
-	public String toString() {
-		return "Proposition [id=" + id + ", emetteurId=" + emetteurId + ", enumTradeType=" + enumTradeType + ", titre="
-				+ titre + ", description=" + description + ", image=" + image + ", ville=" + ville + ", codePostal="
-				+ codePostal + ", valeur=" + valeur + ", dateFin=" + dateFin + ", dateEcheance=" + dateEcheance
-				+ ", categorie=" + categorie + ", dateDebut=" + dateDebut + ", reponses=" + reponses + "]";
-	}
+
+	
 
 
 

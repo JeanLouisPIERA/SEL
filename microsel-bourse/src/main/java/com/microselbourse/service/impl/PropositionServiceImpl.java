@@ -16,18 +16,21 @@ import com.microselbourse.beans.UserBean;
 import com.microselbourse.criteria.PropositionCriteria;
 import com.microselbourse.dao.ICategorieRepository;
 import com.microselbourse.dao.IPropositionRepository;
+import com.microselbourse.dao.IWalletRepository;
 import com.microselbourse.dao.specs.PropositionSpecification;
 import com.microselbourse.dto.PropositionDTO;
 import com.microselbourse.entities.Categorie;
 import com.microselbourse.entities.EnumStatutProposition;
 import com.microselbourse.entities.EnumTradeType;
 import com.microselbourse.entities.Proposition;
+import com.microselbourse.entities.Wallet;
 import com.microselbourse.exceptions.DeniedAccessException;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.mapper.IPropositionMapper;
 import com.microselbourse.proxies.IMicroselAdherentsProxy;
 import com.microselbourse.service.IPropositionService;
+import com.microselbourse.service.IWalletService;
 
 @Service
 @Transactional
@@ -41,6 +44,10 @@ public class PropositionServiceImpl implements IPropositionService {
 	private IPropositionMapper propositionMapper;
 	@Autowired
 	private IMicroselAdherentsProxy microselAdherentsProxy;
+	@Autowired
+	private IWalletRepository walletRepository;
+	@Autowired
+	private IWalletService walletService;
 	
 
 	@Override
@@ -75,6 +82,12 @@ public class PropositionServiceImpl implements IPropositionService {
 	    propositionToCreate.setEmetteurId(emetteurProposition.getId());
 	    propositionToCreate.setDateDebut(LocalDate.now());
 	    propositionToCreate.setStatut(EnumStatutProposition.ENCOURS);
+	    
+	    Optional<Wallet> walletEmetteur = walletRepository.readByTitulaireId(emetteurProposition.getId()); 
+	    if(walletEmetteur.isEmpty()) {
+	    	Wallet emetteurWalletCreated = walletService.createWallet(emetteurProposition.getId());
+	    	return propositionRepository.save(propositionToCreate);
+	    }
 	    
 	    return propositionRepository.save(propositionToCreate);
 		

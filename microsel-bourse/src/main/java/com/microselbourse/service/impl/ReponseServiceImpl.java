@@ -2,6 +2,7 @@ package com.microselbourse.service.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import javax.mail.MessagingException;
@@ -9,6 +10,7 @@ import javax.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.microselbourse.beans.UserBean;
@@ -17,6 +19,9 @@ import com.microselbourse.dao.ICategorieRepository;
 import com.microselbourse.dao.IEchangeRepository;
 import com.microselbourse.dao.IPropositionRepository;
 import com.microselbourse.dao.IReponseRepository;
+import com.microselbourse.dao.IWalletRepository;
+import com.microselbourse.dao.specs.PropositionSpecification;
+import com.microselbourse.dao.specs.ReponseSpecification;
 import com.microselbourse.dto.ReponseDTO;
 import com.microselbourse.entities.Categorie;
 import com.microselbourse.entities.Echange;
@@ -25,6 +30,7 @@ import com.microselbourse.entities.EnumStatutProposition;
 import com.microselbourse.entities.EnumTradeType;
 import com.microselbourse.entities.Proposition;
 import com.microselbourse.entities.Reponse;
+import com.microselbourse.entities.Wallet;
 import com.microselbourse.exceptions.DeniedAccessException;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
@@ -34,6 +40,7 @@ import com.microselbourse.proxies.IMicroselAdherentsProxy;
 import com.microselbourse.service.IEchangeService;
 import com.microselbourse.service.IMailSenderService;
 import com.microselbourse.service.IReponseService;
+import com.microselbourse.service.IWalletService;
 
 @Service
 public class ReponseServiceImpl implements IReponseService{
@@ -54,16 +61,16 @@ public class ReponseServiceImpl implements IReponseService{
 	private IMicroselAdherentsProxy microselAdherentsProxy;
 	
 	@Autowired
-	private IEchangeService echangeService; 
-	
-	@Autowired
-	private IEchangeRepository echangeRepository;
-	
-	@Autowired
 	private IMailSenderService mailSender;
+	
+	@Autowired
+	private IWalletRepository walletRepository;
+	
+	@Autowired
+	private IWalletService walletService;
 
 	@Override
-	public Reponse createReponse(Long propositionId, ReponseDTO reponseDTO) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException {
+	public Reponse createReponse(Long propositionId, ReponseDTO reponseDTO) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException, EntityAlreadyExistsException {
 		
 		UserBean recepteurProposition = microselAdherentsProxy.consulterCompteAdherent(reponseDTO.getRecepteurId());
 		if(recepteurProposition.getId()!= reponseDTO.getRecepteurId())
@@ -94,11 +101,23 @@ public class ReponseServiceImpl implements IReponseService{
 		
 		Reponse reponseCreated = reponseRepository.save(reponseToCreate);
 		
+		List<Reponse> reponses = propositionToRespond.get().getReponses();
+		reponses.add(reponseCreated);
+		propositionToRespond.get().setReponses(reponses);
+		propositionRepository.save(propositionToRespond.get());
+		
 		UserBean emetteurProposition = microselAdherentsProxy.consulterCompteAdherent(reponseDTO.getRecepteurId());
 		
 		mailSender.sendMailEchangeCreation(reponseToCreate, recepteurProposition, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
 		mailSender.sendMailEchangeCreation(reponseToCreate, emetteurProposition, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
 
+		Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId(recepteurProposition.getId()); 
+	    if(walletRecepteur.isEmpty()) {
+	    	Wallet recepteurWalletCreated = walletService.createWallet(recepteurProposition.getId());
+	    	walletRepository.save(recepteurWalletCreated);
+	    	return reponseCreated;
+	    }
+		
 	    return reponseCreated;
 		
 	}
@@ -106,14 +125,22 @@ public class ReponseServiceImpl implements IReponseService{
 	
 	@Override
 	public Page<Reponse> searchAllReponsesByCriteria(ReponseCriteria reponseCriteria, Pageable pageable) {
-		// FIXME Auto-generated method stub
 		return null;
+		/*
+		 * Specification<Reponse> reponseSpecification = new
+		 * ReponseSpecification(reponseCriteria); Page<Reponse> reponses =
+		 * propositionRepository.findAll(reponseSpecification, pageable); return
+		 * reponses; }
+		 */
 	}
 
 	@Override
-	public Reponse readReponse(Long id) {
-		// FIXME Auto-generated method stub
-		return null;
+	public Reponse readReponse(Long id) throws EntityNotFoundException {
+		Optional<Reponse> reponseToRead = reponseRepository.findById(id); 
+		if(!reponseToRead.isPresent())
+			throw new EntityNotFoundException("L'offre ou la demande que vous voulez consulter n'existe pas");
+		
+		return reponseToRead.get();
 	}
 	
 	

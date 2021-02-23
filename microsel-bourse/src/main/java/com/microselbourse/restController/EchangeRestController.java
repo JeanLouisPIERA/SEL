@@ -100,11 +100,11 @@ public class EchangeRestController {
 		  "Les informations fournies ne sont pas correctes"),
 		  @ApiResponse(code = 413, message = 
 		  "L'échange que vous voulez valider n'existe pas"), })
-	@PutMapping("echanges/valider/{id})")
+	@PutMapping("echanges/valider/{id}")
 	public ResponseEntity<Echange> validerEchange (
 			@PathVariable @Valid Long id,
 			@RequestParam(name="validateurId")Long validateurId,
-			@RequestParam(name="decision") Boolean decision) throws UnsupportedEncodingException, EntityNotFoundException, DeniedAccessException, MessagingException {
+			@RequestParam(name="decision") Boolean decision) throws UnsupportedEncodingException, EntityNotFoundException, DeniedAccessException, MessagingException, EntityAlreadyExistsException {
 		return new ResponseEntity<Echange> (echangeService.validerEchange(id, validateurId, decision), HttpStatus.OK);
 	}
 	

@@ -27,8 +27,13 @@ import com.microselbourse.dto.ReponseDTO;
 import com.microselbourse.entities.Proposition;
 import com.microselbourse.entities.Reponse;
 import com.microselbourse.exceptions.DeniedAccessException;
+import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.service.IReponseService;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 
 @RestController
@@ -42,15 +47,30 @@ public class ReponseRestController {
 	
 	@PostMapping("/reponses/{propositionId}")
 	  public ResponseEntity<Reponse> createReponse(
-			  @PathVariable @Valid Long propositionId, @Valid @RequestBody ReponseDTO reponseDTO) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException  {
+			  @PathVariable @Valid Long propositionId, @Valid @RequestBody ReponseDTO reponseDTO) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException, EntityAlreadyExistsException  {
 	    return new ResponseEntity<Reponse>(reponseService.createReponse(propositionId, reponseDTO), HttpStatus.OK);
 	  }
 	
 	
 	 @GetMapping(value="/reponses", produces="application/json") 
 	  public ResponseEntity<Page<Reponse>> searchAllPropositionsByCriteria(
-			  @PathParam("reponseCriteria") ReponseCriteria reponseCriteria, @RequestParam Pageable pageable) { 
+			  @PathParam("reponseCriteria") ReponseCriteria reponseCriteria, @RequestParam(name = "page", defaultValue= "0") int page, @RequestParam(name="size", defaultValue= "6") int size) { 
 		  Page<Reponse> reponses = reponseService.searchAllReponsesByCriteria(reponseCriteria, PageRequest.of(0, 6)); 
 		  	return new ResponseEntity<Page<Reponse>>(reponses, HttpStatus.OK); }  
+	 
+	 
+	 @ApiOperation(value = "Consultation d'une reponse par un adhérent", response = Proposition.class)  
+	  @ApiResponses(value = {
+		  @ApiResponse(code = 201, message =
+		  "La reponse recherchée a été trouvée"),
+		  @ApiResponse(code = 400, message =
+		  "Les informations fournies ne sont pas correctes"),
+		  @ApiResponse(code = 413, message = 
+		  "L'offre ou la demande que vous voulez consulter n'existe pas"), })
+	 
+	 @GetMapping("/reponses/{id}")
+	 public ResponseEntity<Reponse> readReponse(@PathVariable @Valid Long id) throws EntityNotFoundException {
+		return new ResponseEntity<Reponse>(reponseService.readReponse(id), HttpStatus.OK);  
+	 }
 
 }

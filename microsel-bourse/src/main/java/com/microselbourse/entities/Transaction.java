@@ -2,7 +2,9 @@ package com.microselbourse.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -66,8 +68,51 @@ public class Transaction implements Serializable {
 	@ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
         name = "transactions_wallets", 
-        joinColumns = { @JoinColumn(name = "wallet_id") }, 
-        inverseJoinColumns = { @JoinColumn(name = "transaction_id") }
+        joinColumns = { @JoinColumn(name = "transaction_id") }, 
+        inverseJoinColumns = { @JoinColumn(name = "wallet_id") }
     )
-    private Collection<Wallet> wallets;
+    private List<Wallet> wallets = new ArrayList<Wallet>();
+
+	public Transaction() {
+		super();
+		
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Integer getMontant() {
+		return montant;
+	}
+
+	public void setMontant(Integer montant) {
+		this.montant = montant;
+	}
+
+	public LocalDate getDateTransaction() {
+		return dateTransaction;
+	}
+
+	public void setDateTransaction(LocalDate dateTransaction) {
+		this.dateTransaction = dateTransaction;
+	}
+
+	public List<Wallet> getWallets() {
+		return wallets;
+	}
+
+	public void setWallets(List<Wallet> wallets) {
+		this.wallets = wallets;
+	}
+
+	
+	
+	
+	
+	
 }

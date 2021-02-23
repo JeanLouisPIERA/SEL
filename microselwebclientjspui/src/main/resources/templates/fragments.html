@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>Fragments</title>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/main.css}" rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="site-header sticky-top py-1" th:fragment="navigation">
+    <div class="container d-flex flex-column flex-md-row">
+		<a class="py-2 d-none d-md-inline-block ml-5" th:href="@{/}" href="#"></a>
+		<a class="py-2 d-none d-md-inline-block ml-5" th:href="@{/accueil}" href="#">Accueil</a>
+		<a class="py-2 d-none d-md-inline-block ml-5" th:href="@{/users/accueilAdherent}" href="#">Espace Personnel</a>
+		<a class="py-2 d-none d-md-inline-block ml-5" th:href="@{/accueilBourse}" href="#">Bourse d'Echanges</a>
+        
+    </div>
+</nav>
+
+<nav class="site-header sticky-top py-1" th:fragment="navigationAdherent">
+    <div class="container d-flex flex-column flex-md-row">
+        <a class="py-2 d-none d-md-inline-block ml-5" th:href="@{/}" href="#"></a>
+        <a class="py-2 d-none d-md-inline-block ml-5" th:href="@{/accueil}" href="#">Accueil</a>
+		<a class="py-2 d-none d-md-inline-block ml-5" th:href="@{/users/accueilAdherent}" href="#"> Espace Personnel</a>
+		<a class="py-2 d-none d-md-inline-block ml-5" th:href="@{/users/accounts/1}" href="#">Mon profil</a>
+		<a class="py-2 d-none d-md-inline-block ml-5" th:href="@{/accueilBourse}" href="#">Bourse d'Echanges</a>
+        <a class="py-2 d-none d-md-inline-block ml-5" th:href="@{/bureau/adherents}" href="#">Liste des adherents</a>
+        <a class="py-2 d-none d-md-inline-block ml-5" th:href="@{/bureau/pagesAdherents}" href="#">Pages des adherents</a>
+    </div>
+</nav>
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+    <div class="col-md-5 p-lg-5 mx-auto my-5">
+        <h1 class="display-4 font-weight-normal" th:utext="#{index.heading}">Heading</h1>
+        <span th:text="${#messages.msg('index.heading')}"></span>
+        <p class="lead font-weight-normal" th:text="'Hello World!'"></p>
+    </div>
+</div>
+
+
+<footer class="container py-5 mb-0" th:fragment="footer">
+    <div class="row">
+        <div class="col-12 col-md">
+            <medium class="d-block mb-3 text-muted">&copy; 2021 Projet 12 OpenClassrooms</medium>
+        </div>
+        <div class="col-6 col-md">
+            <h5>Pages</h5>
+        </div>
+    </div>
+</footer>
+<script th:src="@{/js/vendor/jquery.slim.min.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

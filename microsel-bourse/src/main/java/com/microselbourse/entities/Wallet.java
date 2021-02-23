@@ -30,15 +30,10 @@ public class Wallet implements Serializable {
 	
 	/*
 	 * Un wallet est rattaché à un seul adhérent et chaque adhérent n'a qu'un portefeuille
-	 * Son accès au portefeuille est sécurisé par son adresse mail identique à celui de son compte adhérent
-	 * et un mot de passe qui peut être différent de celui de son compte adhérent
-	 * Il existe un seul wallet COUNTERPART ouvert pour le compte du SEL pour enregistrer la contrepartie d'échanges en anomalie
+	 * Il existe un seul wallet COUNTERPART ouvert pour le compte du SEL pour enregistrer la contrepartie d'échanges en conflit
 	 */
-	@Column(name="titulaire_email", length = 50)
-	private String titulaire_email;
-	
-	@Column(name="titulaire_password", length = 30)
-	private String titulaire_password;
+	@Column(name="titulaire_id", length = 5, nullable = false, unique = true)
+	private Long titulaireId;
 	
 	/*
 	 * Un wallet se définit comme un solde modifié par des opérations au débit ou au crédit
@@ -53,13 +48,47 @@ public class Wallet implements Serializable {
 	 */
 	
 	@JsonIgnore 
-	@ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(
-        name = "transactions_wallets", 
-        joinColumns = { @JoinColumn(name = "wallet_id") }, 
-        inverseJoinColumns = { @JoinColumn(name = "transaction_id") }
-    )
-    private Collection<Transaction> transactions;
+	@ManyToMany(mappedBy = "wallets")
+    private List<Transaction> transactions = new ArrayList<Transaction>();
+
+	public Wallet() {
+		super();
+		
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getTitulaireId() {
+		return titulaireId;
+	}
+
+	public void setTitulaireId(Long titulaireId) {
+		this.titulaireId = titulaireId;
+	}
+
+	public Integer getSoldeWallet() {
+		return soldeWallet;
+	}
+
+	public void setSoldeWallet(Integer soldeWallet) {
+		this.soldeWallet = soldeWallet;
+	}
+
+	public List<Transaction> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(List<Transaction> transactions) {
+		this.transactions = transactions;
+	}
+
+	
 	
 	
 	

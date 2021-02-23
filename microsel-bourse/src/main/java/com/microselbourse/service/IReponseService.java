@@ -12,15 +12,16 @@ import com.microselbourse.criteria.ReponseCriteria;
 import com.microselbourse.dto.ReponseDTO;
 import com.microselbourse.entities.Reponse;
 import com.microselbourse.exceptions.DeniedAccessException;
+import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
 
 public interface IReponseService {
 	
-	Reponse createReponse(Long propositionId, ReponseDTO reponseDTO) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException;
+	Reponse createReponse(Long propositionId, ReponseDTO reponseDTO) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException, EntityAlreadyExistsException;
 	
 	Page<Reponse> searchAllReponsesByCriteria(ReponseCriteria reponseCriteria, Pageable pageable);
 	
-	Reponse readReponse(Long id);
+	Reponse readReponse(Long id) throws EntityNotFoundException;
 
 	
 

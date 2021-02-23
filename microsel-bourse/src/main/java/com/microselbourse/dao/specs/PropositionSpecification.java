@@ -29,8 +29,8 @@ private PropositionCriteria propositionCriteria;
 		
         Predicate predicates = builder.conjunction();
 
-	        if (propositionCriteria.getCodeEnumTradeType()!= null) {
-	        	predicates.getExpressions().add(builder.equal(root.get("enumTradeType"), EnumTradeType.fromValueCode(propositionCriteria.getCodeEnumTradeType())));			
+	        if (propositionCriteria.getCodeEnumTradeType()!= null || propositionCriteria.getCodeEnumTradeType()!= "INCONNU") {
+	        	predicates.getExpressions().add(builder.equal(root.get("enumTradeType"), EnumTradeType.fromValueCode(propositionCriteria.getCodeEnumTradeType())));	
 	        }
 	        
 	        if (propositionCriteria.getStatut()!= null) {

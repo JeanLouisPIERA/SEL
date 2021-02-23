@@ -21,12 +21,14 @@ import com.microselbourse.entities.Proposition;
 import com.microselbourse.entities.Reponse;
 import com.microselbourse.entities.Transaction;
 import com.microselbourse.exceptions.DeniedAccessException;
+import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.proxies.IMicroselAdherentsProxy;
 import com.microselbourse.service.IEchangeService;
 import com.microselbourse.service.IMailSenderService;
 import com.microselbourse.service.IPropositionService;
 import com.microselbourse.service.IReponseService;
+import com.microselbourse.service.ITransactionService;
 
 @Service
 public class EchangeServiceImpl implements IEchangeService{
@@ -43,6 +45,9 @@ public class EchangeServiceImpl implements IEchangeService{
 	@Autowired
 	private IMailSenderService mailSender;
 	
+	@Autowired
+	private ITransactionService transactionService;
+	
 
 	@Override
 	public Echange readEchange(Long id) throws EntityNotFoundException {
@@ -53,7 +58,7 @@ public class EchangeServiceImpl implements IEchangeService{
 						&& echangeToRead.get().getDateEcheance().isBefore(LocalDate.now()))
 					{
 						echangeToRead.get().setStatutEchange(EnumStatutEchange.ECHU);
-						return echangeToRead.get();
+						return echangeRepository.save(echangeToRead.get());
 					}
 				return echangeToRead.get();}
 		
@@ -79,6 +84,9 @@ public class EchangeServiceImpl implements IEchangeService{
 		echangeToCreate.setRecepteurUsername(recepteur.getUsername());
 		echangeToCreate.setRecepteurMail(recepteur.getEmail());
 		
+		echangeToCreate.setAvisEmetteur(EnumEchangeAvis.SANS);
+		echangeToCreate.setAvisRecepteur(EnumEchangeAvis.SANS);
+		
 		return echangeRepository.save(echangeToCreate);
 	}
 
@@ -96,27 +104,26 @@ public class EchangeServiceImpl implements IEchangeService{
 		
 		UserBean recepteur = adherentsProxy.consulterCompteAdherent(echangeToConfirm.getRecepteurId());
 		
-		
 		if (decision == true) {
 			echangeToConfirm.setStatutEchange(EnumStatutEchange.CONFIRME);
+			echangeToConfirm.setDateConfirmation(LocalDate.now());
 			mailSender.sendMailEchangeConfirmation(echangeToConfirm, recepteur, "Confirmation de l'echange", "03_RecepteurReponse_EchangeConfirmation");
 			return echangeRepository.save(echangeToConfirm);
 		}
-		
 		echangeToConfirm.setStatutEchange(EnumStatutEchange.ANNULE);
+		echangeToConfirm.setDateAnnulation(LocalDate.now());
 		mailSender.sendMailEchangeConfirmation(echangeToConfirm, recepteur, "Annulation de l'echange", "04_RecepteurReponse_EchangeAnnulation");
-		return echangeRepository.save(echangeToConfirm);
-			
+		return echangeRepository.save(echangeToConfirm);	
 	}
 
 
 
 	@Override
-	public Echange validerEchange(@Valid Long id, Long validateurId, Boolean decision) throws UnsupportedEncodingException, MessagingException, EntityNotFoundException, DeniedAccessException {
+	public Echange validerEchange(@Valid Long id, Long validateurId, Boolean decision) throws UnsupportedEncodingException, MessagingException, EntityNotFoundException, DeniedAccessException, EntityAlreadyExistsException {
 		
 		Echange echangeToValidate = this.readEchange(id);
 		
-		if(validateurId!=echangeToValidate.getEmetteurId() || validateurId!=echangeToValidate.getRecepteurId())
+		if(validateurId!=echangeToValidate.getEmetteurId() && validateurId!=echangeToValidate.getRecepteurId())
 			throw new DeniedAccessException("Vous ne pouvez valider qu'un échange auquel vous êtes participant");
 		if(!echangeToValidate.getStatutEchange().equals(EnumStatutEchange.CONFIRME))
 			throw new DeniedAccessException("Le statut de cet échange ne vous permet pas de donner votre validation");
@@ -125,82 +132,154 @@ public class EchangeServiceImpl implements IEchangeService{
 		UserBean emetteur = adherentsProxy.consulterCompteAdherent(echangeToValidate.getEmetteurId());
 		
 		//SCENARII AVIS DE VALIDATION PAR L'EMETTEUR OU LE RECEPTEUR --------< BOUCLE DECISION = TRUE
-		if (decision == true) {
+			if (decision == true) {
+				
 			//HYPOTHESE 1 : AVIS VALIDATION EMETTEUR
-			if(validateurId==echangeToValidate.getEmetteurId()) {
-				echangeToValidate.setAvisEmetteur(EnumEchangeAvis.VALIDE);
-				mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Validation de l'echange par l'emetteur", "05_EmetteurProposition_EchangeValidation");
-				//On vérifie si le récepteur a déjà donné un avis et si OUI lequel pour faire évoluer le statut de l'échange
+				if(validateurId==echangeToValidate.getEmetteurId()) {
+					echangeToValidate.setAvisEmetteur(EnumEchangeAvis.VALIDE);
+					mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Validation de l'echange par l'emetteur", "05_EmetteurProposition_EchangeValidation");
+					//On vérifie si le récepteur a déjà donné un avis et si OUI lequel pour faire évoluer le statut de l'échange
+					
 					//HYPOTHESE 1A : VALIDATION EMETTEUR / RECEPTEUR DEJA VALIDE
+						if(echangeToValidate.getAvisRecepteur().equals(EnumEchangeAvis.VALIDE)) {
+							echangeToValidate.setStatutEchange(EnumStatutEchange.CLOTURE);
+							echangeToValidate.setDateFin(LocalDate.now());
+							mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Cloture de l'echange", "05A_EmetteurProposition_EchangeValidation_Cloture");
+							mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Cloture de l'echange", "05A_RecepteurReponse_EchangeValidation_Cloture");
+							Transaction transactionCreated = transactionService.createTransaction(id);
+							echangeToValidate.setTransaction(transactionCreated);
+							return echangeRepository.save(echangeToValidate);
+						}else if (echangeToValidate.getAvisRecepteur().equals(EnumEchangeAvis.REFUSE)){
+					
+					//HYPOTHESE 1B : VALIDATION EMETTEUR / RECEPTEUR DEJA REFUSE
+							echangeToValidate.setStatutEchange(EnumStatutEchange.LITIGE);
+							echangeToValidate.setDateFin(LocalDate.now());
+							mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Echange en litige", "05B_EmetteurProposition_EchangeValidation_Litige");
+							mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Echange en litige", "05B_RecepteurProposition_EchangeValidation_Litige");
+							Transaction transactionCreated = transactionService.createTransaction(id);
+							echangeToValidate.setTransaction(transactionCreated);
+							return echangeRepository.save(echangeToValidate);
+						}else {
+							
+					//HYPOTHESE 1C : VALIDATION EMETTEUR / RECEPTEUR SANS AVIS = le STATUT DE L'ECHANGE reste CONFIRME 
+							mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Echange relance pour avis", "09_Relance_pour_avis");
+							return echangeRepository.save(echangeToValidate);
+						}
+				}else {
+		
+			//HYPOTHESE 2 : ACCORD VALIDATION RECEPTEUR
+				if(validateurId==echangeToValidate.getRecepteurId()) {
+					echangeToValidate.setAvisRecepteur(EnumEchangeAvis.VALIDE);
+					mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Validation de l'echange par le Recepteur", "06_RecepteurReponse_EchangeValidation");
+					//On vérifie si l'émetteur a déjà donné un avis et si OUI lequel pour faire évoluer le statut de l'échange
+						
+					//HYPOTHESE 1A : VALIDATION RECEPTEUR / EMETTEUR DEJA VALIDE
+						if(echangeToValidate.getAvisEmetteur().equals(EnumEchangeAvis.VALIDE)) {
+							echangeToValidate.setStatutEchange(EnumStatutEchange.CLOTURE);
+							echangeToValidate.setDateFin(LocalDate.now());
+							//TO DO envoi d'un mail de clôture de l'échange à l'émetteur et au récepteur
+							//TO DO enregistrement d'une transaction
+							mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Cloture de l'echange", "05A_EmetteurProposition_EchangeValidation_Cloture");
+							mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Cloture de l'echange", "05A_RecepteurReponse_EchangeValidation_Cloture");
+							Transaction transactionCreated = transactionService.createTransaction(id);
+							echangeToValidate.setTransaction(transactionCreated);
+							return echangeRepository.save(echangeToValidate);
+						}else if (echangeToValidate.getAvisEmetteur().equals(EnumEchangeAvis.REFUSE)){
+							
+					//HYPOTHESE 1B : VALIDATION RECEPTEUR / RECEPTEUR DEJA REFUSE
+							echangeToValidate.setStatutEchange(EnumStatutEchange.LITIGE);
+							echangeToValidate.setDateFin(LocalDate.now());
+							//TO DO envoi d'un mail de litige de l'échange à l'émetteur et au récepteur
+							// TO DO gestion de la transaction : pas d'enregistrement pour le récepteur qui a refusé, enregistrement pour
+							// l'eémetteur qui a accepté avec contrepartie sur le compte monétaire COUNTERPART de l'association
+							mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Echange en litige", "05B_EmetteurProposition_EchangeValidation_Litige");
+							mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Echange en litige", "05B_RecepteurProposition_EchangeValidation_Litige");
+							Transaction transactionCreated = transactionService.createTransaction(id);
+							echangeToValidate.setTransaction(transactionCreated);
+							return echangeRepository.save(echangeToValidate);
+						}else {
+							
+					//HYPOTHESE 1C : VALIDATION RECEPTEUR / EMETTEUR SANS AVIS = le STATUT DE L'ECHANGE reste CONFIRME
+							mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Echange relance pour avis", "09_Relance_pour_avis");
+							return echangeRepository.save(echangeToValidate);
+						}
+					}
+				}
+			}	
+			
+	//SCENARII REFUS DE VALIDATION PAR L'EMETTEUR OU LE RECEPTEUR -------> DECISION = FALSE
+		
+		//HYPOTHESE 3 : REFUS VALIDATION EMETTEUR
+			if(validateurId==echangeToValidate.getEmetteurId()) {
+				echangeToValidate.setAvisEmetteur(EnumEchangeAvis.REFUSE);
+				mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Refus de valider l'echange par l'emetteur", "07_EmetteurProposition_EchangeRefus");
+				//On vérifie si le récepteur a déjà donné un avis et si OUI lequel pour faire évoluer le statut de l'échange
+					
+			   //HYPOTHESE 3A : REFUS EMETTEUR / RECEPTEUR DEJA VALIDE
 					if(echangeToValidate.getAvisRecepteur().equals(EnumEchangeAvis.VALIDE)) {
-						echangeToValidate.setStatutEchange(EnumStatutEchange.CLOTURE);
+						echangeToValidate.setStatutEchange(EnumStatutEchange.LITIGE);
+						echangeToValidate.setDateFin(LocalDate.now());
 						//TO DO envoi d'un mail de clôture de l'échange à l'émetteur et au récepteur
 						//TO DO enregistrement d'une transaction
-						mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Cloture de l'echange", "05A_EmetteurProposition_EchangeValidationCloture");
-						mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Cloture de l'echange", "05A_RecepteurReponse_EchangeValidationCloture");
+						mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Cloture de l'echange", "05A_EmetteurProposition_EchangeValidation_Litige");
+						mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Cloture de l'echange", "05A_RecepteurReponse_EchangeValidation_Litige");
+						Transaction transactionCreated = transactionService.createTransaction(id);
+						echangeToValidate.setTransaction(transactionCreated);
 						return echangeRepository.save(echangeToValidate);
 					}else if (echangeToValidate.getAvisRecepteur().equals(EnumEchangeAvis.REFUSE)){
-						//HYPOTHESE 1B : VALIDATION EMETTEUR / RECEPTEUR DEJA REFUSE
+						
+			  //HYPOTHESE 3B : REFUS EMETTEUR / RECEPTEUR DEJA REFUSE
 						echangeToValidate.setStatutEchange(EnumStatutEchange.LITIGE);
+						echangeToValidate.setDateFin(LocalDate.now());
 						//TO DO envoi d'un mail de litige de l'échange à l'émetteur et au récepteur
 						// TO DO gestion de la transaction : pas d'enregistrement pour le récepteur qui a refusé, enregistrement pour
 						// l'eémetteur qui a accepté avec contrepartie sur le compte monétaire COUNTERPART de l'association
-						mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Echange en litige", "05B_EmetteurProposition_EchangeValidationCloture");
-						mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Echange en litige", "05B_RecepteurProposition_EchangeValidationCloture");
+						mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Echange en litige", "05B_EmetteurProposition_EchangeValidation_Litige");
+						mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Echange en litige", "05B_RecepteurProposition_EchangeValidation_Litige");
+						Transaction transactionCreated = transactionService.createTransaction(id);
+						echangeToValidate.setTransaction(transactionCreated);
 						return echangeRepository.save(echangeToValidate);
 					}else {
-						//HYPOTHESE 1C : VALIDATION EMETTEUR / RECEPTEUR SANS AVIS = le STATUT DE L'ECHANGE reste CONFIRME
+						
+			  //HYPOTHESE 3C : REFUS EMETTEUR / RECEPTEUR SANS AVIS = le STATUT DE L'ECHANGE reste CONFIRME
+						mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Echange relance pour avis", "09_Relance_pour_avis");
 						return echangeRepository.save(echangeToValidate);
 					}
 			}else {
 	
-			//HYPOTHESE 2 : ACCORD VALIDATION RECEPTEUR
+		//HYPOTHESE 4 : REFUS VALIDATION RECEPTEUR 	
 			if(validateurId==echangeToValidate.getRecepteurId()) {
-				echangeToValidate.setAvisRecepteur(EnumEchangeAvis.VALIDE);
-				mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Validation de l'echange par le Recepteur", "06_RecepteurReponse_EchangeValidation");
+				echangeToValidate.setAvisRecepteur(EnumEchangeAvis.REFUSE);
+				mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Refus de valider l'echange par le Recepteur", "08_RecepteurReponse_EchangeRefus");
 				//On vérifie si l'émetteur a déjà donné un avis et si OUI lequel pour faire évoluer le statut de l'échange
-					//HYPOTHESE 1A : VALIDATION RECEPTEUR / EMETTEUR DEJA VALIDE
+					
+			//HYPOTHESE 4A : REFUS RECEPTEUR / EMETTEUR DEJA VALIDE
 					if(echangeToValidate.getAvisEmetteur().equals(EnumEchangeAvis.VALIDE)) {
-						echangeToValidate.setStatutEchange(EnumStatutEchange.CLOTURE);
-						//TO DO envoi d'un mail de clôture de l'échange à l'émetteur et au récepteur
-						//TO DO enregistrement d'une transaction
-						mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Cloture de l'echange", "05A_EmetteurProposition_EchangeValidationCloture");
-						mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Cloture de l'echange", "05A_RecepteurReponse_EchangeValidationCloture");
+						echangeToValidate.setStatutEchange(EnumStatutEchange.LITIGE);
+						echangeToValidate.setDateFin(LocalDate.now());
+						mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Cloture de l'echange", "05A_EmetteurProposition_EchangeValidation_Litige");
+						mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Cloture de l'echange", "05A_RecepteurReponse_EchangeValidation_Litige");
+						Transaction transactionCreated = transactionService.createTransaction(id);
+						echangeToValidate.setTransaction(transactionCreated);
 						return echangeRepository.save(echangeToValidate);
 					}else if (echangeToValidate.getAvisEmetteur().equals(EnumEchangeAvis.REFUSE)){
-						//HYPOTHESE 1B : VALIDATION EMETTEUR / RECEPTEUR DEJA REFUSE
+						
+			//HYPOTHESE 4B : REFUS RECEPTEUR / EMETTEUR DEJA REFUSE
 						echangeToValidate.setStatutEchange(EnumStatutEchange.LITIGE);
-						//TO DO envoi d'un mail de litige de l'échange à l'émetteur et au récepteur
-						// TO DO gestion de la transaction : pas d'enregistrement pour le récepteur qui a refusé, enregistrement pour
-						// l'eémetteur qui a accepté avec contrepartie sur le compte monétaire COUNTERPART de l'association
-						mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Echange en litige", "05B_EmetteurProposition_EchangeValidationCloture");
-						mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Echange en litige", "05B_RecepteurProposition_EchangeValidationCloture");
+						echangeToValidate.setDateFin(LocalDate.now());
+						mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Echange en litige", "05B_EmetteurProposition_EchangeValidation_Litige");
+						mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Echange en litige", "05B_RecepteurProposition_EchangeValidation_Litige");
+						Transaction transactionCreated = transactionService.createTransaction(id);
+						echangeToValidate.setTransaction(transactionCreated);
 						return echangeRepository.save(echangeToValidate);
 					}else {
-						//HYPOTHESE 1C : VALIDATION EMETTEUR / RECEPTEUR SANS AVIS = le STATUT DE L'ECHANGE reste CONFIRME
+						
+			//HYPOTHESE 4C : REFUS RECEPTEUR / EMETTEUR SANS AVIS = le STATUT DE L'ECHANGE reste CONFIRME
+						mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Echange relance pour avis", "09_Relance_pour_avis");
 						return echangeRepository.save(echangeToValidate);
 					}
 				}
 			}
-		}	
-		
-		//SCENARII REFUS DE VALIDATION PAR L'EMETTEUR OU LE RECEPTEUR -------> DECISION = FALSE
-		
-			//HYPOTHESE 3 : REFUS VALIDATION EMETTEUR
-			//TO DO A DEVELOPPER COMME L'HYPOTHESE 1
-			if(validateurId==echangeToValidate.getEmetteurId()) {
-				echangeToValidate.setAvisEmetteur(EnumEchangeAvis.REFUSE);
-				mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Refus de valider l'echange par l'emetteur", "07_EmetteurProposition_EchangeRefus");
-				return echangeRepository.save(echangeToValidate);
-			}
-			//HYPOTHESE 3 : REFUS VALIDATION RECEPTEUR 
-			// TO DO A DEVELOPPER COMME L'HYPOTHESE 2
-			if(validateurId==echangeToValidate.getRecepteurId()) {
-			echangeToValidate.setAvisRecepteur(EnumEchangeAvis.REFUSE);
-			mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Refus de valider l'echange par le Recepteur", "08_RecepteurReponse_EchangeRefus");
-			return echangeRepository.save(echangeToValidate);
-			}
-			
 			return echangeRepository.save(echangeToValidate);
 		}
 
