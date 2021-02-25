@@ -1,0 +1,40 @@
+
+
+<div class="navbar navbar-default">
+
+ <nav role="navigation" class="navbar navbar-default">
+	<div class="navbar-collapse">
+		<a class="navbar-brand">Site MicroSel</a>
+  	<div class="container">
+
+	    <div class="navbar-header">
+	    
+		     <ul class="nav navbar-nav nav-item active">
+			      <li >
+			      	<a class="nav-link" href="/propositions"> Accueil <span class="sr-only"></span></a>
+			      </li>      
+		          <li><a href="/propositions">Propositions</a></li>
+		          <li><a href="/propositions">Echanges</a></li>
+		          <li><a href="/propositions">Portefeuilles</a></li>
+		     </ul>
+		    
+		     </div>
+		    
+		     <ul class="nav navbar-nav navbar-right">
+		     
+		     
+		    
+				 
+		     </ul>
+	    </div>
+	</div>
+</nav>
+ 
+</div>
+
+     
+
+
+
+				
+ 

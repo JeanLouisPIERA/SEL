@@ -20,6 +20,7 @@ import com.microselbourse.dao.IWalletRepository;
 import com.microselbourse.dao.specs.PropositionSpecification;
 import com.microselbourse.dto.PropositionDTO;
 import com.microselbourse.entities.Categorie;
+import com.microselbourse.entities.EnumCategorie;
 import com.microselbourse.entities.EnumStatutProposition;
 import com.microselbourse.entities.EnumTradeType;
 import com.microselbourse.entities.Proposition;
@@ -70,7 +71,7 @@ public class PropositionServiceImpl implements IPropositionService {
 					"Vous avez déjà une OFFRE ou une DEMANDE encours de publication avec le même titre"); 
 		
 		
-		  Optional<Categorie> categorieFound = categorieRepository.findById(propositionDTO.getCategorieId());
+		  Optional<Categorie> categorieFound = categorieRepository.findByName(EnumCategorie.fromValueCode(propositionDTO.getCategorieName()));
 		  if(!categorieFound.isPresent()) 
 			  throw new EntityNotFoundException(
 					  "La catégorie dans laquelle vous avez choisi de publier n'existe pas");
@@ -129,7 +130,7 @@ public class PropositionServiceImpl implements IPropositionService {
 			if(propositionToUpdate.get().getStatut().equals(EnumStatutProposition.CLOTUREE))
 				throw new DeniedAccessException("Vous ne pouvez pas modifier une OFFRE ou une DEMANDE déjà clôturée");
 			
-		Optional<Categorie> categorieToUpdate = categorieRepository.findById(propositionDTO.getCategorieId());
+		Optional<Categorie> categorieToUpdate = categorieRepository.findByName(EnumCategorie.fromValueCode(propositionDTO.getCategorieName()));
 		if(!categorieToUpdate.isPresent()) 
 			  throw new EntityNotFoundException(
 					  "Votre modification est impossible : cette catégorie n'existe pas");

@@ -29,11 +29,11 @@ private PropositionCriteria propositionCriteria;
 		
         Predicate predicates = builder.conjunction();
 
-	        if (propositionCriteria.getCodeEnumTradeType()!= null || propositionCriteria.getCodeEnumTradeType()!= "INCONNU") {
+	        if (propositionCriteria.getCodeEnumTradeType()!= null && !propositionCriteria.getCodeEnumTradeType().isEmpty()) {
 	        	predicates.getExpressions().add(builder.equal(root.get("enumTradeType"), EnumTradeType.fromValueCode(propositionCriteria.getCodeEnumTradeType())));	
 	        }
 	        
-	        if (propositionCriteria.getStatut()!= null) {
+	        if (propositionCriteria.getStatut()!= null && !propositionCriteria.getStatut().isEmpty()) {
 	        	predicates.getExpressions().add(builder.equal(root.get("statut"), EnumStatutProposition.fromValueCode(propositionCriteria.getStatut())));			
 	        }
        
@@ -41,8 +41,8 @@ private PropositionCriteria propositionCriteria;
             	predicates.getExpressions().add(builder.equal(root.get("codePostal"), propositionCriteria.getCodePostal()));		
             }
         	
-            if (propositionCriteria.getNomCategorie()!= null) {
-            	predicates.getExpressions().add(builder.equal(root.get("categorie").get("name"),  EnumCategorie.fromValueCode(propositionCriteria.getNomCategorie())));	
+            if (propositionCriteria.getNomCategorie()!= null && !propositionCriteria.getNomCategorie().isEmpty()) {
+            	predicates.getExpressions().add(builder.equal(root.get("categorie").get("name"), EnumCategorie.fromValueCode(propositionCriteria.getNomCategorie())));	
             }
             
             if (propositionCriteria.getTitre()!= null) {

@@ -46,10 +46,11 @@ public class WalletServiceImpl implements IWalletService {
 		if(!walletToCreate.isEmpty())
 			throw new EntityAlreadyExistsException("Il existe déjà un portefeuille pour cet adhérent");
 		
-		walletToCreate.get().setTitulaireId(adherentId);
-		walletToCreate.get().setSoldeWallet(0);
+		Wallet walletCreated = new Wallet();
+		walletCreated.setTitulaireId(adherentId);
+		walletCreated.setSoldeWallet(0);
 	
-		return walletToCreate.get();
+		return walletCreated;
 	}
 	
 	@Override

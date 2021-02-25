@@ -33,6 +33,7 @@ import com.microselbourse.dao.IPropositionRepository;
 import com.microselbourse.dao.specs.PropositionSpecification;
 import com.microselbourse.dto.PropositionDTO;
 import com.microselbourse.entities.Categorie;
+import com.microselbourse.entities.EnumCategorie;
 import com.microselbourse.entities.EnumStatutProposition;
 import com.microselbourse.entities.EnumTradeType;
 import com.microselbourse.entities.Proposition;
@@ -91,8 +92,8 @@ public class PropositionServiceImplTest {
 		 when(propositionRepository.findByEmetteurIdAndTitreAndEnumTradeTypeAndStatutEnCours((long)1,"Correct", EnumTradeType.DEMANDE, EnumStatutProposition.ENCOURS)).thenReturn(Optional.of(proposition));
 		 when(propositionRepository.findByEmetteurIdAndTitreAndEnumTradeTypeAndStatutEnCours((long)1,"Correct", EnumTradeType.OFFRE, EnumStatutProposition.ENCOURS)).thenReturn(Optional.empty());
 		 when(propositionRepository.findByEmetteurIdAndTitreAndEnumTradeTypeAndStatutEnCours((long)1,"Correct", EnumTradeType.DEMANDE, EnumStatutProposition.ENCOURS)).thenReturn(Optional.empty());
-		 when(categorieRepository.findById((long)0)).thenReturn(Optional.empty()); //UPDATE
-		 when(categorieRepository.findById((long)1)).thenReturn(Optional.of(categorie));
+		 when(categorieRepository.findByName(EnumCategorie.INCONNUE.getCode())).thenReturn(Optional.empty()); //UPDATE
+		 when(categorieRepository.findByName((EnumCategorie.BRICOLAGE.getCode()))).thenReturn(Optional.of(categorie));
 		 when(propositionMapper.propositionDTOToProposition(propositionDTO)).thenReturn(proposition);
 		 when(propositionRepository.save(any(Proposition.class))).thenReturn(proposition);
 		 
@@ -156,8 +157,8 @@ public class PropositionServiceImplTest {
 		  propositionDTO.setEmetteurId((long)1);
 		  propositionDTO.setEnumTradeTypeCode("OFFRE");
 		  propositionDTO.setTitre("Correct");
-		  categorie.setId((long)0);
-		  propositionDTO.setCategorieId(categorie.getId());
+		  categorie.setName(EnumCategorie.INCONNUE);
+		  propositionDTO.setCategorieName(categorie.getName().getCode());
 		  
 		  try {
 				propositionTest = propositionService.createProposition(propositionDTO);
@@ -173,8 +174,8 @@ public class PropositionServiceImplTest {
 		  propositionDTO.setEmetteurId((long)1);
 		  propositionDTO.setEnumTradeTypeCode("OFFRE");
 		  propositionDTO.setTitre("Correct");
-		  categorie.setId((long)1);
-		  propositionDTO.setCategorieId(categorie.getId());
+		  categorie.setName(EnumCategorie.BRICOLAGE);
+		  propositionDTO.setCategorieName(categorie.getName().getCode());
 		  
 		  propositionDTO.setEnumTradeTypeCode(EnumTradeType.OFFRE.getCode());
 			  propositionTest = propositionService.createProposition(propositionDTO);
@@ -292,7 +293,7 @@ public class PropositionServiceImplTest {
 		   proposition.setEmetteurId((long)1);
 		   proposition.setDateFin(LocalDate.of(2200, 12, 31));
 		   proposition.setStatut(EnumStatutProposition.ENCOURS);
-		   propositionDTO.setCategorieId((long)0);
+		   propositionDTO.setCategorieName(EnumCategorie.INCONNUE.getCode());
 		   
 		   try {
 				propositionTest = propositionService.updateProposition((long)1, propositionDTO);
@@ -309,7 +310,7 @@ public class PropositionServiceImplTest {
 		  proposition.setEmetteurId((long)1);
 		  proposition.setDateFin(LocalDate.of(2200, 12, 31));
 		  proposition.setStatut(EnumStatutProposition.ENCOURS);
-		  propositionDTO.setCategorieId((long)1);
+		  propositionDTO.setCategorieName(EnumCategorie.BRICOLAGE.getCode());
 		  propositionDTO.setEnumTradeTypeCode("Erreur");
 	  
 		  try {
@@ -326,7 +327,7 @@ public class PropositionServiceImplTest {
 		   proposition.setEmetteurId((long)1);
 		   proposition.setDateFin(LocalDate.of(2200, 12, 31));
 		   proposition.setStatut(EnumStatutProposition.ENCOURS);
-		   propositionDTO.setCategorieId((long)1);
+		   propositionDTO.setCategorieName(EnumCategorie.BRICOLAGE.getCode());
 		   propositionDTO.setEnumTradeTypeCode("OFFRE");
 		   propositionDTO.setTitre("Wrong");
 		   proposition.setTitre("Wrong");
@@ -363,7 +364,7 @@ public class PropositionServiceImplTest {
 		   proposition.setEmetteurId((long)1);
 		   proposition.setDateFin(LocalDate.of(2200, 12, 31));
 		   proposition.setStatut(EnumStatutProposition.ENCOURS);
-		   propositionDTO.setCategorieId((long)1);
+		   propositionDTO.setCategorieName(EnumCategorie.BRICOLAGE.getCode());
 		   propositionDTO.setEnumTradeTypeCode("OFFRE");
 		   propositionDTO.setTitre("Correct");
 		   proposition.setTitre("Wrong");

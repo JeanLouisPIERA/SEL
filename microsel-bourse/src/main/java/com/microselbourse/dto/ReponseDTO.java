@@ -23,7 +23,7 @@ public class ReponseDTO {
 	private String ville;  
 	private Integer codePostal; 
 	private Integer valeur; 
-	private LocalDate dateEcheance; 
+	private String dateEcheance; 
 
 	
 	public ReponseDTO() {
@@ -87,14 +87,15 @@ public class ReponseDTO {
 		this.valeur = valeur;
 	}
 
-	public LocalDate getDateEcheance() {
+	public String getDateEcheance() {
 		return dateEcheance;
 	}
 
-	public void setDateEcheance(LocalDate dateEcheance) {
+	public void setDateEcheance(String dateEcheance) {
 		this.dateEcheance = dateEcheance;
 	}
 
+	
 	
 	
 	

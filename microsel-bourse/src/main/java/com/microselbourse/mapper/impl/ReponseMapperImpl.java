@@ -1,5 +1,7 @@
 package com.microselbourse.mapper.impl;
 
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Service;
 
 import com.microselbourse.dto.PropositionDTO;
@@ -20,7 +22,7 @@ public class ReponseMapperImpl implements IReponseMapper {
         ReponseDTO reponseDTO = new ReponseDTO();
         
         reponseDTO.setCodePostal(entity.getCodePostal());
-        reponseDTO.setDateEcheance(entity.getDateEcheance());
+        //reponseDTO.setDateEcheance(entity.getDateEcheance());
         reponseDTO.setDescription(entity.getDescription());
         reponseDTO.setImage(entity.getImage());
         reponseDTO.setRecepteurId(entity.getRecepteurId());
@@ -40,7 +42,7 @@ public class ReponseMapperImpl implements IReponseMapper {
         Reponse reponse = new Reponse();
         
         reponse.setCodePostal(dto.getCodePostal());
-        reponse.setDateEcheance(dto.getDateEcheance());
+        reponse.setDateEcheance(LocalDate.parse(dto.getDateEcheance()));
         reponse.setDescription(dto.getDescription());
         reponse.setImage(dto.getImage());
         reponse.setRecepteurId(dto.getRecepteurId());

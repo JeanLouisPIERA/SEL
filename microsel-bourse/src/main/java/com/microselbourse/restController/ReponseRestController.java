@@ -45,10 +45,10 @@ public class ReponseRestController {
 	IReponseService reponseService;
 	
 	
-	@PostMapping("/reponses/{propositionId}")
+	@PostMapping("/reponses/{id}")
 	  public ResponseEntity<Reponse> createReponse(
-			  @PathVariable @Valid Long propositionId, @Valid @RequestBody ReponseDTO reponseDTO) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException, EntityAlreadyExistsException  {
-	    return new ResponseEntity<Reponse>(reponseService.createReponse(propositionId, reponseDTO), HttpStatus.OK);
+			  @PathVariable @Valid Long id, @Valid @RequestBody ReponseDTO reponseDTO) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException, EntityAlreadyExistsException  {
+	    return new ResponseEntity<Reponse>(reponseService.createReponse(id, reponseDTO), HttpStatus.OK);
 	  }
 	
 	

@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 public class PropositionCriteria {
 	
-	
 	private String codeEnumTradeType;
 	
 	private String titre;
@@ -80,13 +79,6 @@ public class PropositionCriteria {
 		this.statut = statut;
 	}
 
-	@Override
-	public String toString() {
-		return "PropositionCriteria [codeEnumTradeType=" + codeEnumTradeType + ", titre=" + titre + ", ville=" + ville
-				+ ", codePostal=" + codePostal + ", nomCategorie=" + nomCategorie + ", statut=" + statut + "]";
-	}
-
 	
-
 	
 }

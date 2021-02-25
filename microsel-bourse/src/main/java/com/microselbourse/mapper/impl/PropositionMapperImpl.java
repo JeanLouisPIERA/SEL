@@ -1,8 +1,12 @@
 package com.microselbourse.mapper.impl;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.stereotype.Service;
 
 import com.microselbourse.dto.PropositionDTO;
+import com.microselbourse.entities.EnumCategorie;
 import com.microselbourse.entities.EnumTradeType;
 import com.microselbourse.entities.Proposition;
 import com.microselbourse.mapper.IPropositionMapper;
@@ -12,6 +16,8 @@ import com.microselbourse.mapper.IPropositionMapper;
 @Service
 public class PropositionMapperImpl implements IPropositionMapper{
 
+	
+	//DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
 	
 	@Override
 	public PropositionDTO propositionTopropositionDTO(Proposition entity) {
@@ -30,9 +36,9 @@ public class PropositionMapperImpl implements IPropositionMapper{
         propositionDTO.setTitre(entity.getTitre());
         propositionDTO.setValeur(entity.getValeur());
         propositionDTO.setVille(entity.getVille());
-        propositionDTO.setDateFin(entity.getDateFin());
-        propositionDTO.setDateEcheance(entity.getDateEcheance());
-        
+        //propositionDTO.setDateFin(entity.getDateFin().format(formatter));
+        //propositionDTO.setDateEcheance(entity.getDateEcheance().format(formatter));
+
         return propositionDTO;
 		
 	}
@@ -54,10 +60,13 @@ public class PropositionMapperImpl implements IPropositionMapper{
 	        proposition.setTitre(dto.getTitre());
 	        proposition.setValeur(dto.getValeur());
 	        proposition.setVille(dto.getVille());
-	        proposition.setDateFin(dto.getDateFin());
-	        proposition.setDateEcheance(dto.getDateEcheance());
+	        //proposition.setDateFin(LocalDate.parse(dto.getDateFin(), formatter));
+	        //proposition.setDateEcheance(LocalDate.parse(dto.getDateEcheance(), formatter));
+	        proposition.setDateFin(LocalDate.parse(dto.getDateFin()));
+	        proposition.setDateEcheance(LocalDate.parse(dto.getDateEcheance()));
 
 	        return proposition;
 	}
-
+	
+	
 }
