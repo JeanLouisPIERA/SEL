@@ -1,6 +1,4 @@
-package com.microselbourse.criteria;
-
-
+package com.microselwebclientjspui.criteria;
 
 public class EchangeCriteria {
 	
@@ -10,7 +8,6 @@ public class EchangeCriteria {
 	private String titre;
 	private String statutEchange;
 
-	
 	public EchangeCriteria() {
 		super();
 	}
@@ -46,9 +43,5 @@ public class EchangeCriteria {
 	}
 	
 	
-	
-	
-	
+
 }
-
-

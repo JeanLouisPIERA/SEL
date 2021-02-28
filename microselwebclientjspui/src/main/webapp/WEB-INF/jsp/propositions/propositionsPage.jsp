@@ -224,7 +224,7 @@
 <%@ include file="/WEB-INF/jsp/common/footer1.jspf"%>
 </div>
 
-</div>
+
 </body>
 
 </html>

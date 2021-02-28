@@ -26,7 +26,7 @@
  <div class="panel panel-primary ">
  
   <div class="panel-heading">
-   <h5>L'enregistrement de votre reponse a ete valide</h5>
+   <h5>Votre réponse a été enregistrée</h5>
   </div>
   
   <div class="panel-body">

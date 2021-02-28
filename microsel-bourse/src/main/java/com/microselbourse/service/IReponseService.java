@@ -22,6 +22,8 @@ public interface IReponseService {
 	Page<Reponse> searchAllReponsesByCriteria(ReponseCriteria reponseCriteria, Pageable pageable);
 	
 	Reponse readReponse(Long id) throws EntityNotFoundException;
+	
+	
 
 	
 

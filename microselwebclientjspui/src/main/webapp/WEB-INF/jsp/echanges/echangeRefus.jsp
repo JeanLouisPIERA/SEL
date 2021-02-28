@@ -8,7 +8,7 @@
 
 <head>
 
-<title>Proposition Confirmation</title>
+<title>Echange Refus</title>
 <%@ include file="/WEB-INF/jsp/common/header1.jspf"%>
 </head>
 
@@ -26,42 +26,26 @@
  <div class="panel panel-primary ">
  
   <div class="panel-heading">
-   <h5>Votre proposition a ete enregistrée</h5>
+   <h5>Votre refus de valider cet échange a bien été enregistré</h5>
   </div>
   
   <div class="panel-body">
    <table class="table table-striped table-condensed table-bordered">
     <thead>
         <tr>
-            <th colspan="2"> Titre : ${proposition.titre}</th>
+            <th colspan="2"> Titre : ${echange.titre}</th>
         </tr>
     </thead>
     <tbody>
          <tr>
-            <td>Identifiant :</td>
-            <td>${proposition.id}</td>
+            <td>N° :</td>
+            <td>${echange.id}</td>
         </tr>
         <tr>
-            <td>Description :</td>
-            <td>${proposition.description}</td>
+            <td>Statut:</td>
+            <td>${echange.statutEchange.getCode()}</td>
         </tr>
-        <tr>
-            <td>Type :</td>
-            <td>${proposition.enumTradeType.getCode()}</td>
-        </tr>
-        <tr>
-            <td>Categorie :</td>
-            <td>${proposition.categorie.getName().getCode()}</td>
-        </tr>
-        <tr>
-            <td>Valeur :</td>
-            <td>${proposition.valeur}</td>
-        </tr>
-        <tr>
-            <td>Fin de publication :</td>
-            <td>${proposition.dateFin}</td>
-        </tr>
- 		
+       
     </tbody>
 </table>
   

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
 @Component
-public class PropositionExceptionMessage {
+public class EchangeExceptionMessage {
 	
 	public String convertCodeStatusToExceptionMessage(Integer StatusCode) {
 		String message ="";

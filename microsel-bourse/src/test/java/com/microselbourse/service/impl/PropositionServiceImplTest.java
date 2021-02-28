@@ -92,8 +92,8 @@ public class PropositionServiceImplTest {
 		 when(propositionRepository.findByEmetteurIdAndTitreAndEnumTradeTypeAndStatutEnCours((long)1,"Correct", EnumTradeType.DEMANDE, EnumStatutProposition.ENCOURS)).thenReturn(Optional.of(proposition));
 		 when(propositionRepository.findByEmetteurIdAndTitreAndEnumTradeTypeAndStatutEnCours((long)1,"Correct", EnumTradeType.OFFRE, EnumStatutProposition.ENCOURS)).thenReturn(Optional.empty());
 		 when(propositionRepository.findByEmetteurIdAndTitreAndEnumTradeTypeAndStatutEnCours((long)1,"Correct", EnumTradeType.DEMANDE, EnumStatutProposition.ENCOURS)).thenReturn(Optional.empty());
-		 when(categorieRepository.findByName(EnumCategorie.INCONNUE.getCode())).thenReturn(Optional.empty()); //UPDATE
-		 when(categorieRepository.findByName((EnumCategorie.BRICOLAGE.getCode()))).thenReturn(Optional.of(categorie));
+		 when(categorieRepository.findByName(EnumCategorie.INCONNUE)).thenReturn(Optional.empty()); //UPDATE
+		 when(categorieRepository.findByName((EnumCategorie.BRICOLAGE))).thenReturn(Optional.of(categorie));
 		 when(propositionMapper.propositionDTOToProposition(propositionDTO)).thenReturn(proposition);
 		 when(propositionRepository.save(any(Proposition.class))).thenReturn(proposition);
 		 

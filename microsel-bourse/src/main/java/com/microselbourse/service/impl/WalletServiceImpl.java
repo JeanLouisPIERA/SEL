@@ -128,7 +128,8 @@ public class WalletServiceImpl implements IWalletService {
 						walletRepository.save(walletCounterpart.get());					
 					}
 				//HYPOTHDESE 4: le solde du wallet du récepteur débiteur est suffisant pour régler la transaction sans passer sous le solde mini
-					walletRecepteur.get().setSoldeWallet(walletRecepteur.get().getSoldeWallet() - transactionToRegistrate.get().getMontant());
+					int newSolde = (walletRecepteur.get().getSoldeWallet()) - (transactionToRegistrate.get().getMontant());
+					walletRecepteur.get().setSoldeWallet(newSolde);
 						List<Transaction> walletRecepteurTransactions = walletRecepteur.get().getTransactions();
 						walletRecepteurTransactions.add(transactionToRegistrate.get());
 						walletRecepteur.get().setTransactions(walletRecepteurTransactions);

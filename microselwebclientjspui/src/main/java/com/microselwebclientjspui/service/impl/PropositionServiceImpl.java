@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,20 +37,12 @@ public class PropositionServiceImpl implements IPropositionService{
 	 
 	@Override
 	public Page<Proposition> searchByCriteria(PropositionCriteria propositionCriteria, Pageable pageable) {
-		
-		System.out.println("test Rostow" + propositionCriteria);
-		
-		
-		
+	
 		HttpHeaders headers = new HttpHeaders();
     	headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
     	
     	HttpEntity<?> entity = new HttpEntity<>(headers);
-    	System.out.println("metierEntity" + entity.toString());
-		
-    
-    	
-    	
+
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLProposition)
     	        .queryParam("codeEnumTradeType", propositionCriteria.getEnumTradeType())
     	        .queryParam("titre", propositionCriteria.getTitre())
@@ -60,22 +53,14 @@ public class PropositionServiceImpl implements IPropositionService{
     	        .queryParam("page", pageable.getPageNumber())
     	        .queryParam("size", pageable.getPageSize());
     	
-		System.out.println("metierBuilder" + builder.toUriString().toString());
-		
-    	
-    	
+
     	ResponseEntity<RestResponsePage<Proposition>> propositions = restTemplate.exchange
     			(builder.build().toUriString(), 
 				HttpMethod.GET,
 				entity,
     			new ParameterizedTypeReference<RestResponsePage<Proposition>>(){});
         Page<Proposition> pageProposition = propositions.getBody();
-        
-        System.out.println("metier1" + propositions.getStatusCode());
-        System.out.println("metier2" + propositions.getBody().getNumberOfElements());
-        System.out.println("metier2" + propositions.getBody().getTotalPages());
-        propositions.getBody().forEach(e -> System.out.println("forEach"+ e));
-        
+ 
         return pageProposition;
 	}
 

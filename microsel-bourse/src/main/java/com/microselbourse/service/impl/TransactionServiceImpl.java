@@ -84,7 +84,7 @@ public class TransactionServiceImpl implements ITransactionService{
 		
 		Transaction transactionSaved = transactionRepository.save(transactionToCreate);
 		
-		walletService.enregistrerTransaction(transactionToCreate.getId());
+		walletService.enregistrerTransaction(transactionSaved.getId());
 
 		return transactionSaved;		
 	}

@@ -14,7 +14,7 @@
 			      	<a class="nav-link" href="/propositions"> Accueil <span class="sr-only"></span></a>
 			      </li>      
 		          <li><a href="/propositions">Propositions</a></li>
-		          <li><a href="/propositions">Echanges</a></li>
+		          <li><a href="/echanges">Echanges</a></li>
 		          <li><a href="/propositions">Portefeuilles</a></li>
 		     </ul>
 		    

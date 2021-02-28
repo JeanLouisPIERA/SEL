@@ -68,6 +68,9 @@ public class ReponseServiceImpl implements IReponseService{
 	
 	@Autowired
 	private IWalletService walletService;
+	
+	@Autowired
+	private IEchangeService echangeService;
 
 	@Override
 	public Reponse createReponse(Long propositionId, ReponseDTO reponseDTO) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException, EntityAlreadyExistsException {
@@ -94,12 +97,34 @@ public class ReponseServiceImpl implements IReponseService{
 		if(propositionToRespond.get().getEnumTradeType().equals(EnumTradeType.OFFRE))
 			{
 				reponseToCreate.setEnumTradeType(EnumTradeType.DEMANDE);
-				return reponseRepository.save(reponseToCreate);
+				Reponse reponseCreated = reponseRepository.save(reponseToCreate);
+				
+				Echange echange = echangeService.createEchange(reponseCreated.getId());
+				
+				List<Reponse> reponses = propositionToRespond.get().getReponses();
+				reponses.add(reponseCreated);
+				propositionToRespond.get().setReponses(reponses);
+				propositionRepository.save(propositionToRespond.get());
+				
+				UserBean emetteurProposition = microselAdherentsProxy.consulterCompteAdherent(reponseDTO.getRecepteurId());
+				
+				mailSender.sendMailEchangeCreation(reponseToCreate, recepteurProposition, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
+				mailSender.sendMailEchangeCreation(reponseToCreate, emetteurProposition, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
+
+				Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId(recepteurProposition.getId()); 
+			    if(walletRecepteur.isEmpty()) {
+			    	Wallet recepteurWalletCreated = walletService.createWallet(recepteurProposition.getId());
+			    	walletRepository.save(recepteurWalletCreated);
+			    	return reponseCreated;
+			    }
+				return reponseCreated;
 			} 
 		
 		reponseToCreate.setEnumTradeType(EnumTradeType.OFFRE);
 		
 		Reponse reponseCreated = reponseRepository.save(reponseToCreate);
+		
+		Echange echange = echangeService.createEchange(reponseCreated.getId());
 		
 		List<Reponse> reponses = propositionToRespond.get().getReponses();
 		reponses.add(reponseCreated);
