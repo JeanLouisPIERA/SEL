@@ -15,4 +15,7 @@ public interface IMailSenderService {
 	    
 	void sendMailEchangeConfirmation(Echange echange, UserBean destinataire, String subject, String microselBourseMailTemplate) throws MessagingException, UnsupportedEncodingException;
 	 
+	void sendMessageMailEchangeCreation(Reponse reponse, Long destinataireId, String subject, String microselBourseMailTemplate) throws MessagingException, UnsupportedEncodingException;
+	
+	
 }

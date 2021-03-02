@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.mail.MessagingException;
 
+
+
 public interface IMailService {
 	
 	void sendMessageUsingThymeleafTemplate(
@@ -14,5 +16,7 @@ public interface IMailService {
 	void sendHtmlMessage(
 			String to, String name, String subject, String htmlBody) 
 					throws MessagingException, UnsupportedEncodingException;
+	
+	
 
 }

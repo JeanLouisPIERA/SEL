@@ -75,10 +75,13 @@ public class ReponseServiceImpl implements IReponseService{
 	@Override
 	public Reponse createReponse(Long propositionId, ReponseDTO reponseDTO) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException, EntityAlreadyExistsException {
 		
+		System.out.println("dto-recepteurId = " + reponseDTO.getRecepteurId());
 		UserBean recepteurProposition = microselAdherentsProxy.consulterCompteAdherent(reponseDTO.getRecepteurId());
 		if(recepteurProposition.getId()!= reponseDTO.getRecepteurId())
 			throw new EntityNotFoundException(
 					"Vous n'êtes pas identifié comme adhérent de l'association");
+		
+		System.out.println("recepteurPropositionId = " + recepteurProposition.getId());
 		
 		Optional<Proposition> propositionToRespond = propositionRepository.findById(propositionId); 
 				if(propositionToRespond.isEmpty()) 
@@ -106,11 +109,17 @@ public class ReponseServiceImpl implements IReponseService{
 				propositionToRespond.get().setReponses(reponses);
 				propositionRepository.save(propositionToRespond.get());
 				
-				UserBean emetteurProposition = microselAdherentsProxy.consulterCompteAdherent(reponseDTO.getRecepteurId());
+				UserBean emetteurProposition = microselAdherentsProxy.consulterCompteAdherent(propositionToRespond.get().getEmetteurId());
 				
-				mailSender.sendMailEchangeCreation(reponseToCreate, recepteurProposition, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
-				mailSender.sendMailEchangeCreation(reponseToCreate, emetteurProposition, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
+				//mailSender.sendMailEchangeCreation(reponseToCreate, recepteurProposition, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
+				//mailSender.sendMailEchangeCreation(reponseToCreate, emetteurProposition, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
+				Long recepteurPropositionId = reponseDTO.getRecepteurId();
+				Long emetteurPropositionId = propositionToRespond.get().getEmetteurId();
+				mailSender.sendMessageMailEchangeCreation(reponseToCreate, recepteurPropositionId, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
+				mailSender.sendMessageMailEchangeCreation(reponseToCreate, emetteurPropositionId, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
 
+				
+				
 				Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId(recepteurProposition.getId()); 
 			    if(walletRecepteur.isEmpty()) {
 			    	Wallet recepteurWalletCreated = walletService.createWallet(recepteurProposition.getId());
@@ -131,11 +140,17 @@ public class ReponseServiceImpl implements IReponseService{
 		propositionToRespond.get().setReponses(reponses);
 		propositionRepository.save(propositionToRespond.get());
 		
-		UserBean emetteurProposition = microselAdherentsProxy.consulterCompteAdherent(reponseDTO.getRecepteurId());
+		UserBean emetteurProposition = microselAdherentsProxy.consulterCompteAdherent(propositionToRespond.get().getEmetteurId());
 		
-		mailSender.sendMailEchangeCreation(reponseToCreate, recepteurProposition, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
-		mailSender.sendMailEchangeCreation(reponseToCreate, emetteurProposition, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
+		//mailSender.sendMailEchangeCreation(reponseToCreate, recepteurProposition, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
+		//mailSender.sendMailEchangeCreation(reponseToCreate, emetteurProposition, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
+		Long recepteurPropositionId = reponseDTO.getRecepteurId();
+		Long emetteurPropositionId = propositionToRespond.get().getEmetteurId();
+		mailSender.sendMessageMailEchangeCreation(reponseToCreate, recepteurPropositionId, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
+		mailSender.sendMessageMailEchangeCreation(reponseToCreate, emetteurPropositionId, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
 
+		
+		
 		Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId(recepteurProposition.getId()); 
 	    if(walletRecepteur.isEmpty()) {
 	    	Wallet recepteurWalletCreated = walletService.createWallet(recepteurProposition.getId());
