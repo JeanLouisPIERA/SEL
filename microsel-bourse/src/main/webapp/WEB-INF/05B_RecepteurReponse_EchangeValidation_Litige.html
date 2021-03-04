@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Mail d'information d'envoi de la validation de l'échange</title>
+<title>Mail d'information d'échange en litige</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link href="http://fonts.googleapis.com/css?family=Roboto"
@@ -19,19 +19,17 @@ body {
 
 <body>
 	<p>
-		Objet: validation de l'échange Numero <span th:text="${echange_id}"></span> 
+		Objet: litige sur l'échange Numero <span th:text="${echange_id}"></span> 
 	</p>
 
 	<p th:text="${'Bonjour ' + destinataire_username}"></p>
 
 	<p>
-		Nous sommes heureux de vous confirmer que l'échange sous rubrique publié sous le titre "<span th:text="${titre}"></span>" 
-		a été validé par votre contrepartie l'adhérent <span th:text="${emetteur_username}"></span>
+		Suite à l'enregistrement de votre avis et à celui de votre contrepartie, l'échange sous rubrique publié sous le titre
+		 "<span th:text="${titre}"></span>" est désormais enregistré en tant que LITIGE. 
 		
-		Si de votre côté, vous avez déjà refusé cet échange la transaction ne sera réalisée qu'en ce qui concerne votre contrepartie.
+		La transaction monétaire n'a été réalisée que sur le portefeuille de la partie qui a validé l'échange.
 		
-		Si vous n'avez pas encore donné votre avis, merci de faire rapidement le nécessaire avant la date d'échéance ; vous risquez sinon de voir votre compte bloqué.
-
 	</p>
 	
 	<p>

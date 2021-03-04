@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Mail d'information d'envoi de la réponse</title>
+<title>Mail d'information de clôture de l'échange</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link href="http://fonts.googleapis.com/css?family=Roboto"
@@ -19,7 +19,7 @@ body {
 
 <body>
 	<p>
-		Objet: validation de l'échange Numero <span th:text="${echange_id}"></span> 
+		Objet: clôture de l'échange Numero <span th:text="${echange_id}"></span> 
 	</p>
 
 	<p th:text="${'Bonjour ' + destinataire_username}"></p>

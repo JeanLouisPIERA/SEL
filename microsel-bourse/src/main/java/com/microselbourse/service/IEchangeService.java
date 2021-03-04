@@ -1,6 +1,7 @@
 package com.microselbourse.service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
@@ -23,17 +24,6 @@ public interface IEchangeService {
 	
 	Echange readEchange(Long id) throws EntityNotFoundException;
 
-	/*
-	 * Echange confirmerEchange(Long id, Long emetteurId, Boolean decision) throws
-	 * EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException,
-	 * MessagingException;
-	 * 
-	 * Echange validerEchange(Long id, Long validateurId, Boolean decision) throws
-	 * UnsupportedEncodingException, MessagingException, EntityNotFoundException,
-	 * DeniedAccessException, EntityAlreadyExistsException;
-	 */
-	Echange solderEchange(Long id);
-
 	Page<Echange> searchAllEchangesByCriteria(EchangeCriteria echangeCriteria, Pageable pageable);
 
 	Echange refuserEchangeEmetteur(@Valid Long id) 
@@ -53,4 +43,10 @@ public interface IEchangeService {
 
 	Echange confirmerEchange(@Valid Long id) 
 			throws UnsupportedEncodingException, MessagingException, DeniedAccessException, EntityNotFoundException;
+
+	List<Echange> searchAndUpdateEchangesASupprimer();
+
+	List<Echange> searchAndUpdateEchangesAForceValider();
+
+	List<Echange> searchAndUpdateEchangesAForceRefuser();
 }

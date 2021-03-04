@@ -15,6 +15,7 @@ import com.microselbourse.dao.IReponseRepository;
 import com.microselbourse.dao.ITransactionRepository;
 import com.microselbourse.dao.IWalletRepository;
 import com.microselbourse.entities.Echange;
+import com.microselbourse.entities.EnumEchangeAvis;
 import com.microselbourse.entities.EnumStatutEchange;
 import com.microselbourse.entities.EnumTradeType;
 import com.microselbourse.entities.Reponse;
@@ -64,21 +65,174 @@ public class TransactionServiceImpl implements ITransactionService{
 		if (reponseFromEchange.isEmpty())
 			throw new EntityNotFoundException("Le détail des informations concernant votre transaction n'est pas accessible");
 		
-		UserBean emetteur = adherentsProxy.consulterCompteAdherent(echangeToTransaction.get().getEmetteurId());
-		UserBean recepteur = adherentsProxy.consulterCompteAdherent(echangeToTransaction.get().getRecepteurId());
-		
-		Optional<Wallet> walletEmetteur = walletRepository.readByTitulaireId(echangeToTransaction.get().getEmetteurId());
-		if(walletEmetteur.isEmpty())
-			throw new EntityNotFoundException("Transaction impossible : le portefeuille de l'émetteur de la proposition n'existe pas");
-		
-		Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId(echangeToTransaction.get().getRecepteurId());
-		if(walletEmetteur.isEmpty())
-			throw new EntityNotFoundException("Transaction impossible : le portefeuille du récepteur de la proposition n'existe pas ");
- 		
 		Transaction transactionToCreate = new Transaction();
 		transactionToCreate.setId(echangeId);
 		transactionToCreate.setDateTransaction(LocalDate.now());
 		transactionToCreate.setMontant(reponseFromEchange.get().getValeur());
+		
+		UserBean emetteur = adherentsProxy.consulterCompteAdherent(echangeToTransaction.get().getEmetteurId());
+		UserBean recepteur = adherentsProxy.consulterCompteAdherent(echangeToTransaction.get().getRecepteurId());
+		
+		//**********************************************************************************************************************************
+		
+		//SCENARIO 1 L'ECHANGE EST EN STATUT LITIGE 
+		
+		//Cela signifie que le WALLET COUNTERPART va être utilisé au moins 1 fois
+		
+		if(echangeToTransaction.get().getStatutEchange().equals(EnumStatutEchange.LITIGE)) {
+			
+		//3 POSSIBILIES : 
+		//EMETTEUR VALIDE ET RECEPTEUR FORCEMENT REFUS (SCENARIO 1EV-RR),
+		//EMETTEUR REFUS ET RECEPTEUR VALIDE (SCENARIO 1ER-RV)
+		//EMETTEUR ET RECEPTEUR REFUS (SCENARIO 1ER-RR)
+			
+			//SCENARIO 1EV-RR - PAS BESOIN DE VERIFIER QUE AVIS RECEPTEUR = REFUS PUISQUE ECHANGE = LITIGE
+			if(echangeToTransaction.get().getAvisEmetteur().equals(EnumEchangeAvis.VALIDE)) {
+				
+				Optional<Wallet> walletEmetteur = walletRepository.readByTitulaireId(echangeToTransaction.get().getEmetteurId());
+				if(walletEmetteur.isEmpty())
+					{
+						Wallet walletEmetteurToCreate = walletService.createWallet(echangeToTransaction.get().getEmetteurId());
+						
+						Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId((long) 0);
+						if(walletRecepteur.isEmpty())
+							throw new EntityNotFoundException("Transaction impossible : le portefeuille COUNTERPART n'existe pas ");
+			
+						List<Wallet> transactionToCreateInvolvedWallets = Arrays.asList(walletEmetteurToCreate, walletRecepteur.get());
+						transactionToCreate.setWallets(transactionToCreateInvolvedWallets);
+						
+						Transaction transactionSaved = transactionRepository.save(transactionToCreate);
+						
+						walletService.enregistrerTransaction(transactionSaved.getId());				
+						
+						return transactionSaved;
+					}
+
+				Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId((long) 0);
+				if(walletRecepteur.isEmpty())
+					throw new EntityNotFoundException("Transaction impossible : le portefeuille COUNTERPART n'existe pas ");
+	
+				List<Wallet> transactionToCreateInvolvedWallets = Arrays.asList(walletEmetteur.get(), walletRecepteur.get());
+				transactionToCreate.setWallets(transactionToCreateInvolvedWallets);
+				
+				Transaction transactionSaved = transactionRepository.save(transactionToCreate);
+				
+				walletService.enregistrerTransaction(transactionSaved.getId());				
+
+				return transactionSaved;
+				
+			}
+			
+			//SCENARIO 1ER - .....
+			else if(echangeToTransaction.get().getAvisEmetteur().equals(EnumEchangeAvis.REFUSE)) {
+				//SCENARIO 1ER-RV
+				if(echangeToTransaction.get().getAvisRecepteur().equals(EnumEchangeAvis.VALIDE)) {
+					
+					Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId(echangeToTransaction.get().getRecepteurId());
+					if(walletRecepteur.isEmpty())
+						{
+							Wallet walletRecepteurToCreate = walletService.createWallet(echangeToTransaction.get().getRecepteurId());
+							
+							Optional<Wallet> walletEmetteur = walletRepository.readByTitulaireId((long) 0);
+							if(walletRecepteur.isEmpty())
+								throw new EntityNotFoundException("Transaction impossible : le portefeuille COUNTERPART n'existe pas ");
+				
+							List<Wallet> transactionToCreateInvolvedWallets = Arrays.asList(walletEmetteur.get(), walletRecepteurToCreate);
+							transactionToCreate.setWallets(transactionToCreateInvolvedWallets);
+							
+							Transaction transactionSaved = transactionRepository.save(transactionToCreate);
+							
+							walletService.enregistrerTransaction(transactionSaved.getId());
+							
+							return transactionSaved;
+						}
+					
+					Optional<Wallet> walletEmetteur = walletRepository.readByTitulaireId((long) 0);
+					if(walletRecepteur.isEmpty())
+						throw new EntityNotFoundException("Transaction impossible : le portefeuille COUNTERPART n'existe pas ");
+		
+					List<Wallet> transactionToCreateInvolvedWallets = Arrays.asList(walletEmetteur.get(), walletRecepteur.get());
+					transactionToCreate.setWallets(transactionToCreateInvolvedWallets);
+					
+					Transaction transactionSaved = transactionRepository.save(transactionToCreate);
+					
+					walletService.enregistrerTransaction(transactionSaved.getId());
+					
+					return transactionSaved;
+						
+				}else {
+				//SCENARION 1ER-RR - Puisqu'il y a 2 refus, la transaction se fait au débit et au crédit par le compte COUNTERPART = double anomalie
+				Optional<Wallet> walletCounterpart = walletRepository.readByTitulaireId((long) 0);
+				if(walletCounterpart.isEmpty())
+					throw new EntityNotFoundException("Transaction impossible : le portefeuille COUNTERPART n'existe pas ");
+	
+				List<Wallet> transactionToCreateInvolvedWallets = Arrays.asList(walletCounterpart.get());
+				transactionToCreate.setWallets(transactionToCreateInvolvedWallets);
+				
+				Transaction transactionSaved = transactionRepository.save(transactionToCreate);					
+				walletService.enregistrerTransaction(transactionSaved.getId());
+				
+				return transactionSaved;
+				}
+			}
+		}
+		
+		//*******************************************************************************************************************************
+			
+		//SCENARIO 2 L'ECHANge EST STATUT CLOTURE : cela signifie que le WALLET COUNTERPART ne sera pas utilisé 
+		//1 SEULE POSSIBILITE : EMETTEUR ET RECEPTEUR VALIDE (SCENARIO 2EV-RV)
+		
+		else if(echangeToTransaction.get().getStatutEchange().equals(EnumStatutEchange.CLOTURE)){
+		//UserBean emetteur = adherentsProxy.consulterCompteAdherent(echangeToTransaction.get().getEmetteurId());
+		//UserBean recepteur = adherentsProxy.consulterCompteAdherent(echangeToTransaction.get().getRecepteurId());
+		
+		Optional<Wallet> walletEmetteur = walletRepository.readByTitulaireId(echangeToTransaction.get().getEmetteurId());
+		if(walletEmetteur.isEmpty())
+			//throw new EntityNotFoundException("Transaction impossible : le portefeuille de l'émetteur de la proposition n'existe pas");
+			{
+				Wallet walletEmetteurToCreate = walletService.createWallet(echangeToTransaction.get().getEmetteurId());
+				
+				Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId(echangeToTransaction.get().getRecepteurId());
+				if(walletRecepteur.isEmpty())
+					//throw new EntityNotFoundException("Transaction impossible : le portefeuille du récepteur de la proposition n'existe pas ");
+					{
+						Wallet walletRecepteurToCreate = walletService.createWallet(echangeToTransaction.get().getRecepteurId());
+					
+						List<Wallet> transactionToCreateInvolvedWallets = Arrays.asList(walletEmetteurToCreate, walletRecepteurToCreate);
+						transactionToCreate.setWallets(transactionToCreateInvolvedWallets);
+						
+						Transaction transactionSaved = transactionRepository.save(transactionToCreate);
+						
+						walletService.enregistrerTransaction(transactionSaved.getId());
+						
+						return transactionSaved;
+					}
+				List<Wallet> transactionToCreateInvolvedWallets = Arrays.asList(walletEmetteurToCreate, walletRecepteur.get());
+				transactionToCreate.setWallets(transactionToCreateInvolvedWallets);
+				
+				Transaction transactionSaved = transactionRepository.save(transactionToCreate);
+				
+				walletService.enregistrerTransaction(transactionSaved.getId());
+				
+				return transactionSaved;
+			}
+		
+		Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId(echangeToTransaction.get().getRecepteurId());
+		if(walletRecepteur.isEmpty())
+			//throw new EntityNotFoundException("Transaction impossible : le portefeuille du récepteur de la proposition n'existe pas ");
+			{
+				Wallet walletRecepteurToCreate = walletService.createWallet(echangeToTransaction.get().getRecepteurId());
+			
+				List<Wallet> transactionToCreateInvolvedWallets = Arrays.asList(walletEmetteur.get(), walletRecepteurToCreate);
+				transactionToCreate.setWallets(transactionToCreateInvolvedWallets);
+				
+				Transaction transactionSaved = transactionRepository.save(transactionToCreate);
+				
+				walletService.enregistrerTransaction(transactionSaved.getId());
+				
+				return transactionSaved;
+			}
+			
 		List<Wallet> transactionToCreateInvolvedWallets = Arrays.asList(walletEmetteur.get(), walletRecepteur.get());
 		transactionToCreate.setWallets(transactionToCreateInvolvedWallets);
 		
@@ -87,6 +241,7 @@ public class TransactionServiceImpl implements ITransactionService{
 		walletService.enregistrerTransaction(transactionSaved.getId());
 
 		return transactionSaved;		
+		}
+		return null;
 	}
-
 }

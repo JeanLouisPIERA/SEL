@@ -3,6 +3,7 @@ package com.microselbourse.entities;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -140,6 +141,12 @@ public class Echange implements Serializable {
 	  @PrimaryKeyJoinColumn	
 	  /* @OneToOne(mappedBy = "echange") */
 	  private Transaction transaction;
+	  
+	  
+	  @JsonIgnore
+	  @OneToMany(mappedBy="echange", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+	  private List<Blocage> blocages;
+	  
 
 	  
 	public Echange() {
@@ -356,6 +363,17 @@ public class Echange implements Serializable {
 	public void setRecepteurMail(String recepteurMail) {
 		this.recepteurMail = recepteurMail;
 	}
+
+
+	public List<Blocage> getBlocages() {
+		return blocages;
+	}
+
+
+	public void setBlocages(List<Blocage> blocages) {
+		this.blocages = blocages;
+	}
+	
 	
 	
 	 

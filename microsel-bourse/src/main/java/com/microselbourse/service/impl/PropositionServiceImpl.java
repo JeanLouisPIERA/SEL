@@ -14,13 +14,16 @@ import org.springframework.stereotype.Service;
 
 import com.microselbourse.beans.UserBean;
 import com.microselbourse.criteria.PropositionCriteria;
+import com.microselbourse.dao.IBlocageRepository;
 import com.microselbourse.dao.ICategorieRepository;
 import com.microselbourse.dao.IPropositionRepository;
 import com.microselbourse.dao.IWalletRepository;
 import com.microselbourse.dao.specs.PropositionSpecification;
 import com.microselbourse.dto.PropositionDTO;
+import com.microselbourse.entities.Blocage;
 import com.microselbourse.entities.Categorie;
 import com.microselbourse.entities.EnumCategorie;
+import com.microselbourse.entities.EnumStatutBlocage;
 import com.microselbourse.entities.EnumStatutProposition;
 import com.microselbourse.entities.EnumTradeType;
 import com.microselbourse.entities.Proposition;
@@ -49,15 +52,21 @@ public class PropositionServiceImpl implements IPropositionService {
 	private IWalletRepository walletRepository;
 	@Autowired
 	private IWalletService walletService;
+	@Autowired
+	private IBlocageRepository blocageRepository;
 	
 
 	@Override
-	public Proposition createProposition(PropositionDTO propositionDTO) throws EntityAlreadyExistsException, EntityNotFoundException {
+	public Proposition createProposition(PropositionDTO propositionDTO) throws EntityAlreadyExistsException, EntityNotFoundException, DeniedAccessException {
 		
 		UserBean emetteurProposition = microselAdherentsProxy.consulterCompteAdherent(propositionDTO.getEmetteurId());
 		if(emetteurProposition.getId()!= propositionDTO.getEmetteurId())
 			throw new EntityNotFoundException(
 					"Vous n'êtes pas identifié comme adhérent de l'association");
+		
+		Optional<Blocage> blocageEmetteurId = blocageRepository.findByAdherentIdAndStatutBlocage(emetteurProposition.getId(), EnumStatutBlocage.ENCOURS);
+		if(blocageEmetteurId.isPresent())
+			throw new DeniedAccessException("La proposition ne peut pas être créée : il existe un blocage encours concernant l'émetteur de la proposition.");
 		
 		Optional<EnumTradeType> enumTradeType = EnumTradeType.getEnumTradeTypeByCode(propositionDTO.getEnumTradeTypeCode());
 		if(enumTradeType.isEmpty())

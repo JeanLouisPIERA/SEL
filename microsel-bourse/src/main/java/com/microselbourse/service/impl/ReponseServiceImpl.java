@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.microselbourse.beans.UserBean;
 import com.microselbourse.criteria.ReponseCriteria;
+import com.microselbourse.dao.IBlocageRepository;
 import com.microselbourse.dao.ICategorieRepository;
 import com.microselbourse.dao.IEchangeRepository;
 import com.microselbourse.dao.IPropositionRepository;
@@ -23,8 +24,10 @@ import com.microselbourse.dao.IWalletRepository;
 import com.microselbourse.dao.specs.PropositionSpecification;
 import com.microselbourse.dao.specs.ReponseSpecification;
 import com.microselbourse.dto.ReponseDTO;
+import com.microselbourse.entities.Blocage;
 import com.microselbourse.entities.Categorie;
 import com.microselbourse.entities.Echange;
+import com.microselbourse.entities.EnumStatutBlocage;
 import com.microselbourse.entities.EnumStatutEchange;
 import com.microselbourse.entities.EnumStatutProposition;
 import com.microselbourse.entities.EnumTradeType;
@@ -71,17 +74,21 @@ public class ReponseServiceImpl implements IReponseService{
 	
 	@Autowired
 	private IEchangeService echangeService;
+	
+	@Autowired
+	private IBlocageRepository blocageRepository;
 
 	@Override
 	public Reponse createReponse(Long propositionId, ReponseDTO reponseDTO) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException, EntityAlreadyExistsException {
 		
-		System.out.println("dto-recepteurId = " + reponseDTO.getRecepteurId());
 		UserBean recepteurProposition = microselAdherentsProxy.consulterCompteAdherent(reponseDTO.getRecepteurId());
 		if(recepteurProposition.getId()!= reponseDTO.getRecepteurId())
 			throw new EntityNotFoundException(
 					"Vous n'êtes pas identifié comme adhérent de l'association");
 		
-		System.out.println("recepteurPropositionId = " + recepteurProposition.getId());
+		Optional<Blocage> blocageRecepteurId = blocageRepository.findByAdherentIdAndStatutBlocage(recepteurProposition.getId(), EnumStatutBlocage.ENCOURS);
+		if(blocageRecepteurId.isPresent())
+			throw new DeniedAccessException("La réponse ne peut pas être créée : il existe un blocage encours concernant l'adherent récepteur.");
 		
 		Optional<Proposition> propositionToRespond = propositionRepository.findById(propositionId); 
 				if(propositionToRespond.isEmpty()) 
@@ -111,14 +118,19 @@ public class ReponseServiceImpl implements IReponseService{
 				
 				UserBean emetteurProposition = microselAdherentsProxy.consulterCompteAdherent(propositionToRespond.get().getEmetteurId());
 				
-				//mailSender.sendMailEchangeCreation(reponseToCreate, recepteurProposition, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
-				//mailSender.sendMailEchangeCreation(reponseToCreate, emetteurProposition, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
-				Long recepteurPropositionId = reponseDTO.getRecepteurId();
-				Long emetteurPropositionId = propositionToRespond.get().getEmetteurId();
-				mailSender.sendMessageMailEchangeCreation(reponseToCreate, recepteurPropositionId, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
-				mailSender.sendMessageMailEchangeCreation(reponseToCreate, emetteurPropositionId, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
-
-				
+				mailSender.sendMailEchangeCreation(reponseToCreate, recepteurProposition, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
+				mailSender.sendMailEchangeCreation(reponseToCreate, emetteurProposition, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
+				/*
+				 * Long recepteurPropositionId = reponseDTO.getRecepteurId(); Long
+				 * emetteurPropositionId = propositionToRespond.get().getEmetteurId();
+				 * mailSender.sendMessageMailEchangeCreation(reponseToCreate,
+				 * recepteurPropositionId, "Creation d'un nouvel échange",
+				 * "01_RecepteurReponse_EchangeCreation");
+				 * mailSender.sendMessageMailEchangeCreation(reponseToCreate,
+				 * emetteurPropositionId, "Reponse a votre Proposition",
+				 * "02_EmetteurProposition_EchangeCreation");
+				 * 
+				 */
 				
 				Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId(recepteurProposition.getId()); 
 			    if(walletRecepteur.isEmpty()) {
@@ -142,13 +154,18 @@ public class ReponseServiceImpl implements IReponseService{
 		
 		UserBean emetteurProposition = microselAdherentsProxy.consulterCompteAdherent(propositionToRespond.get().getEmetteurId());
 		
-		//mailSender.sendMailEchangeCreation(reponseToCreate, recepteurProposition, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
-		//mailSender.sendMailEchangeCreation(reponseToCreate, emetteurProposition, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
-		Long recepteurPropositionId = reponseDTO.getRecepteurId();
-		Long emetteurPropositionId = propositionToRespond.get().getEmetteurId();
-		mailSender.sendMessageMailEchangeCreation(reponseToCreate, recepteurPropositionId, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
-		mailSender.sendMessageMailEchangeCreation(reponseToCreate, emetteurPropositionId, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
-
+		mailSender.sendMailEchangeCreation(reponseToCreate, recepteurProposition, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
+		mailSender.sendMailEchangeCreation(reponseToCreate, emetteurProposition, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
+		/*
+		 * Long recepteurPropositionId = reponseDTO.getRecepteurId(); Long
+		 * emetteurPropositionId = propositionToRespond.get().getEmetteurId();
+		 * mailSender.sendMessageMailEchangeCreation(reponseToCreate,
+		 * recepteurPropositionId, "Creation d'un nouvel échange",
+		 * "01_RecepteurReponse_EchangeCreation");
+		 * mailSender.sendMessageMailEchangeCreation(reponseToCreate,
+		 * emetteurPropositionId, "Reponse a votre Proposition",
+		 * "02_EmetteurProposition_EchangeCreation");
+		 */
 		
 		
 		Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId(recepteurProposition.getId()); 

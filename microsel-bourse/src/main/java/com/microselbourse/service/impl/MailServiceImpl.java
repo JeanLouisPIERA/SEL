@@ -32,6 +32,13 @@ public class MailServiceImpl implements IMailService {
 	@Value("${application.nameFrom}")
 	private String nameFrom;
 	
+	@Value("${application.template.echange.suppress}")
+	private String templateSuppress;
+	@Value("${application.template.echange.forcevalid}")
+	private String templateForceValid;
+	@Value("${application.template.echange.forcerefus}")
+	private String templateForceRefus;
+	
 	/**
 	 * Cette méthode permet de customiser le message envoyé en utilisant le template Thymeleaf indiqué (paramètre String mailTemplate)
 	 * @param to
@@ -53,7 +60,18 @@ public class MailServiceImpl implements IMailService {
 		        sendHtmlMessage(to, name, subject, htmlBody);
 		    }
 	 
-	 
+	
+	public void sendMessageUsingThymeleafTemplateSuppress(
+	        String to, String name, String subject, Map<String, Object> templateModel)
+	            throws MessagingException, UnsupportedEncodingException {
+	                
+	        Context thymeleafContext = new Context();
+	        thymeleafContext.setVariables(templateModel);
+	        
+	        String htmlBody = thymeleafTemplateEngine.process(templateSuppress, thymeleafContext);
+
+	        sendHtmlMessage(to, name, subject, htmlBody);
+	    } 
 	
 	/**
 	 * Cette méthode permet de créer un message HTML en renseignant le destinataire, le sujet, l'émetteur et en créant le htmlBody du mail 

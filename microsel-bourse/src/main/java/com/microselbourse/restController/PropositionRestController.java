@@ -54,7 +54,7 @@ public class PropositionRestController {
 				  "Une autre proposition existe déjà avec ces attributs"), })
 	 
 	  @PostMapping("/propositions")
-	  public ResponseEntity<Proposition> createProposition(@Valid @RequestBody PropositionDTO propositionDTO) throws EntityAlreadyExistsException, EntityNotFoundException {
+	  public ResponseEntity<Proposition> createProposition(@Valid @RequestBody PropositionDTO propositionDTO) throws EntityAlreadyExistsException, EntityNotFoundException, DeniedAccessException {
 	    return new ResponseEntity<Proposition>(propositionService.createProposition(propositionDTO), HttpStatus.OK);
 	  }
 	  

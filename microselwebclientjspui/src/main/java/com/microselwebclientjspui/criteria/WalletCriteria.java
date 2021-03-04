@@ -1,18 +1,14 @@
-package com.microselwebclientjspui.objets;
+package com.microselwebclientjspui.criteria;
 
-import java.util.List;
-
-public class Wallet {
+public class WalletCriteria {
 	
 	private Long id;
 	
 	private Long titulaireId;
 	
 	private int soldeWallet;
-	
-	private List<Transaction> transactions; 
 
-	public Wallet() {
+	public WalletCriteria() {
 		super();
 	}
 
@@ -38,14 +34,6 @@ public class Wallet {
 
 	public void setSoldeWallet(int soldeWallet) {
 		this.soldeWallet = soldeWallet;
-	}
-
-	public List<Transaction> getTransactions() {
-		return transactions;
-	}
-
-	public void setTransactions(List<Transaction> transactions) {
-		this.transactions = transactions;
 	}
 	
 	

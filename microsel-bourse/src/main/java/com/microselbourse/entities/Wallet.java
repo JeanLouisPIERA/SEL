@@ -55,6 +55,17 @@ public class Wallet implements Serializable {
 		super();
 		
 	}
+	
+
+	public Wallet(Long id, Long titulaireId, Integer soldeWallet, List<Transaction> transactions) {
+		super();
+		this.id = id;
+		this.titulaireId = titulaireId;
+		this.soldeWallet = soldeWallet;
+		this.transactions = transactions;
+	}
+
+
 
 	public Long getId() {
 		return id;

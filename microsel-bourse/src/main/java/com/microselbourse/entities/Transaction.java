@@ -77,6 +77,18 @@ public class Transaction implements Serializable {
 		super();
 		
 	}
+	
+	
+
+	public Transaction(Long id, Integer montant, LocalDate dateTransaction, List<Wallet> wallets) {
+		super();
+		this.id = id;
+		this.montant = montant;
+		this.dateTransaction = dateTransaction;
+		this.wallets = wallets;
+	}
+
+
 
 	public Long getId() {
 		return id;

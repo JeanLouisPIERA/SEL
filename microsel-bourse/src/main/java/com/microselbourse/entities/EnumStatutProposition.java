@@ -17,10 +17,10 @@ public enum EnumStatutProposition {
 		this.text = text;
 	}
 	
-	public static EnumStatutProposition getEnumStatutEchangeByCode(String code) {
-		for (EnumStatutProposition enumStatutEchange : EnumStatutProposition.values()) {
-			if(enumStatutEchange.code.equals(code)){
-				return enumStatutEchange;
+	public static EnumStatutProposition getEnumStatutPropositionByCode(String code) {
+		for (EnumStatutProposition enumStatutProposition : EnumStatutProposition.values()) {
+			if(enumStatutProposition.code.equals(code)){
+				return enumStatutProposition;
 			}
 		}
 		return null;

@@ -62,8 +62,6 @@ public class EchangeRestController {
 			  @RequestParam(name = "page", defaultValue= "0") int page, 
 			  @RequestParam(name="size", defaultValue= "6") int size) { 
 	  	  Page<Echange> echanges = echangeService.searchAllEchangesByCriteria(echangeCriteria, PageRequest.of(page, size)); 
-	  	  List<Echange> echangesList = echanges.getContent();
-	  	  for(Echange echange : echangesList) {System.out.println("titre" + echange.getTitre());}
 		  return new ResponseEntity<Page<Echange>>(echanges, HttpStatus.OK); 
 	  }
 	
@@ -185,19 +183,34 @@ public class EchangeRestController {
 		return new ResponseEntity<Echange> (echangeService.refuserEchangeRecepteur(id), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "Traitement d'un echange dont le statut est en anomalie à l'échéance soit différent de CLOTURE ou LITIGE ", response = Echange.class)  
+	@ApiOperation(value = "Passage au statut SUPPRIME des echanges dont le statut est toujours CONFIRME à l'échéance et sans aucun avis émetteur ou récepteur ", response = Echange.class)  
 	  @ApiResponses(value = {
 		  @ApiResponse(code = 201, message =
-		  "Léchange recherché a été soldé"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "L'échange que vous voulez solder n'existe pas"), })
-	@PutMapping("echanges/solder/{id}")
-	public ResponseEntity<Echange> solderEchange(@PathVariable @Valid Long id) {
-		return new ResponseEntity<Echange> (echangeService.solderEchange(id), HttpStatus.OK);
+		  "Les échanges ont été supprimés")})
+	@GetMapping(value="/echanges/toStatutSupprime", produces="application/json")
+	public ResponseEntity<List<Echange>> selectEchangesASupprimer() {
+		List<Echange> echangesASupprimerListe = echangeService.searchAndUpdateEchangesASupprimer();
+		return new ResponseEntity<List<Echange>>(echangesASupprimerListe, HttpStatus.OK); 
 	}
 	
+	@ApiOperation(value = "Passage au statut FORCEVALID d'un echange dont le statut est toujours CONFIRME à l'échéance, avec un seul avis VALIDE ", response = Echange.class)  
+	  @ApiResponses(value = {
+		  @ApiResponse(code = 201, message =
+		  "Les échanges ont été cloturés en force")})
+	@GetMapping(value="/echanges/toStatutForceValid", produces="application/json")
+	public ResponseEntity<List<Echange>> selectEchangesAForceValider() {
+		List<Echange> echangesAForceValiderListe = echangeService.searchAndUpdateEchangesAForceValider();
+		return new ResponseEntity<List<Echange>>(echangesAForceValiderListe, HttpStatus.OK); 
+	}
 	
+	@ApiOperation(value = "Passage au statut FORCEREFUS d'un echange dont le statut est toujours CONFIRME à l'échéance, avec un seul avis REFUSE ", response = Echange.class)  
+	  @ApiResponses(value = {
+		  @ApiResponse(code = 201, message =
+		  "Les échanges ont été mis en litige en force")})
+	@GetMapping(value="/echanges/toStatutForceRefus", produces="application/json")
+	public ResponseEntity<List<Echange>> selectEchangesAForceRefuser() {
+		List<Echange> echangesAForceRefuserListe = echangeService.searchAndUpdateEchangesAForceRefuser();
+		return new ResponseEntity<List<Echange>>(echangesAForceRefuserListe, HttpStatus.OK); 
+	}
 
 }

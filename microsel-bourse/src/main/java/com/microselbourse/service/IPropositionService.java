@@ -13,7 +13,7 @@ import com.microselbourse.exceptions.EntityNotFoundException;
 
 public interface IPropositionService {
 	
-	Proposition createProposition(PropositionDTO propositionDTO) throws EntityAlreadyExistsException, EntityNotFoundException;
+	Proposition createProposition(PropositionDTO propositionDTO) throws EntityAlreadyExistsException, EntityNotFoundException, DeniedAccessException;
 	
 	Page<Proposition> searchAllPropositionsByCriteria(PropositionCriteria propositionCriteria, Pageable pageable);
 	

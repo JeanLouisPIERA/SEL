@@ -69,7 +69,7 @@ public class EchangeController {
 	     * Permet de lire la fiche d'une propositionn
 	     */
 	    @GetMapping("/echanges/{id}")
-	    public String readPret(Model model, @PathVariable("id") Long id) {
+	    public String readEchange(Model model, @PathVariable("id") Long id) {
 	    	
 	    	try {
 				Echange readEchange = echangeService.searchById(id);
