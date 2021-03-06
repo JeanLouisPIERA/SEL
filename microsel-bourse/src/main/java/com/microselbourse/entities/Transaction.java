@@ -64,7 +64,20 @@ public class Transaction implements Serializable {
 	 * Echange echange;
 	 */
 	
-	@JsonIgnore 
+	/*
+	 * On rajoute ces 3 attributs pour conserver une partie de l'info sur l'échange @OneToOne unidirectionnel
+	 */
+	
+	@Column(name="titre_echange", length = 100, nullable=false)
+	private String titreEchange;
+	
+	@Column(name="emetteur_username")
+	private String emetteurUsername;
+	
+	@Column(name="recepteur_username")
+	private String recepteurUsername;
+	
+	@JsonIgnore
 	@ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
         name = "transactions_wallets", 
@@ -113,6 +126,43 @@ public class Transaction implements Serializable {
 	public void setDateTransaction(LocalDate dateTransaction) {
 		this.dateTransaction = dateTransaction;
 	}
+	
+	
+
+	public String getTitreEchange() {
+		return titreEchange;
+	}
+
+
+
+	public void setTitreEchange(String titreEchange) {
+		this.titreEchange = titreEchange;
+	}
+
+
+
+	public String getEmetteurUsername() {
+		return emetteurUsername;
+	}
+
+
+
+	public void setEmetteurUsername(String emetteurUsername) {
+		this.emetteurUsername = emetteurUsername;
+	}
+
+
+	public String getRecepteurUsername() {
+		return recepteurUsername;
+	}
+
+
+
+	public void setRecepteurUsername(String recepteurUsername) {
+		this.recepteurUsername = recepteurUsername;
+	}
+
+
 
 	public List<Wallet> getWallets() {
 		return wallets;

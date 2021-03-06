@@ -35,6 +35,10 @@ public class Wallet implements Serializable {
 	@Column(name="titulaire_id", length = 5, nullable = false, unique = true)
 	private Long titulaireId;
 	
+	@Column(name="titulaire_username", length = 25, nullable = false)
+	private String titulaireUsername;
+	
+	
 	/*
 	 * Un wallet se définit comme un solde modifié par des opérations au débit ou au crédit
 	 */
@@ -55,17 +59,6 @@ public class Wallet implements Serializable {
 		super();
 		
 	}
-	
-
-	public Wallet(Long id, Long titulaireId, Integer soldeWallet, List<Transaction> transactions) {
-		super();
-		this.id = id;
-		this.titulaireId = titulaireId;
-		this.soldeWallet = soldeWallet;
-		this.transactions = transactions;
-	}
-
-
 
 	public Long getId() {
 		return id;
@@ -81,6 +74,14 @@ public class Wallet implements Serializable {
 
 	public void setTitulaireId(Long titulaireId) {
 		this.titulaireId = titulaireId;
+	}
+	
+	public String getTitulaireUsername() {
+		return titulaireUsername;
+	}
+
+	public void setTitulaireUsername(String titulaireUsername) {
+		this.titulaireUsername = titulaireUsername;
 	}
 
 	public Integer getSoldeWallet() {

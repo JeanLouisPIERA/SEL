@@ -7,6 +7,10 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.microselbourse.beans.UserBean;
@@ -69,6 +73,9 @@ public class TransactionServiceImpl implements ITransactionService{
 		transactionToCreate.setId(echangeId);
 		transactionToCreate.setDateTransaction(LocalDate.now());
 		transactionToCreate.setMontant(reponseFromEchange.get().getValeur());
+		transactionToCreate.setTitreEchange(reponseFromEchange.get().getTitre());
+		transactionToCreate.setEmetteurUsername(echangeToTransaction.get().getEmetteurUsername());
+		transactionToCreate.setRecepteurUsername(echangeToTransaction.get().getRecepteurUsername());
 		
 		UserBean emetteur = adherentsProxy.consulterCompteAdherent(echangeToTransaction.get().getEmetteurId());
 		UserBean recepteur = adherentsProxy.consulterCompteAdherent(echangeToTransaction.get().getRecepteurId());
@@ -244,4 +251,26 @@ public class TransactionServiceImpl implements ITransactionService{
 		}
 		return null;
 	}
+
+
+	@Override
+	public Page<Transaction> findAllByWalletId(Long walletId, Pageable pageable) throws EntityNotFoundException {
+		Optional<Wallet> walletFound = walletRepository.findById(walletId);
+		if(!walletFound.isPresent())
+			throw new EntityNotFoundException("Il n'existe aucun portefeuille enregistré pour l'identifiant indiqué");
+		
+		int start = (int) pageable.getOffset();
+		int end = (int) ((start + pageable.getPageSize()) > walletFound.get().getTransactions().size() ? walletFound.get().getTransactions().size()
+				  : (start + pageable.getPageSize()));
+		
+		Page<Transaction> transactions = new PageImpl<Transaction>(
+				walletFound.get().getTransactions().subList(start, end), 
+				pageable, 
+				walletFound.get().getTransactions().size());
+		
+		return transactions;
+	}
+	
+	
+	
 }

@@ -178,4 +178,26 @@ databaseChangeLog:
           path: scripts/16_create_blocages.sql
           relativeToChangelogFile: true
           splitStatements: true
-          stripComments: true                                                                                                                 
+          stripComments: true  
+ - changeSet:
+      id: script17
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/17_alter_table_transactions.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true        
+ - changeSet:
+      id: script18
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/18_alter_table_wallets.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true                                                                                                                                                        

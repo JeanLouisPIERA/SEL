@@ -3,6 +3,8 @@ package com.microselbourse.service;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,5 +23,7 @@ public interface IWalletService {
 	Wallet readByUserId (Long userId) throws EntityNotFoundException;
 
 	Page<Wallet> searchAllWalletsByCriteria(WalletCriteria walletCriteria, Pageable pageable);
+
+	Wallet readById(@Valid Long id) throws EntityNotFoundException;
  
 }

@@ -54,18 +54,18 @@
 				 
 				 <fieldset class="form-group">
 				 <label>N° du portefeuille :</label>
-				 <input type="text" name="id" value="${propositionCriteria.id}"/>
+				 <input type="text" name="id" value="${walletCriteria.id}"/>
 				 </fieldset>
 				 
 				 <fieldset class="form-group">
 				 <label>N° du Titulaire :</label>
-				 <input type="text" name="titulaireId" value="${propositionCriteria.titulaireId}"/>
+				 <input type="text" name="titulaireId" value="${walletCriteria.titulaireId}"/>
 				 </fieldset>
 				 
 				 
 				 <fieldset class="form-group">
-				 <label>Solde du portefeuille:</label>
-				 <input type="text" name="soldeWallet" value="${propositionCriteria.soldeWallet}"/>
+				 <label>Solde du portefeuille supérieur à :</label>
+				 <input type="text" name="soldeWallet" value="${walletCriteria.soldeWallet}"/>
 				 </fieldset>
 				 
 				 <button class="btn-sm btn-primary">Valider</button>
@@ -91,7 +91,8 @@
 					   		 <thead>		  	  	 
 					    			 <tr>
 									      <th style="text-align:center">N° du Portefeuille </th>
-									      <th style="text-align:center">N° de l'Adhérent Titualaire</th>
+									      <th style="text-align:center">N° du Titulaire</th>
+									      <th style="text-align:center">Nom du Titulaire</th>
 									      <th style="text-align:center">Solde</th>
 								     </tr>
 								     </thead>
@@ -100,11 +101,12 @@
 					   				 <tr>
 								          <td>${wallet.id}</td>
 								          <td>${wallet.titulaireId}</td>
+								          <td>${wallet.titulaireUsername}</td>
 								          <td>${wallet.soldeWallet}</td>
 								          
 								          <td>
 								          	<a type="button"  class="btn btn-success" 
-								        	href="/wallets/${wallet.titulaireId}">Détail Portefeuille</a>
+								        	href="/wallets/transactions/${wallet.id}">Détail Portefeuille</a>
 								          </td>
 								       
 								          

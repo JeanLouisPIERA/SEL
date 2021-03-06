@@ -3,6 +3,8 @@ package com.microselbourse.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.microselbourse.beans.UserBean;
 import com.microselbourse.criteria.WalletCriteria;
 import com.microselbourse.dao.IEchangeRepository;
 import com.microselbourse.dao.IReponseRepository;
@@ -27,6 +30,7 @@ import com.microselbourse.entities.Transaction;
 import com.microselbourse.entities.Wallet;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
+import com.microselbourse.proxies.IMicroselAdherentsProxy;
 import com.microselbourse.service.IWalletService;
 
 @Service
@@ -44,6 +48,9 @@ public class WalletServiceImpl implements IWalletService {
 	@Autowired
 	private IReponseRepository reponseRepository;
 	
+	@Autowired
+	private IMicroselAdherentsProxy adherentProxy;
+	
 	@Value ("${solde.mini}")
 	private Integer soldeMini;
 
@@ -54,9 +61,13 @@ public class WalletServiceImpl implements IWalletService {
 		if(!walletToCreate.isEmpty())
 			throw new EntityAlreadyExistsException("Il existe déjà un portefeuille pour cet adhérent");
 		
+		UserBean titulaire = adherentProxy.consulterCompteAdherent(adherentId);
+		
 		Wallet walletCreated = new Wallet();
 		walletCreated.setTitulaireId(adherentId);
+		walletCreated.setTitulaireUsername(titulaire.getUsername());
 		walletCreated.setSoldeWallet(0);
+		
 	
 		return walletCreated;
 	}
@@ -343,7 +354,7 @@ System.out.println("Test Boolean walletRecepteurEchange = " + transactionToRegis
 	@Override
 	public Wallet readByUserId(Long id) throws EntityNotFoundException {
 		
-		Optional<Wallet> walletToRead = walletRepository.findById(id); 
+		Optional<Wallet> walletToRead = walletRepository.readByTitulaireId(id); 
 		if(walletToRead.isEmpty())
 			throw new EntityNotFoundException("Il n'existe pas de wallet pour cet adhérent");
 		
@@ -355,6 +366,15 @@ System.out.println("Test Boolean walletRecepteurEchange = " + transactionToRegis
 		 Specification<Wallet> walletSpecification = new WalletSpecification(walletCriteria); 
 		  Page<Wallet> wallets = walletRepository.findAll(walletSpecification, pageable); 
 		  return wallets; }
+
+	@Override
+	public Wallet readById(@Valid Long id) throws EntityNotFoundException {
+		Optional<Wallet> walletToRead = walletRepository.findById(id); 
+		if(walletToRead.isEmpty())
+			throw new EntityNotFoundException("Il n'existe pas de wallet pour cet adhérent");
+		
+		return walletToRead.get();
+	}
 	}
 
 

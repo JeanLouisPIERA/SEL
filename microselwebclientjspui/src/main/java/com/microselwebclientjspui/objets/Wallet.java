@@ -1,5 +1,6 @@
 package com.microselwebclientjspui.objets;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Wallet {
@@ -8,9 +9,10 @@ public class Wallet {
 	
 	private Long titulaireId;
 	
-	private int soldeWallet;
+	private String titulaireUsername;
 	
-	private List<Transaction> transactions; 
+	private Integer soldeWallet;
+	
 
 	public Wallet() {
 		super();
@@ -31,22 +33,25 @@ public class Wallet {
 	public void setTitulaireId(Long titulaireId) {
 		this.titulaireId = titulaireId;
 	}
+	
+	public String getTitulaireUsername() {
+		return titulaireUsername;
+	}
 
-	public int getSoldeWallet() {
+	public void setTitulaireUsername(String titulaireUsername) {
+		this.titulaireUsername = titulaireUsername;
+	}
+
+	public Integer getSoldeWallet() {
 		return soldeWallet;
 	}
 
-	public void setSoldeWallet(int soldeWallet) {
+	public void setSoldeWallet(Integer soldeWallet) {
 		this.soldeWallet = soldeWallet;
 	}
 
-	public List<Transaction> getTransactions() {
-		return transactions;
-	}
-
-	public void setTransactions(List<Transaction> transactions) {
-		this.transactions = transactions;
-	}
+	
+	
 	
 	
 

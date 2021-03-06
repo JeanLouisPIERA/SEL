@@ -44,7 +44,7 @@ public class WalletRestController {
 	  
 	  @GetMapping(value="/wallets", produces="application/json") 
 	  public ResponseEntity<Page<Wallet>> searchAllWalletssByCriteria(
-			  @PathParam("walletCriteria") WalletCriteria walletCriteria, @RequestParam(name = "page", defaultValue= "0") int page, @RequestParam(name="size", defaultValue= "10") int size) { 
+			  @PathParam("walletCriteria") WalletCriteria walletCriteria, @RequestParam(name = "page", defaultValue= "0") int page, @RequestParam(name="size", defaultValue= "6") int size) { 
 	  	  Page<Wallet> wallets = walletService.searchAllWalletsByCriteria(walletCriteria, PageRequest.of(page, size)); 	
 		  return new ResponseEntity<Page<Wallet>>(wallets, HttpStatus.OK); 
 	  }
@@ -60,11 +60,23 @@ public class WalletRestController {
 		  @ApiResponse(code = 413, message = 
 		  "Le portefeuille que vous voulez consulter n'existe pas"), })
 	 
-	 @GetMapping("/wallets/{id}")
-	 public ResponseEntity<Wallet> readWallet(@PathVariable @Valid Long id) throws EntityNotFoundException {
+	 @GetMapping("/wallets/user/{id}")
+	 public ResponseEntity<Wallet> readWalletByUserId(@PathVariable @Valid Long id) throws EntityNotFoundException {
 		return new ResponseEntity<Wallet>(walletService.readByUserId(id), HttpStatus.OK);  
 	 }
 	 
+	 @ApiOperation(value = "Consultation d'un portefeuille par son N° identifiant", response = Wallet.class)  
+	  @ApiResponses(value = {
+		  @ApiResponse(code = 201, message =
+		  "Le portefeuille recherché a été trouvé"),
+		  @ApiResponse(code = 400, message =
+		  "Les informations fournies ne sont pas correctes"),
+		  @ApiResponse(code = 413, message = 
+		  "Le portefeuille que vous voulez consulter n'existe pas"), })
 	 
+	 @GetMapping("/wallets/{id}")
+	 public ResponseEntity<Wallet> readWalletById(@PathVariable @Valid Long id) throws EntityNotFoundException {
+		return new ResponseEntity<Wallet>(walletService.readById(id), HttpStatus.OK);  
+	 }
 
 }

@@ -11,4 +11,5 @@ public interface IWalletRepository extends JpaRepository<Wallet, Long>, JpaSpeci
 	
 	Optional<Wallet> readByTitulaireId (Long titulaireId);
 
+	
 }

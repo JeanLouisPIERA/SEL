@@ -1,15 +1,17 @@
 package com.microselwebclientjspui.objets;
 
 import java.time.LocalDate;
-import java.util.List;
+
+
 
 public class Transaction {
 	
 	private Long id;
 	private int montant;
 	private LocalDate dateTransaction;
-	private List<Wallet> wallets;
-	
+	private String titreEchange;
+	private String emetteurUsername;
+	private String recepteurUsername;
 	
 	public Transaction() {
 		super();
@@ -47,19 +49,34 @@ public class Transaction {
 	}
 
 
-	public List<Wallet> getWallets() {
-		return wallets;
+	public String getTitreEchange() {
+		return titreEchange;
 	}
 
 
-	public void setWallets(List<Wallet> wallets) {
-		this.wallets = wallets;
+	public void setTitreEchange(String titreEchange) {
+		this.titreEchange = titreEchange;
 	}
 
 
-	
-	
-	
-	
+	public String getEmetteurUsername() {
+		return emetteurUsername;
+	}
+
+
+	public void setEmetteurUsername(String emetteurUsername) {
+		this.emetteurUsername = emetteurUsername;
+	}
+
+
+	public String getRecepteurUsername() {
+		return recepteurUsername;
+	}
+
+
+	public void setRecepteurUsername(String recepteurUsername) {
+		this.recepteurUsername = recepteurUsername;
+	}
+
 
 }

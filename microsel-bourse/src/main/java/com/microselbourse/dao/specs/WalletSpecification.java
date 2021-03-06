@@ -32,8 +32,8 @@ private WalletCriteria walletCriteria;
 	        	predicates.getExpressions().add(builder.equal(root.get("titulaireId"), walletCriteria.getTitulaireId()));			
 	        }
        
-        	if (walletCriteria.getSoldeWallet()!= 0) {
-            	predicates.getExpressions().add(builder.equal(root.get("soldeWallet"), walletCriteria.getSoldeWallet()));		
+        	if (walletCriteria.getSoldeWallet()!= null) {
+            	predicates.getExpressions().add(builder.greaterThanOrEqualTo(root.get("soldeWallet"), walletCriteria.getSoldeWallet()));		
             }
         	
         return builder.and(predicates);

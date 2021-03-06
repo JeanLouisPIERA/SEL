@@ -1,12 +1,17 @@
 package com.microselwebclientjspui.criteria;
 
+import java.util.List;
+
+import com.microselwebclientjspui.objets.Transaction;
+
 public class WalletCriteria {
 	
 	private Long id;
 	
 	private Long titulaireId;
 	
-	private int soldeWallet;
+	private Integer soldeWallet;
+	
 
 	public WalletCriteria() {
 		super();
@@ -28,13 +33,15 @@ public class WalletCriteria {
 		this.titulaireId = titulaireId;
 	}
 
-	public int getSoldeWallet() {
+	public Integer getSoldeWallet() {
 		return soldeWallet;
 	}
 
-	public void setSoldeWallet(int soldeWallet) {
+	public void setSoldeWallet(Integer soldeWallet) {
 		this.soldeWallet = soldeWallet;
 	}
+
+	
 	
 	
 

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -45,7 +46,7 @@ public class WalletServiceImpl implements IWalletService {
 	}
 
 	@Override
-	public Page<Wallet> searchByCriteria(WalletCriteria walletCriteria, PageRequest of) {
+	public Page<Wallet> searchByCriteria(WalletCriteria walletCriteria, Pageable pageable) {
 		
 		HttpHeaders headers = new HttpHeaders();
     	headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -55,7 +56,10 @@ public class WalletServiceImpl implements IWalletService {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLWallet)
     	        .queryParam("id", walletCriteria.getId())
     	        .queryParam("titulaireId", walletCriteria.getTitulaireId())
-    	        .queryParam("solde", walletCriteria.getSoldeWallet());
+    	        .queryParam("soldeWallet", walletCriteria.getSoldeWallet())
+    	        .queryParam("page", pageable.getPageNumber())
+    	        .queryParam("size", pageable.getPageSize());
+		
     
     	ResponseEntity<RestResponsePage<Wallet>> wallets = restTemplate.exchange
     			(builder.build().toUriString(), 
@@ -65,6 +69,21 @@ public class WalletServiceImpl implements IWalletService {
         Page<Wallet> pageWallet = wallets.getBody();
  
         return pageWallet;
+	}
+
+	@Override
+	public Wallet searchById(Long id) {
+		HttpHeaders headers = new HttpHeaders();
+    	headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+    	headers.setContentType(MediaType.APPLICATION_JSON);
+    	
+    	HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+		
+		String url = uRLWallet+"/" + id;
+    	
+		ResponseEntity<Wallet> wallet = restTemplate.exchange(url , HttpMethod.GET, requestEntity, Wallet.class);
+		
+		return wallet.getBody(); 
 	}
 	
 	
