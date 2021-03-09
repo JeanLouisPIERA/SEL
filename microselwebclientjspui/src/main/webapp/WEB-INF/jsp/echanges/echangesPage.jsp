@@ -96,13 +96,12 @@
 					   <table class="table table-striped table-condensed table-bordered" style="text-align:center">
 					   		 <thead>		  	  	 
 					    			 <tr>
-									      <th style="text-align:center">N° de l'échange</th>
+									      <th style="text-align:center">N° Echange</th>
 									      <th style="text-align:center">Titre</th>
 									      <th style="text-align:center">Enregistré le</th>
 									      <th style="text-align:center">Adherent Proposant</th>
 									      <th style="text-align:center">Adherent Repondant</th>
-									      <th style="text-align:center">A realiser avant le</th>
-									      <th style="text-align:center">Cloture le</th>
+									      <th style="text-align:center">Echeance</th>
 									      <th style="text-align:center">Statut</th>
 								     </tr>
 								     </thead>
@@ -115,8 +114,21 @@
 								          <td>${echange.emetteurUsername}</td>
 								          <td>${echange.recepteurUsername}</td>
 								          <td>${echange.dateEcheance}</td>					          
-								          <td>${echange.dateFin}</td>
 								          <td>${echange.statutEchange.getCode()}</td>
+								          
+								          <td>
+								          	<a type="button"  class="btn btn-primary "
+								        	href="/echanges/evaluations/${echange.id}">Détails</a>
+								          </td>	
+								          
+								          <%--  <c:if test="${echange.statutEchange.getCode() == 'CLOTURE' 
+								          || echange.statutEchange.getCode() == 'LITIGE'
+								          || echange.statutEchange.getCode() == 'CONFLIT' }">
+								          <td>
+								          	<a type="button"  class="btn btn-info "
+								        	href="/echanges/evaluations/${echange.id}">Voir Evaluations</a>
+								          </td>	
+								          </c:if> --%>
 								          
 								         <c:if test="${echange.statutEchange.getCode() == 'ENREGISTRE'}">
 								          <td>
@@ -132,21 +144,23 @@
 								          <c:if test="${echange.statutEchange.getCode() == 'CONFIRME'}">
 								          <td>
 								          	<a type="button"  class="btn btn-success" 
-								        	href="/echanges/emetteurValidation/${echange.id}">Valider (E)</a>
+								        	href="/echanges/emetteurValidation/${echange.id}">Avis + (E)</a>
 								          </td>
 								          <td>
 								          	<a type="button"  class="btn btn-danger" 
-								        	href="/echanges/emetteurRefus/${echange.id}">Refuser (E)</a>
+								        	href="/echanges/emetteurRefus/${echange.id}">Avis - (E)</a>
 								          </td>
 								          <td>
 								          	<a type="button"  class="btn btn-success" 
-								        	href="/echanges/recepteurValidation/${echange.id}">Valider (R)</a>
+								        	href="/echanges/recepteurValidation/${echange.id}">Avis + (R)</a>
 								          </td>
 								          <td>
 								          	<a type="button"  class="btn btn-danger" 
-								        	href="/echanges/recepteurRefus/${echange.id}">Refuser (R)</a>
+								        	href="/echanges/recepteurRefus/${echange.id}">Avis - (R)</a>
 								          </td>
 								          </c:if>
+								          
+								          
 								          
 					    				 </tr>
 				   					</c:forEach>

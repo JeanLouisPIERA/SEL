@@ -9,7 +9,7 @@
 
 <head>
 
-<title>Page Portefeuilles</title>
+<title>Page Détail d'un Portefeuille</title>
 <%@ include file="/WEB-INF/jsp/common/header1.jspf"%>
 </head>
 

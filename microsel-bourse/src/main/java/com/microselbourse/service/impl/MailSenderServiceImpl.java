@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.microselbourse.beans.UserBean;
 import com.microselbourse.entities.Echange;
+import com.microselbourse.entities.Evaluation;
 import com.microselbourse.entities.Proposition;
 import com.microselbourse.entities.Reponse;
 import com.microselbourse.proxies.IMicroselAdherentsProxy;
@@ -99,6 +100,32 @@ public class MailSenderServiceImpl implements IMailSenderService {
     	this.populateModel("statut_echange", echange.getStatutEchange().getText());
     	//this.populateModel("transaction_", echange.getTransaction());
     	   	
+    	this.populateModel("destinataire_username", nomUser);
+    	
+        mailService.sendMessageUsingThymeleafTemplate(mailTo, nomUser, subject, model, microselBourseMailTemplate);
+		
+	}
+
+	@Override
+	public void sendMailEchangeEvaluation(Evaluation evaluation, UserBean destinataire, String subject,
+			String microselBourseMailTemplate) throws UnsupportedEncodingException, MessagingException {
+		
+		String mailTo = destinataire.getEmail(); 
+    	String nomUser = destinataire.getUsername();
+    	
+    	this.populateModel("adherent_id", evaluation.getAdherentId()); 
+    	this.populateModel("adherent_username", evaluation.getAdherentUsername()); 
+    	this.populateModel("commentaire", evaluation.getCommentaire());
+    	this.populateModel("date_evaluation", evaluation.getDateEvaluation());
+    	this.populateModel("date_enregistrement_echange", evaluation.getEchange().getDateEnregistrement());
+    	this.populateModel("echange_emetteur_username", evaluation.getEchange().getEmetteurUsername());
+    	this.populateModel("echange_recepteur_username", evaluation.getEchange().getRecepteurUsername());
+    	this.populateModel("echange_statut", evaluation.getEchange().getStatutEchange());
+    	this.populateModel("echange_id", evaluation.getEchange().getId());
+    	this.populateModel("echange_titre", evaluation.getEchange().getTitre());
+    	this.populateModel("evaluation_note", evaluation.getEnumNoteEchange().toString());
+    	this.populateModel("evaluation_id", evaluation.getId());
+    	
     	this.populateModel("destinataire_username", nomUser);
     	
         mailService.sendMessageUsingThymeleafTemplate(mailTo, nomUser, subject, model, microselBourseMailTemplate);

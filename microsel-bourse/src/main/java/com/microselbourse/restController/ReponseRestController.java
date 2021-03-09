@@ -26,10 +26,12 @@ import com.microselbourse.criteria.ReponseCriteria;
 import com.microselbourse.dto.ReponseDTO;
 import com.microselbourse.entities.Proposition;
 import com.microselbourse.entities.Reponse;
+import com.microselbourse.entities.Transaction;
 import com.microselbourse.exceptions.DeniedAccessException;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.service.IReponseService;
+import com.microselbourse.service.ITransactionService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -72,5 +74,17 @@ public class ReponseRestController {
 	 public ResponseEntity<Reponse> readReponse(@PathVariable @Valid Long id) throws EntityNotFoundException {
 		return new ResponseEntity<Reponse>(reponseService.readReponse(id), HttpStatus.OK);  
 	 }
+	 	
+	@ApiOperation(value = "Recherche de toutes les réponses à une proposition", response = Proposition.class)  
+	  @ApiResponses(value = {
+	  @ApiResponse(code = 200, message = 
+			  "La recherche a été réalisée avec succés"), })
+	  
+	  @GetMapping(value="/reponses/proposition/{id}", produces="application/json") 
+	  public ResponseEntity<Page<Reponse>> searchAllByPropositionId(
+			  @PathVariable Long id, @RequestParam(name = "page", defaultValue= "0") int page, @RequestParam(name="size", defaultValue= "6") int size) throws EntityNotFoundException { 
+	  	  Page<Reponse> reponses = reponseService.findAllByWalletId(id, PageRequest.of(page, size)); 	
+		  return new ResponseEntity<Page<Reponse>>(reponses, HttpStatus.OK); 
+	  }
 
 }

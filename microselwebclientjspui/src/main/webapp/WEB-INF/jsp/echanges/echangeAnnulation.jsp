@@ -56,7 +56,7 @@
  </div>
  </div>
  <div>
- <a type="button" class="btn btn-primary btn-md" href="/propositions">Retour au menu</a>
+ <a type="button" class="btn btn-primary btn-md" href="/echanges">Retour au menu</a>
  </div>
  </div>
  

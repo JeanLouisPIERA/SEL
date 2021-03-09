@@ -105,8 +105,8 @@
 								          <td>${wallet.soldeWallet}</td>
 								          
 								          <td>
-								          	<a type="button"  class="btn btn-success" 
-								        	href="/wallets/transactions/${wallet.id}">Détail Portefeuille</a>
+								          	<a type="button"  class="btn btn-primary" 
+								        	href="/wallets/transactions/${wallet.id}">Détails</a>
 								          </td>
 								       
 								          

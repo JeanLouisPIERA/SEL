@@ -31,7 +31,11 @@ import com.microselwebclientjspui.objets.EnumCategorie;
 import com.microselwebclientjspui.objets.EnumStatutProposition;
 import com.microselwebclientjspui.objets.EnumTradeType;
 import com.microselwebclientjspui.objets.Proposition;
+import com.microselwebclientjspui.objets.Reponse;
+import com.microselwebclientjspui.objets.Transaction;
+import com.microselwebclientjspui.objets.Wallet;
 import com.microselwebclientjspui.service.IPropositionService;
+import com.microselwebclientjspui.service.IReponseService;
 
 
 @Controller
@@ -43,7 +47,8 @@ public class PropositionController {
     private ObjectMapper mapper;
     @Autowired
     private PropositionExceptionMessage propositionExceptionMessage;
-    
+    @Autowired
+    private IReponseService reponseService;
 
     //CREATE PROPOSITION *****************************************************************************************************
     
@@ -116,11 +121,22 @@ public class PropositionController {
     /**
      * Permet de lire la fiche d'une propositionn
      */
-    @GetMapping("/propositions/{id}")
-    public String readPret(Model model, @PathVariable("id") Long id) {
+    @GetMapping("/propositions/reponses/{id}")
+    public String readProposition(Model model, @PathVariable("id") Long id, @RequestParam(name="page", defaultValue="0") int page, 
+			@RequestParam(name="size", defaultValue="6") int size) {
     	try {
 			Proposition readProposition = propositionService.searchById(id);
-			model.addAttribute("readProposition", readProposition);
+			model.addAttribute("proposition", readProposition);
+			
+			Page<Reponse> reponses = reponseService.findAllByPropositionId(id, PageRequest.of(page, size));
+	    	
+	    	model.addAttribute("reponses", reponses.getContent());
+	    	model.addAttribute("page", Integer.valueOf(page));
+			model.addAttribute("number", reponses.getNumber());
+	        model.addAttribute("totalPages", reponses.getTotalPages());
+	        model.addAttribute("totalElements", reponses.getTotalElements());
+	        model.addAttribute("size", reponses.getSize());
+			
 		} catch (HttpClientErrorException e) {
 			String errorMessage = propositionExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
 			model.addAttribute("error", errorMessage);
@@ -128,6 +144,8 @@ public class PropositionController {
 		}
     	return "propositions/propositionView";
     }
+    
+    
     
     //UPDATE PROPOSITION *************************************************************************************************
 

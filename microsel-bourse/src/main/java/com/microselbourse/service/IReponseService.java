@@ -6,6 +6,7 @@ import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.microselbourse.criteria.ReponseCriteria;
@@ -22,6 +23,8 @@ public interface IReponseService {
 	Page<Reponse> searchAllReponsesByCriteria(ReponseCriteria reponseCriteria, Pageable pageable);
 	
 	Reponse readReponse(Long id) throws EntityNotFoundException;
+
+	Page<Reponse> findAllByWalletId(Long id, Pageable pageable) throws EntityNotFoundException;
 	
 	
 

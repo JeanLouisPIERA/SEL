@@ -33,13 +33,17 @@
    <table class="table table-striped table-condensed table-bordered">
     <thead>
         <tr>
-            <th colspan="2"> Titre : ${proposition.titre}</th>
+            <th colspan="2"> Enregistrement N° : ${proposition.id}</th> sous le N° Adhérent ${proposition.emetteurId}</th>
         </tr>
     </thead>
     <tbody>
          <tr>
-            <td>Identifiant :</td>
-            <td>${proposition.id}</td>
+            <td>Titre:</td>
+            <td>${proposition.titre}</td>
+        </tr>
+        <tr>
+            <td>Illustration:</td>
+            <td>${proposition.image}</td>
         </tr>
         <tr>
             <td>Description :</td>
@@ -58,9 +62,22 @@
             <td>${proposition.valeur}</td>
         </tr>
         <tr>
+            <td>Ville :</td>
+            <td>${proposition.ville}</td>
+        </tr>
+        <tr>
+            <td>Code Postal :</td>
+            <td>${proposition.codePostal}</td>
+        </tr>
+        <tr>
             <td>Fin de publication :</td>
             <td>${proposition.dateFin}</td>
         </tr>
+ 		<tr>
+            <td>Echange à réaliser avant le :</td>
+            <td>${proposition.dateEcheance}</td>
+        </tr>
+ 		
  		
     </tbody>
 </table>

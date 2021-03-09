@@ -83,7 +83,6 @@ public class User implements Serializable {
 	@Column(name="date_bureau_debut", nullable=true)
 	private LocalDate dateBureauDebut;
 	
-	
 	@Column(name="date_bureau_fin", nullable=true)
 	private LocalDate dateBureauFin;
 	

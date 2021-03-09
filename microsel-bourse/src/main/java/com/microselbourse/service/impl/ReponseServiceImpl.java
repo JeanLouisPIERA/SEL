@@ -9,6 +9,8 @@ import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,7 @@ import com.microselbourse.entities.EnumStatutProposition;
 import com.microselbourse.entities.EnumTradeType;
 import com.microselbourse.entities.Proposition;
 import com.microselbourse.entities.Reponse;
+import com.microselbourse.entities.Transaction;
 import com.microselbourse.entities.Wallet;
 import com.microselbourse.exceptions.DeniedAccessException;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
@@ -198,6 +201,25 @@ public class ReponseServiceImpl implements IReponseService{
 			throw new EntityNotFoundException("L'offre ou la demande que vous voulez consulter n'existe pas");
 		
 		return reponseToRead.get();
+	}
+
+
+	@Override
+	public Page<Reponse> findAllByWalletId(Long id, Pageable pageable) throws EntityNotFoundException {
+		Optional<Proposition> propositionFound = propositionRepository.findById(id);
+		if(!propositionFound.isPresent())
+			throw new EntityNotFoundException("Il n'existe aucune proposition enregistrée pour l'identifiant indiqué");
+		
+		int start = (int) pageable.getOffset();
+		int end = (int) ((start + pageable.getPageSize()) > propositionFound.get().getReponses().size() ? propositionFound.get().getReponses().size()
+				  : (start + pageable.getPageSize()));
+		
+		Page<Reponse> reponses = new PageImpl<Reponse>(
+				propositionFound.get().getReponses().subList(start, end), 
+				pageable, 
+				propositionFound.get().getReponses().size());
+		
+		return reponses;
 	}
 	
 	

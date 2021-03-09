@@ -8,7 +8,7 @@
 
 <head>
 
-<title>Echange Refus</title>
+<title>Reponse Confirmation</title>
 <%@ include file="/WEB-INF/jsp/common/header1.jspf"%>
 </head>
 
@@ -26,37 +26,46 @@
  <div class="panel panel-primary ">
  
   <div class="panel-heading">
-   <h5>Votre refus de valider cet échange a bien été enregistré</h5>
+   <h5>Votre évaluation a été enregistrée</h5>
   </div>
   
   <div class="panel-body">
    <table class="table table-striped table-condensed table-bordered">
     <thead>
         <tr>
-            <th colspan="2"> Titre : ${echange.titre}</th>
+            <th colspan="2"> Titre de l'échange: ${evaluation.echange.titre}</th>
         </tr>
     </thead>
     <tbody>
          <tr>
-            <td>N° :</td>
-            <td>${echange.id}</td>
+            <td>Identifiant de l'échange : </td>
+            <td>${evaluation.echange.id}</td>
         </tr>
         <tr>
-            <td>Statut:</td>
-            <td>${echange.statutEchange.getCode()}</td>
+            <td>Identifiant de votre evaluation : </td>
+            <td>${evaluation.id}</td>
         </tr>
-       
+        <tr>
+            <td>Date de votre évaluation : </td>
+            <td>${evaluation.dateEvaluation}</td>
+        </tr>
+        <tr>
+            <td>Note donnée dans votre évaluation :</td>
+            <td>${evaluation.enumNoteEchange.toString()}</td>
+        </tr>
+        <tr>
+            <td>Commentaire de votre évaluation :</td>
+            <td>${evaluation.commentaire}</td>
+        </tr>
+        
+ 		
     </tbody>
 </table>
   
  </div>
  </div>
-  		<td>
-         	<a type="button"  class="btn btn-success" 
-        	href="/evaluations/echange/${echange.id}">Evaluer l'échange</a>
-        </td>
  <div>
- <a type="button" class="btn btn-primary btn-md" href="/echanges">Retour au menu</a>
+ <a type="button" class="btn btn-primary btn-md" href="/echanges">Retour au menu </a>
  </div>
  </div>
  

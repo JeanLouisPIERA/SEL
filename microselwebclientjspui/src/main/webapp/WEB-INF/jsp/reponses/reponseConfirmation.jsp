@@ -26,7 +26,7 @@
  <div class="panel panel-primary ">
  
   <div class="panel-heading">
-   <h5>Votre réponse a été enregistrée</h5>
+   <h5>Votre réponse a été enregistrée avec le N° ${reponse.id} sous le N° Adhérent : ${reponse.recepteurId}</h5>
   </div>
   
   <div class="panel-body">
@@ -41,14 +41,7 @@
             <td>Identifiant de la proposition : </td>
             <td>${reponse.proposition.id}</td>
         </tr>
-        <tr>
-            <td>Identifiant de votre réponse : </td>
-            <td>${reponse.id}</td>
-        </tr>
-        <tr>
-            <td>Date d'échéance : </td>
-            <td>${reponse.dateEcheance}</td>
-        </tr>
+       
         <tr>
             <td>Description de votre réponse :</td>
             <td>${reponse.description}</td>
@@ -77,7 +70,10 @@
             <td>Valeur : </td>
             <td>${reponse.valeur}</td>
         </tr>
-        
+         <tr>
+            <td>Date d'échéance : </td>
+            <td>${reponse.dateEcheance}</td>
+        </tr>
  		
     </tbody>
 </table>

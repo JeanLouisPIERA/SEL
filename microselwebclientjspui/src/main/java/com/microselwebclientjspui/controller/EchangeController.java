@@ -1,5 +1,7 @@
 package com.microselwebclientjspui.controller;
 
+import java.util.List;
+
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,12 @@ import com.microselwebclientjspui.objets.EnumCategorie;
 import com.microselwebclientjspui.objets.EnumStatutEchange;
 import com.microselwebclientjspui.objets.EnumStatutProposition;
 import com.microselwebclientjspui.objets.EnumTradeType;
+import com.microselwebclientjspui.objets.Evaluation;
 import com.microselwebclientjspui.objets.Proposition;
+import com.microselwebclientjspui.objets.Transaction;
+import com.microselwebclientjspui.objets.Wallet;
 import com.microselwebclientjspui.service.IEchangeService;
+import com.microselwebclientjspui.service.IEvaluationService;
 import com.microselwebclientjspui.service.IPropositionService;
 
 @Controller
@@ -35,9 +41,11 @@ public class EchangeController {
     private ObjectMapper mapper;
     @Autowired
     private EchangeExceptionMessage echangeExceptionMessage;
+    @Autowired
+    private IEvaluationService evaluationService;
     
 	
-	//READ AND SEARCH PROPOSITION(S)************************************************************************************************
+	//READ AND SEARCH ECHANGE(S)************************************************************************************************
     
     
 		/**
@@ -64,21 +72,27 @@ public class EchangeController {
 	        return "echanges/echangesPage";
 	        
 	    }
-	    
+    
 	    /**
-	     * Permet de lire la fiche d'une propositionn
+	     * Permet de lire les évaluations d'un échange
 	     */
-	    @GetMapping("/echanges/{id}")
-	    public String readEchange(Model model, @PathVariable("id") Long id) {
+	    @GetMapping("/echanges/evaluations/{id}")
+	    public String readWallet(Model model, @PathVariable("id") Long id) {
 	    	
 	    	try {
 				Echange readEchange = echangeService.searchById(id);
 				model.addAttribute("readEchange", readEchange);
-			} catch (HttpClientErrorException e) {
+			
+		    	List<Evaluation> evaluations = evaluationService.findAllByEchangeId(id);
+		    	
+		    	model.addAttribute("evaluations", evaluations);
+		    	
+	    	} catch (HttpClientErrorException e) {
 				String errorMessage = echangeExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
 				model.addAttribute("error", errorMessage);
 				return"/error";
 			}
+	        
 	    	return "echanges/echangeView";
 	    }
 	    

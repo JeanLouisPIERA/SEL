@@ -109,7 +109,8 @@ public class Proposition implements Serializable {
 	@JsonIgnore
 	@OneToMany(mappedBy="proposition", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Reponse> reponses;
-
+	
+	
 
 	public Proposition() {
 		super();
@@ -310,10 +311,6 @@ public class Proposition implements Serializable {
 	public void setReponses(List<Reponse> reponses) {
 		this.reponses = reponses;
 	}
-
-
-	
-
 
 
 }

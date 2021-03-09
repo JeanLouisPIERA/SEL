@@ -153,37 +153,36 @@
 					   <table class="table table-striped table-condensed table-bordered" style="text-align:center">
 					   		 <thead>		  	  	 
 					    			 <tr>
-									      <th style="text-align:center">Type de Proposition</th>
-									      <th style="text-align:center">Reference de la Proposition</th>
-									      <th style="text-align:center">Reference de l'adhérent</th>
-									      <th style="text-align:center">Titre</th>
-									      <th style="text-align:center">Détail</th>
-									      <th style="text-align:center">Valeur</th>
-									      <th style="text-align:center">Date d'échéance</th>
-									      <th style="text-align:center">Ville</th>
-									      <th style="text-align:center">Code Postal</th>
+					    			      <th style="text-align:center">Référence</th>
+					    			      <th style="text-align:center">Type</th>
 									      <th style="text-align:center">Rubrique</th>
+					    			      <th style="text-align:center">Titre</th>
+					    			      <th style="text-align:center">Valeur</th>
+					    			      <th style="text-align:center">Ville</th>
+									      <th style="text-align:center">Code Postal</th>
+					    			      <th style="text-align:center">N° Adhérent</th>		
 									      <th style="text-align:center">Situation</th>
-									      <th style="text-align:center">Date de publication</th>
 									      <th style="text-align:center">Fin de publication</th>
 								     </tr>
 								     </thead>
 								     <tbody>
 					   				 <c:forEach var="proposition" items="${propositions}">
 					   				 <tr>
-								          <td>${proposition.enumTradeType.getCode()}</td>
 								          <td>${proposition.id}</td>
-								          <td>${proposition.emetteurId}</td>
+								          <td>${proposition.enumTradeType.toString()}</td>
+								          <td>${proposition.categorie.getName().toString()}</td>
 								          <td>${proposition.titre}</td>
-								          <td>${proposition.description}</td>
 								          <td>${proposition.valeur}</td>
-								          <td>${proposition.dateEcheance}</td>
 								          <td>${proposition.ville}</td>
 								          <td>${proposition.codePostal}</td>
-								          <td>${proposition.categorie.getName().getCode()}</td>
+								          <td>${proposition.emetteurId}</td>						          
 								          <td>${proposition.statut.getCode()}</td>
-								          <td>${proposition.dateDebut}</td>
 								          <td>${proposition.dateFin}</td>
+								          
+								          <td>
+								          	<a type="button"  class="btn btn-primary" 
+								        	href="/propositions/reponses/${proposition.id}">Détails</a>
+								          </td>
 								          
 								          <c:if test="${proposition.statut.getCode()=='ENCOURS'}"> 
 								          <td>

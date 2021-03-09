@@ -18,6 +18,7 @@ public enum RoleEnum {
 		this.text = text;
 	}
 	
+	
 	public static RoleEnum getRoleEnumByCode(String code) {
 		for (RoleEnum roleEnum : RoleEnum.values()) {
 			if(roleEnum.code.equals(code)){

@@ -34,7 +34,6 @@ public class Proposition {
 	
 	private Categorie categorie;
 	
-	
 	private LocalDate dateDebut;
 
 	

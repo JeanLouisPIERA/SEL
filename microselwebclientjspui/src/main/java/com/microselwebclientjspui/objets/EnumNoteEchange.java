@@ -1,4 +1,4 @@
-package com.microselbourse.entities;
+package com.microselwebclientjspui.objets;
 
 
 public enum EnumNoteEchange {

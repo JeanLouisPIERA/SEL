@@ -68,6 +68,7 @@ public class ReponseController {
 		}
     	
     	try {
+    		System.out.println("reponseDTO recepteurId" + reponseDTO.getRecepteurId());
 			Reponse reponseToCreate = reponseService.createReponse(id, reponseDTO);
 			model.addAttribute("reponse", reponseToCreate);
 		} catch (HttpClientErrorException e) {

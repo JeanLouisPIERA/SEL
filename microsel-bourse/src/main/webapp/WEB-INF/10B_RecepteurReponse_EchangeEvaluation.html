@@ -1,0 +1,60 @@
+<!-- DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml"-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Mail d'information d'évaluation d'un échange</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="http://fonts.googleapis.com/css?family=Roboto"
+	rel="stylesheet" type="text/css" />
+<!-- use the font -->
+<style>
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: 20px;
+}
+</style>
+</head>
+
+<body>
+	<p>
+		Objet: Evaluation de l'échange Numero <span th:text="${echange_id}"></span> enregistré le 
+		<span th:text="${#temporals.format(date_enregistrement_echange, 'dd-MMMM-yyyy', new java.util.Locale('fr', 'FR'))}"></span>
+	</p>
+
+	<p th:text="${'Bonjour ' + destinataire_username}"></p>
+
+	<p>
+		L'échange sous rubrique publié sous le titre "<span th:text="${echange_titre}"></span>" a été évalué le
+		<span th:text="${#temporals.format(date_evaluation, 'dd-MMMM-yyyy', new java.util.Locale('fr', 'FR'))}"></span>
+		par l'adherent <span th:text="${echange_recepteur_username}"></span>. 
+	
+	</p> <p>
+		
+		Voici son evaluation sur la qualité de votre échange :
+		"<span th:text="${evaluation_note}"></span>".
+	
+	</p> <p>
+		
+		Et son commentaire plus détaillé :
+		"<span th:text="${commentaire}"></span>".
+		
+	</p> <p>	
+		
+		Si vous ne l'avez pas déjà fait, vous avez la possibilité d'évaluer et de commenter vous aussi la qualité de cet échange en cliquant
+		sur le bouton EVALUATION.
+		
+	</p>
+	
+	<p>
+		Nous vous souhaitons d'excellents échanges collaboratifs <br />
+	</p>
+
+	<p>La SEL Team</p>
+
+
+</body>
+
+
+</html>

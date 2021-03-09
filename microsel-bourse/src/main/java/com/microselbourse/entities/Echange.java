@@ -147,6 +147,10 @@ public class Echange implements Serializable {
 	  @OneToMany(mappedBy="echange", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
 	  private List<Blocage> blocages;
 	  
+	  @JsonIgnore
+		@OneToMany(mappedBy="echange", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+		private List<Evaluation> evaluations;
+
 
 	  
 	public Echange() {
@@ -372,6 +376,16 @@ public class Echange implements Serializable {
 
 	public void setBlocages(List<Blocage> blocages) {
 		this.blocages = blocages;
+	}
+
+
+	public List<Evaluation> getEvaluations() {
+		return evaluations;
+	}
+
+
+	public void setEvaluations(List<Evaluation> evaluations) {
+		this.evaluations = evaluations;
 	}
 	
 	
