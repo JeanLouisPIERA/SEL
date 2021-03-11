@@ -2,6 +2,8 @@ package com.microselwebclientjspui.controller;
 
 import java.util.EnumSet;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,7 +58,7 @@ public class ReponseController {
      * Permet de valider l'enregistrement d'une nouvelle reponse
      */
     @PostMapping("/reponses/newReponse/{id}")
-    public String createReponse(Model model, @PathVariable Long id, @ModelAttribute("reponseDTO") ReponseDTO reponseDTO, BindingResult result) {
+    public String createReponse(Model model, HttpServletRequest request, @PathVariable Long id, @ModelAttribute("reponseDTO") ReponseDTO reponseDTO, BindingResult result) {
 		
 		/*
 		 * Proposition propositionToRespond = propositionService.searchById(id);
@@ -69,7 +71,7 @@ public class ReponseController {
     	
     	try {
     		System.out.println("reponseDTO recepteurId" + reponseDTO.getRecepteurId());
-			Reponse reponseToCreate = reponseService.createReponse(id, reponseDTO);
+			Reponse reponseToCreate = reponseService.createReponse(id, request, reponseDTO);
 			model.addAttribute("reponse", reponseToCreate);
 		} catch (HttpClientErrorException e) {
 			 String errorMessage = propositionExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);

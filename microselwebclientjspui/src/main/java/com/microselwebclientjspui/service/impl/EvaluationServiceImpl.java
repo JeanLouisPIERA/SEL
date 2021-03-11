@@ -3,6 +3,7 @@ package com.microselwebclientjspui.service.impl;
 import java.util.Arrays;
 import java.util.List;
 
+import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -26,9 +27,10 @@ import com.microselwebclientjspui.service.IEvaluationService;
 @Service
 public class EvaluationServiceImpl implements IEvaluationService {
 	
-	@Autowired
-	private RestTemplate restTemplate;
-
+	
+	  @Autowired private RestTemplate restTemplate;
+	 
+	
 	@Value("${application.uRLEvaluation}") private String uRLEvaluation;
 
 

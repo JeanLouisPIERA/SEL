@@ -2,6 +2,7 @@ package com.microselwebclientjspui.service.impl;
 
 import java.util.Arrays;
 
+import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -25,8 +26,10 @@ import com.microselwebclientjspui.service.IWalletService;
 @Service
 public class WalletServiceImpl implements IWalletService {
 	
-	@Autowired
-	private RestTemplate restTemplate;
+	
+	@Autowired private RestTemplate restTemplate;
+	 
+	
 	
 	@Value("${application.uRLWallet}") private String uRLWallet;
 

@@ -55,9 +55,25 @@ public class User implements Serializable {
 	@JsonIgnore
 	private String passwordConfirm;
 	
-	
 	@Column(name = "email", length = 100, nullable=false, unique=true)
 	private String email;
+	
+	
+	
+	@Column(name = "first_name", length = 25, nullable=false)
+	private String firstname;
+	
+	@Column(name = "last_name", length = 25, nullable=false)
+	private String lastname;
+	
+	@Column(name = "status_code", length = 3)
+	private int statusCode;
+	
+	@Column(name = "status", length = 25)
+	private String status;
+	
+	
+	
 	
 	@Column(name = "statut", length = 5, nullable=false)
 	private UserStatutEnum statut;
@@ -114,88 +130,6 @@ public class User implements Serializable {
 		super();
 	}
 	
-	
-
-	public User(Long id, String username, String password, String passwordConfirm, String email) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.passwordConfirm = passwordConfirm;
-		this.email = email;
-	}
-
-
-
-	public User(String username, String password, String email, UserStatutEnum statut, LocalDate dateAdhesion) {
-		super();
-		this.username = username;
-		this.password = password;
-		this.email = email;
-		this.statut = statut;
-		this.dateAdhesion = dateAdhesion;
-	}
-
-
-	public User(Long id, String username, String password, String email, UserStatutEnum statut,
-			LocalDate dateAdhesion) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.email = email;
-		this.statut = statut;
-		this.dateAdhesion = dateAdhesion;
-	}
-
-
-
-	public User(Long id, String username, String password, String passwordConfirm, String email, UserStatutEnum statut,
-			LocalDate dateAdhesion) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.passwordConfirm = passwordConfirm;
-		this.email = email;
-		this.statut = statut;
-		this.dateAdhesion = dateAdhesion;
-	}
-	
-	public User(Long id, String username, String password, String passwordConfirm, String email, UserStatutEnum statut,
-			LocalDate dateAdhesion, LocalDate dateClotureDebut, LocalDate dateClotureFin, LocalDate dateBlocageDebut,
-			LocalDate dateBlocageFin) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.passwordConfirm = passwordConfirm;
-		this.email = email;
-		this.statut = statut;
-		this.dateAdhesion = dateAdhesion;
-		this.dateClotureDebut = dateClotureDebut;
-		this.dateClotureFin = dateClotureFin;
-		this.dateBlocageDebut = dateBlocageDebut;
-		this.dateBlocageFin = dateBlocageFin;
-	}
-
-	public User(Long id, String username, String password, String passwordConfirm, String email, UserStatutEnum statut,
-			LocalDate dateAdhesion, LocalDate dateClotureDebut, LocalDate dateClotureFin, LocalDate dateBlocageDebut,
-			LocalDate dateBlocageFin, List<Role> roles) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.passwordConfirm = passwordConfirm;
-		this.email = email;
-		this.statut = statut;
-		this.dateAdhesion = dateAdhesion;
-		this.dateClotureDebut = dateClotureDebut;
-		this.dateClotureFin = dateClotureFin;
-		this.dateBlocageDebut = dateBlocageDebut;
-		this.dateBlocageFin = dateBlocageFin;
-		this.roles = roles;
-	}
 
 	public Long getId() {
 		return id;
@@ -342,21 +276,45 @@ public class User implements Serializable {
 	}
 
 
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", passwordConfirm="
-				+ passwordConfirm + ", email=" + email + ", statut=" + statut + ", dateAdhesion=" + dateAdhesion
-				+ ", dateClotureDebut=" + dateClotureDebut + ", dateClotureFin=" + dateClotureFin
-				+ ", dateBlocageDebut=" + dateBlocageDebut + ", dateBlocageFin=" + dateBlocageFin + ", dateBureauDebut="
-				+ dateBureauDebut + ", dateBureauFin=" + dateBureauFin + ", dateAdminDebut=" + dateAdminDebut
-				+ ", dateAdminFin=" + dateAdminFin + ", roles=" + roles + "]";
+	public String getFirstname() {
+		return firstname;
 	}
 
 
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
 
-	
 
-	
+	public String getLastname() {
+		return lastname;
+	}
+
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+
+	public int getStatusCode() {
+		return statusCode;
+	}
+
+
+	public void setStatusCode(int statusCode) {
+		this.statusCode = statusCode;
+	}
+
+
+	public String getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+
 	
 }

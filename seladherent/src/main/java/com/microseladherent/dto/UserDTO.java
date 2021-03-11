@@ -11,6 +11,8 @@ import io.swagger.annotations.ApiModelProperty;
 
 
 
+
+
 @IPasswordConfirmation.List({
     @IPasswordConfirmation(
             password = "password",
@@ -24,6 +26,9 @@ public class UserDTO {
 	@NotEmpty(message="Merci de saisir votre identifiant")
 	@Size(min = 5, max = 25, message = "{user.name.invalid}")
 	private String username;
+	
+	private String firstname;
+	private String lastname;
 	
 	@ApiModelProperty(notes= "Adresse mail de l'utilisateur (Saisie obligatoire)")
 	@NotEmpty(message="Merci de saisir votre e-mail")
@@ -40,6 +45,9 @@ public class UserDTO {
 	
 	@AssertTrue 
 	private Boolean terms;
+	
+	private int statusCode;
+	private String status;
 	
 	public UserDTO() {
 		super();
@@ -89,6 +97,40 @@ public class UserDTO {
 	public void setTerms(Boolean terms) {
 		this.terms = terms;
 	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public int getStatusCode() {
+		return statusCode;
+	}
+
+	public void setStatusCode(int statusCode) {
+		this.statusCode = statusCode;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	
 	
 	
 

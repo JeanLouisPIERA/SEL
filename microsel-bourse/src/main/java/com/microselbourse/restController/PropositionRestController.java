@@ -2,9 +2,13 @@ package com.microselbourse.restController;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
+import org.keycloak.KeycloakPrincipal;
+import org.keycloak.KeycloakSecurityContext;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Page;
@@ -67,7 +71,9 @@ public class PropositionRestController {
 		  
 		  @GetMapping(value="/propositions", produces="application/json") 
 		  public ResponseEntity<Page<Proposition>> searchAllPropositionsByCriteria(
-				  @PathParam("propositionCriteria") PropositionCriteria propositionCriteria, @RequestParam(name = "page", defaultValue= "0") int page, @RequestParam(name="size", defaultValue= "10") int size) { 
+				  @PathParam("propositionCriteria") PropositionCriteria propositionCriteria,
+				  @RequestParam(name = "page", defaultValue= "0") int page, @RequestParam(name="size", defaultValue= "10") int size) { 
+		  	  
 		  	  Page<Proposition> propositions = propositionService.searchAllPropositionsByCriteria(propositionCriteria, PageRequest.of(page, size)); 	
 		  	  List<Proposition> propositionsList = propositions.getContent();
 		  	  for(Proposition proposition : propositionsList) {System.out.println("titre" + proposition.getTitre());}

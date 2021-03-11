@@ -22,4 +22,15 @@ databaseChangeLog:
           relativeToChangelogFile: true
           splitStatements: true
           stripComments: true
+ - changeSet:
+      id: script03
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/03_alter_table_users.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true          
  

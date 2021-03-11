@@ -2,6 +2,7 @@ package com.microselwebclientjspui.service.impl;
 
 import java.util.Optional;
 
+import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -23,8 +24,10 @@ import com.microselwebclientjspui.service.ITransactionService;
 @Service
 public class TransactionServiceImpl implements ITransactionService {
 	
-	@Autowired
-	private RestTemplate restTemplate;
+	
+	  @Autowired private RestTemplate restTemplate;
+	 
+	
 	
 	@Value("${application.uRLTransaction}") private String uRLTransaction;
 

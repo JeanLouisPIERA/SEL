@@ -130,6 +130,8 @@
 								          </td>	
 								          </c:if> --%>
 								          
+								         
+								         <c:if test="${pageContext.request.userPrincipal.name == echange.emetteurUsername}"> 
 								         <c:if test="${echange.statutEchange.getCode() == 'ENREGISTRE'}">
 								          <td>
 								          	<a type="button"  class="btn btn-success" 
@@ -139,6 +141,7 @@
 								          	<a type="button"  class="btn btn-warning" 
 								        	href="/echanges/annulation/${echange.id}">Annuler</a>
 								          </td>
+								          </c:if>
 								          </c:if>
 								          
 								          <c:if test="${echange.statutEchange.getCode() == 'CONFIRME'}">

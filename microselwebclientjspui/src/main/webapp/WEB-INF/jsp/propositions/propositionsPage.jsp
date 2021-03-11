@@ -184,12 +184,14 @@
 								        	href="/propositions/reponses/${proposition.id}">Détails</a>
 								          </td>
 								          
-								          <c:if test="${proposition.statut.getCode()=='ENCOURS'}"> 
-								          <td>
-								          	<a type="button"  class="btn btn-success" 
-								        	href="/reponses/newReponse/${proposition.id}">Répondre</a>
-								          </td>
-								          </c:if>
+								           
+									          <c:if test="${proposition.statut.getCode()=='ENCOURS'}"> 
+									          <td>
+									          	<a type="button"  class="btn btn-success" 
+									        	href="/reponses/newReponse/${proposition.id}">Répondre</a>
+									          </td>
+									          </c:if>
+								          
 								          
 					    				 </tr>
 				   					</c:forEach>

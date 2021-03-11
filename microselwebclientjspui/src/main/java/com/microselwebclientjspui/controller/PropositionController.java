@@ -3,8 +3,10 @@ package com.microselwebclientjspui.controller;
 
 import java.util.EnumSet;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
 
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;

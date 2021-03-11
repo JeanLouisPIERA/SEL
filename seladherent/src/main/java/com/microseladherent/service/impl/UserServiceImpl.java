@@ -6,7 +6,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import javax.ws.rs.core.Response;
+
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.keycloak.OAuth2Constants;
+import org.keycloak.admin.client.CreatedResponseUtil;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.KeycloakBuilder;
+import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.UserResource;
+import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.RoleRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +50,8 @@ public class UserServiceImpl implements IUserService
 	@Autowired
 	private IUserMapper userMapper;
 	
+	
+	
 	private Role roleAdherent = new Role((long) 0, RoleEnum.ADHERENT);
 	private Role roleBureau = new Role((long) 1, RoleEnum.BUREAU);
 	private Role roleAdmin = new Role((long)1, RoleEnum.ADMIN);
@@ -50,26 +67,32 @@ public class UserServiceImpl implements IUserService
 	 * La date de création du compte est enregistrée
 	 * @throws EntityAlreadyExistsException 
 	 */
-	@Override
-	public User createAccount(UserDTO userDTO) throws EntityAlreadyExistsException{
-				
-		Optional<User> usernameAlreadyExists = userRepository.findByUsername(userDTO.getUsername());
-		if (usernameAlreadyExists.isPresent()) 
-			throw new EntityAlreadyExistsException("Ce nom d'adhérent est déjà utilisé"); 
-		
-		Optional<User> adresseMailAlreadyExists = userRepository.findByEmail(userDTO.getAdresseMail());
-		if(adresseMailAlreadyExists.isPresent())
-			throw new EntityAlreadyExistsException("Un compte d'adhérent existe déjà pour cette adresse mail");
-			
-		User userToCreate = userMapper.userDTOToUser(userDTO);
-			
-	    userToCreate.setDateAdhesion(LocalDate.now());
-	    userToCreate.setStatut(UserStatutEnum.ACTIVE);
-	    List<Role> roleAdherent = Arrays.asList(roleRepository.findByRoleEnum(RoleEnum.ADHERENT));
-	    userToCreate.setRoles(roleAdherent);
-	    return userRepository.save(userToCreate);
-	}
 	
+	  @Override public User createAccount(UserDTO userDTO) throws
+	  EntityAlreadyExistsException{
+	  
+	  Optional<User> usernameAlreadyExists =
+	  userRepository.findByUsername(userDTO.getUsername()); if
+	  (usernameAlreadyExists.isPresent()) throw new
+	  EntityAlreadyExistsException("Ce nom d'adhérent est déjà utilisé");
+	  
+	  Optional<User> adresseMailAlreadyExists =
+	  userRepository.findByEmail(userDTO.getAdresseMail());
+	  if(adresseMailAlreadyExists.isPresent()) throw new
+	  EntityAlreadyExistsException("Un compte d'adhérent existe déjà pour cette adresse mail"
+	  );
+	  
+	  User userToCreate = userMapper.userDTOToUser(userDTO);
+	  
+	  userToCreate.setDateAdhesion(LocalDate.now());
+	  userToCreate.setStatut(UserStatutEnum.ACTIVE); List<Role> roleAdherent =
+	  Arrays.asList(roleRepository.findByRoleEnum(RoleEnum.ADHERENT));
+	  userToCreate.setRoles(roleAdherent); return
+	  userRepository.save(userToCreate); }
+	 
+	
+	
+
 
 	
 	/**
@@ -380,6 +403,7 @@ public class UserServiceImpl implements IUserService
 		  
 		  }
 
+	
 
 
 

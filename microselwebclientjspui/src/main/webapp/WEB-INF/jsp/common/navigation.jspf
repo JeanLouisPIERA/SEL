@@ -1,4 +1,4 @@
-
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <div class="navbar navbar-default">
 
@@ -11,18 +11,43 @@
 	    
 		     <ul class="nav navbar-nav nav-item active">
 			      <li >
-			      	<a class="nav-link" href="/propositions"> Accueil <span class="sr-only"></span></a>
+			      	<a class="nav-link" href="/accueil"> Accueil <span class="sr-only"></span></a>
 			      </li>      
 		          <li><a href="/propositions">Propositions</a></li>
 		          <li><a href="/echanges">Echanges</a></li>
-		          <li><a href="/wallets">Portefeuilles</a></li>
+		          <li>
+		          
+		           <sec:authorize access="hasAuthority('ADMIN')">
+		          <a href="/wallets">Portefeuilles</a>
+		          </sec:authorize>
+		          
+		          </li>
 		     </ul>
 		    
 		     </div>
 		    
 		     <ul class="nav navbar-nav navbar-right">
 		     
+		     			 <c:if test="${pageContext.request.userPrincipal.name == null}">
+					       	<div> Connectez vous à votre Espace Adhérent || <a href="/login""> Login</a></div>
+					    	
+					    </c:if>
 		     
+		         
+					    <c:if test="${pageContext.request.userPrincipal.name != null}">
+					        <%-- <form id="logoutForm" method="GET" action="${contextPath}/logout">
+					            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+					        </form> --%>
+					
+					       <%--  <div>${pageContext.request.userPrincipal.name} est connecté| <a onclick="document.forms['logoutForm'].submit()">Logout</a></div> --%>
+					    	<div>${pageContext.request.userPrincipal.name} est connecté || <a href="/logout""> Logout</a></div>
+					    	
+					    </c:if>
+					  
+		         </li> 
+		         <li>
+			         <a href="mailto:jeanlouispiera@yahoo.fr?subject=Premiercontact&cc=jlp340105@gmail.com&body=Bonjour,"> Nous Contacter</a>
+		         </li>
 		    
 				 
 		     </ul>

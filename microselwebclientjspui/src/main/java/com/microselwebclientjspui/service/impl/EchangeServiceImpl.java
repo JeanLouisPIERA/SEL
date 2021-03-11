@@ -2,6 +2,7 @@ package com.microselwebclientjspui.service.impl;
 
 import java.util.Arrays;
 
+import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -26,8 +27,10 @@ import com.microselwebclientjspui.service.IEchangeService;
 @Service
 public class EchangeServiceImpl implements IEchangeService {
 	
-	@Autowired
-	private RestTemplate restTemplate;
+	
+	  @Autowired private RestTemplate restTemplate;
+	 
+	
 	
 	@Value("${application.uRLEchange}") private String uRLEchange;
 
