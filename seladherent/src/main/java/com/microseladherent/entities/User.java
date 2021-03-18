@@ -65,9 +65,9 @@ public class User implements Serializable {
 	
 	@Column(name = "last_name", length = 25, nullable=false)
 	private String lastname;
-	
-	@Column(name = "status_code", length = 3)
-	private int statusCode;
+	/*
+	 * @Column(name = "status_code", length = 3) private long statusCode;
+	 */
 	
 	@Column(name = "status", length = 25)
 	private String status;
@@ -124,12 +124,6 @@ public class User implements Serializable {
         inverseJoinColumns = { @JoinColumn(name = "role_id") }
     )
     private List<Role> roles = new ArrayList<Role>();
-	
-	
-	public User() {
-		super();
-	}
-	
 
 	public Long getId() {
 		return id;
@@ -169,6 +163,30 @@ public class User implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public UserStatutEnum getStatut() {
@@ -219,6 +237,38 @@ public class User implements Serializable {
 		this.dateBlocageFin = dateBlocageFin;
 	}
 
+	public LocalDate getDateBureauDebut() {
+		return dateBureauDebut;
+	}
+
+	public void setDateBureauDebut(LocalDate dateBureauDebut) {
+		this.dateBureauDebut = dateBureauDebut;
+	}
+
+	public LocalDate getDateBureauFin() {
+		return dateBureauFin;
+	}
+
+	public void setDateBureauFin(LocalDate dateBureauFin) {
+		this.dateBureauFin = dateBureauFin;
+	}
+
+	public LocalDate getDateAdminDebut() {
+		return dateAdminDebut;
+	}
+
+	public void setDateAdminDebut(LocalDate dateAdminDebut) {
+		this.dateAdminDebut = dateAdminDebut;
+	}
+
+	public LocalDate getDateAdminFin() {
+		return dateAdminFin;
+	}
+
+	public void setDateAdminFin(LocalDate dateAdminFin) {
+		this.dateAdminFin = dateAdminFin;
+	}
+
 	public List<Role> getRoles() {
 		return roles;
 	}
@@ -226,95 +276,8 @@ public class User implements Serializable {
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
-	
-	
-
-	public LocalDate getDateBureauDebut() {
-		return dateBureauDebut;
-	}
-
-
-
-	public void setDateBureauDebut(LocalDate dateBureauDebut) {
-		this.dateBureauDebut = dateBureauDebut;
-	}
-
-
-
-	public LocalDate getDateBureauFin() {
-		return dateBureauFin;
-	}
-
-
-
-	public void setDateBureauFin(LocalDate dateBureauFin) {
-		this.dateBureauFin = dateBureauFin;
-	}
-
-
-
-	public LocalDate getDateAdminDebut() {
-		return dateAdminDebut;
-	}
-
-
-
-	public void setDateAdminDebut(LocalDate dateAdminDebut) {
-		this.dateAdminDebut = dateAdminDebut;
-	}
-
-
-
-	public LocalDate getDateAdminFin() {
-		return dateAdminFin;
-	}
-
-
-
-	public void setDateAdminFin(LocalDate dateAdminFin) {
-		this.dateAdminFin = dateAdminFin;
-	}
-
-
-	public String getFirstname() {
-		return firstname;
-	}
-
-
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
-
-
-	public String getLastname() {
-		return lastname;
-	}
-
-
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
-
-
-	public int getStatusCode() {
-		return statusCode;
-	}
-
-
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
-
-
-	public String getStatus() {
-		return status;
-	}
-
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-
+	 
+	 
 	
 }
+	

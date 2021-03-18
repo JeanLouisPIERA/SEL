@@ -131,7 +131,7 @@
 								          </c:if> --%>
 								          
 								         
-								         <c:if test="${pageContext.request.userPrincipal.name == echange.emetteurUsername}"> 
+								         <sec:authorize access="hasAuthority('USER')">
 								         <c:if test="${echange.statutEchange.getCode() == 'ENREGISTRE'}">
 								          <td>
 								          	<a type="button"  class="btn btn-success" 
@@ -142,7 +142,7 @@
 								        	href="/echanges/annulation/${echange.id}">Annuler</a>
 								          </td>
 								          </c:if>
-								          </c:if>
+								         
 								          
 								          <c:if test="${echange.statutEchange.getCode() == 'CONFIRME'}">
 								          <td>
@@ -162,7 +162,7 @@
 								        	href="/echanges/recepteurRefus/${echange.id}">Avis - (R)</a>
 								          </td>
 								          </c:if>
-								          
+								          </sec:authorize>
 								          
 								          
 					    				 </tr>

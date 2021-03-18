@@ -1,5 +1,7 @@
 package com.microselwebclientjspui;
 
+import org.keycloak.adapters.springsecurity.client.KeycloakClientRequestFactory;
+import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -35,6 +37,7 @@ public class MicroselwebclientjspuiApplication {
     
 		return builtRestTemplate;
 	}
+	
 	
 	
 }

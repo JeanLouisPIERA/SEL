@@ -1,0 +1,73 @@
+databaseChangeLog:
+ - changeSet:
+      id: script01
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          endDelimiter: \nGO
+          path: scripts/01_create_typedocuments.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+ - changeSet:
+      id: script02
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          endDelimiter: \nGO
+          path: scripts/02_create_documents.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true 
+ - changeSet:
+      id: script03
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          endDelimiter: \nGO
+          path: scripts/03_alter_table_typedocuments.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+ - changeSet:
+      id: script04
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          endDelimiter: \nGO
+          path: scripts/04_alter_table_documents.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true   
+ - changeSet:
+      id: script05
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          endDelimiter: \nGO
+          path: scripts/05_create_typepropositions.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true 
+ - changeSet:
+      id: script06
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          endDelimiter: \nGO
+          path: scripts/06_alter_table_typepropositions.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true                                                             

@@ -26,6 +26,10 @@ public interface IPropositionService {
 	public void closeProposition(Long id);
 
 	/*
+	 * public Proposition createProposition(HttpServletRequest request,
+	 * PropositionDTO propositionDTO);
+	 */
+	/*
 	 * public Page<Proposition> searchByCriteria(PropositionCriteria
 	 * propositionCriteria, HttpServletRequest request, Pageable pageable);
 	 */

@@ -101,14 +101,16 @@ public class EchangeController {
 		 */
 	    @GetMapping("/echanges/confirmation/{id}")
 		public String confirmerEchange(Model model, @PathVariable("id") Long id) {
-			try {
-				Echange echangeAConfirmer = echangeService.confirmerEchange(id);
-				model.addAttribute("echange", echangeAConfirmer);
-			} catch (HttpClientErrorException e) {
-				String errorMessage = echangeExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
-				model.addAttribute("error", errorMessage);
-				return"/error";
-			}
+	    	
+			  try { 
+			  Echange echangeAConfirmer = echangeService.confirmerEchange(id);
+			  model.addAttribute("echange", echangeAConfirmer); } 
+			  catch
+			  (HttpClientErrorException e) { 
+				  String errorMessage = echangeExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode()); 
+				  model.addAttribute("error", errorMessage);
+			  return"/error"; }
+			 
 			return "echanges/echangeConfirmation";
 		}
 	    

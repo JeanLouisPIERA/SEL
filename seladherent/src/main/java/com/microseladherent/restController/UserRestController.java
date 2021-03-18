@@ -8,7 +8,7 @@ import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import javax.ws.rs.core.Response;
 
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+/*import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
@@ -18,7 +18,7 @@ import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
-import org.keycloak.representations.idm.UserRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;*/
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -53,12 +53,13 @@ public class UserRestController {
 	@Autowired
 	private IUserService userService;
 	
-	@Value ("${keycloak.auth-server-url}")
-	String authServerUrl;
-	@Value ("${keycloak.realm}")
-	String realm;
-	@Value ("${keycloak.resource}")
-	String clientId;
+	/*
+	 * @Value ("${keycloak.auth-server-url}") String authServerUrl;
+	 * 
+	 * @Value ("${keycloak.realm}") String realm;
+	 * 
+	 * @Value ("${keycloak.resource}") String clientId;
+	 */
 	
 	private String role = "USER";
 	
@@ -88,58 +89,57 @@ public class UserRestController {
 	  @PostMapping("/create")
 	    public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) throws EntityAlreadyExistsException {
 		  
-		  //User mySQLUserCreated = userService.createAccount(userDTO);
+		  User mySQLUserCreated = userService.createAccount(userDTO);
 		  
-		  System.out.println("test" + authServerUrl);
-
-		  Keycloak keycloak = KeycloakBuilder.builder().serverUrl("http://localhost:8180/auth")
-	                .grantType(OAuth2Constants.PASSWORD).realm("microsel-realm").clientId("authServerUrl")
-	                .username("admin").password("admin1234")
-	                .resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build()).build();
-
-	        keycloak.tokenManager().getAccessToken();
-
-	        UserRepresentation user = new UserRepresentation();
-	        user.setEnabled(true);
-	        user.setUsername(userDTO.getUsername());
-	        user.setFirstName(userDTO.getFirstname());
-	        user.setLastName(userDTO.getLastname());
-	        user.setEmail(userDTO.getAdresseMail());
-
-	        // Get realm
-	        RealmResource realmResource = keycloak.realm(realm);
-	        UsersResource usersRessource = realmResource.users();
-
-	        Response response = usersRessource.create(user);
-
-	        userDTO.setStatusCode(response.getStatus());
-	        //userDTO.setStatus(response.getEntity().toString());
-
-	        if (response.getStatus() == 201) {
-
-	            String userId = CreatedResponseUtil.getCreatedId(response);
-
-	            //log.info("Created userId {}", userId);
-
-
-	            // create password credential
-	            CredentialRepresentation passwordCred = new CredentialRepresentation();
-	            passwordCred.setTemporary(false);
-	            passwordCred.setType(CredentialRepresentation.PASSWORD);
-	            passwordCred.setValue(userDTO.getPassword());
-
-	            UserResource userResource = usersRessource.get(userId);
-
-	            // Set password credential
-	            userResource.resetPassword(passwordCred);
-
-	            // Get realm role student
-	            RoleRepresentation realmRoleUser = realmResource.roles().get(role).toRepresentation();
-
-	            // Assign realm role student to user
-	            userResource.roles().realmLevel().add(Arrays.asList(realmRoleUser));
-	          
-	        }
+			/*
+			 * System.out.println("test" + authServerUrl);
+			 * 
+			 * Keycloak keycloak =
+			 * KeycloakBuilder.builder().serverUrl("http://localhost:8180/auth")
+			 * .grantType(OAuth2Constants.PASSWORD).realm("microsel-realm").clientId(
+			 * "authServerUrl") .username("admin").password("admin1234") .resteasyClient(new
+			 * ResteasyClientBuilder().connectionPoolSize(10).build()).build();
+			 * 
+			 * keycloak.tokenManager().getAccessToken();
+			 * 
+			 * UserRepresentation user = new UserRepresentation(); user.setEnabled(true);
+			 * user.setUsername(userDTO.getUsername());
+			 * user.setFirstName(userDTO.getFirstname());
+			 * user.setLastName(userDTO.getLastname());
+			 * user.setEmail(userDTO.getAdresseMail());
+			 * 
+			 * // Get realm RealmResource realmResource = keycloak.realm(realm);
+			 * UsersResource usersRessource = realmResource.users();
+			 * 
+			 * Response response = usersRessource.create(user);
+			 * 
+			 * userDTO.setStatusCode(response.getStatus());
+			 * //userDTO.setStatus(response.getEntity().toString());
+			 * 
+			 * if (response.getStatus() == 201) {
+			 * 
+			 * String userId = CreatedResponseUtil.getCreatedId(response);
+			 * 
+			 * //log.info("Created userId {}", userId);
+			 * 
+			 * 
+			 * // create password credential CredentialRepresentation passwordCred = new
+			 * CredentialRepresentation(); passwordCred.setTemporary(false);
+			 * passwordCred.setType(CredentialRepresentation.PASSWORD);
+			 * passwordCred.setValue(userDTO.getPassword());
+			 * 
+			 * UserResource userResource = usersRessource.get(userId);
+			 * 
+			 * // Set password credential userResource.resetPassword(passwordCred);
+			 * 
+			 * // Get realm role student RoleRepresentation realmRoleUser =
+			 * realmResource.roles().get(role).toRepresentation();
+			 * 
+			 * // Assign realm role student to user
+			 * userResource.roles().realmLevel().add(Arrays.asList(realmRoleUser));
+			 * 
+			 * }
+			 */
 	        return ResponseEntity.ok(userDTO);
 	    }
 	  

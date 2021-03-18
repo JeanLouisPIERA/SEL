@@ -6,9 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
-import org.keycloak.KeycloakPrincipal;
+/*import org.keycloak.KeycloakPrincipal;
 import org.keycloak.KeycloakSecurityContext;
-import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;*/
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Page;
@@ -109,7 +109,7 @@ public class PropositionRestController {
 			  ),
 			  @ApiResponse(code = 413, message = "Cette proposition n'existe pas"), })
 		 
-	  @PutMapping(value = "/propositions/update/{id}")
+	  @PutMapping(value = "/users/propositions/update/{id}")
 	  public ResponseEntity<Proposition> updateProposition(
   			@PathVariable @Valid Long id, @Valid @RequestBody PropositionDTO propositionDTO) throws EntityNotFoundException, DeniedAccessException, EntityAlreadyExistsException {
 		  return new ResponseEntity<Proposition>(propositionService.updateProposition(id, propositionDTO), HttpStatus.OK);

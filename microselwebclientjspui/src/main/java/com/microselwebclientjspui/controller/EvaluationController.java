@@ -73,10 +73,15 @@ public class EvaluationController {
     	
 		/* Object evaluationToCreate = new Object(); */
     	
+    	Evaluation evaluationToCreate = evaluationService.createEvaluation(echangeId, evaluationDTO);
+		model.addAttribute("evaluation", evaluationToCreate);
+    	
     	try {
     		System.out.println("adherent_Id" + evaluationDTO.getEnumNoteEchange().toString());
-			Evaluation evaluationToCreate = evaluationService.createEvaluation(echangeId, evaluationDTO);
-			model.addAttribute("evaluation", evaluationToCreate);
+			/*
+			 * Evaluation evaluationToCreate = evaluationService.createEvaluation(echangeId,
+			 * evaluationDTO); model.addAttribute("evaluation", evaluationToCreate);
+			 */
 		} catch (HttpClientErrorException e) {
 			 String errorMessage = evaluationExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			 model.addAttribute("error", errorMessage);

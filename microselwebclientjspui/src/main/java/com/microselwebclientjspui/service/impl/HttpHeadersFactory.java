@@ -17,17 +17,17 @@ import org.springframework.stereotype.Service;
 public class HttpHeadersFactory {
 	
 	
-	/*
-	 * public HttpHeaders createHeaders(String username, String password){ return
-	 * new HttpHeaders() {{ String auth = username + ":" + password; byte[]
-	 * encodedAuth = Base64.encodeBase64( auth.getBytes(Charset.forName("US-ASCII"))
-	 * ); String authHeader = "Basic " + new String( encodedAuth ); set(
-	 * "Authorization", authHeader ); }};
-	 * 
-	 * }
-	 */
 	
-	public HttpHeaders createHeaders(HttpServletRequest request) {
+	  public HttpHeaders createHeaders(String username, String password){ return
+	  new HttpHeaders() {{ String auth = username + ":" + password; byte[]
+	  encodedAuth = Base64.encodeBase64( auth.getBytes(Charset.forName("US-ASCII"))
+	  ); String authHeader = "Basic " + new String( encodedAuth ); set(
+	  "Authorization", authHeader ); }};
+	  
+	  }
+	 
+	
+	/*public HttpHeaders createHeaders(HttpServletRequest request) {
 		KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) request.getUserPrincipal(); 
 		KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
 		KeycloakSecurityContext session = principal.getKeycloakSecurityContext();
@@ -37,6 +37,6 @@ public class HttpHeadersFactory {
 		return httpHeaders;
 		
 		
-	}
+	}*/
 
 }

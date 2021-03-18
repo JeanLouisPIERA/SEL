@@ -76,17 +76,22 @@ public class PropositionController {
     	if(result.hasErrors()) {
 			return "propositions/propositionCreation";
 		}
+  
+    	//Object propositionToCreate = new Object();
     	
-    	Object propositionToCreate = new Object();
+		
+		/*
+		 * try { Proposition propositionToCreate =
+		 * propositionService.createProposition(propositionDTO);
+		 * model.addAttribute((Proposition)propositionToCreate); } catch
+		 * (HttpClientErrorException e) { String errorMessage =
+		 * propositionExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage
+		 * (e); model.addAttribute("error", errorMessage); return"/error"; }
+		 */
+		 
+		  Proposition propositionToCreate = propositionService.createProposition(propositionDTO); 
+		  model.addAttribute((Proposition)propositionToCreate); 
     	
-    	try {
-			propositionToCreate = propositionService.createProposition(propositionDTO);
-			model.addAttribute((Proposition)propositionToCreate);
-		} catch (HttpClientErrorException e) {
-			 String errorMessage = propositionExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
-			 model.addAttribute("error", errorMessage);
-		     return"/error";
-		}
     	
 		return "propositions/propositionConfirmation";
     }

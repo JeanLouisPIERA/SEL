@@ -1,0 +1,2 @@
+ALTER TABLE documents
+MODIFY contenu TEXT NOT NULL;

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.microselbourse.beans.CategorieBean;
 import com.microselbourse.beans.UserBean;
 import com.microselbourse.criteria.PropositionCriteria;
 import com.microselbourse.dao.IBlocageRepository;
@@ -33,6 +34,7 @@ import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.mapper.IPropositionMapper;
 import com.microselbourse.proxies.IMicroselAdherentsProxy;
+import com.microselbourse.proxies.IMicroselReferentielsProxy;
 import com.microselbourse.service.IPropositionService;
 import com.microselbourse.service.IWalletService;
 
@@ -48,6 +50,9 @@ public class PropositionServiceImpl implements IPropositionService {
 	private IPropositionMapper propositionMapper;
 	@Autowired
 	private IMicroselAdherentsProxy microselAdherentsProxy;
+	/*
+	 * @Autowired private IMicroselReferentielsProxy microselReferentielsProxy;
+	 */
 	@Autowired
 	private IWalletRepository walletRepository;
 	@Autowired
@@ -80,11 +85,19 @@ public class PropositionServiceImpl implements IPropositionService {
 					"Vous avez déjà une OFFRE ou une DEMANDE encours de publication avec le même titre"); 
 		
 		
-		  Optional<Categorie> categorieFound = categorieRepository.findByName(EnumCategorie.fromValueCode(propositionDTO.getCategorieName()));
-		  if(!categorieFound.isPresent()) 
-			  throw new EntityNotFoundException(
-					  "La catégorie dans laquelle vous avez choisi de publier n'existe pas");
+		
+		 Optional<Categorie> categorieFound = categorieRepository.findByName(EnumCategorie.fromValueCode(propositionDTO.
+		  getCategorieName())); if(!categorieFound.isPresent()) throw new EntityNotFoundException(
+		  "La catégorie dans laquelle vous avez choisi de publier n'existe pas");
 		 
+		 
+		/*
+		 * CategorieBean categorieFound =
+		 * microselReferentielsProxy.consulterTypeProposition(propositionDTO.
+		 * getCategorieName());
+		 * if(!categorieFound.getTypeName().equals(propositionDTO.getCategorieName()))
+		 * throw new EntityNotFoundException( "Il n'existe aucune catégorie de ce nom");
+		 */
 		
 		Proposition propositionToCreate = propositionMapper.propositionDTOToProposition(propositionDTO);
 		

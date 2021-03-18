@@ -36,23 +36,32 @@ public class PropositionServiceImpl implements IPropositionService{
 	
 	 @Autowired private RestTemplate restTemplate; 
 	 
+	 @Autowired private KeycloakRestTemplate keycloakRestTemplate; 
+	 
 	@Autowired
 	private HttpHeadersFactory httpHeadersFactory;
 	
 	@Value("${application.uRLProposition}") private String uRLProposition;
+	
+	@Value("${zuul.u}")
+	private String zuulu;
+	
+	@Value("${zuul.p}")
+	private String zuulp;
 	
 	 
 	@Override
 	public Page<Proposition> searchByCriteria(PropositionCriteria propositionCriteria, Pageable pageable) {
 	
 		
-		  HttpHeaders headers = new HttpHeaders();
+		  HttpHeaders headers = httpHeadersFactory.createHeaders(zuulu, zuulp);
 		  
-		  headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		  
+		  //headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		  headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+	    	headers.setContentType(MediaType.APPLICATION_JSON);
 		  HttpEntity<?> entity = new HttpEntity<>(headers);
 		 
-
+		 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLProposition)
     	        .queryParam("codeEnumTradeType", propositionCriteria.getEnumTradeType())
     	        .queryParam("titre", propositionCriteria.getTitre())
@@ -64,58 +73,52 @@ public class PropositionServiceImpl implements IPropositionService{
     	        .queryParam("size", pageable.getPageSize());
     	
 
-    	ResponseEntity<RestResponsePage<Proposition>> propositions = restTemplate.exchange
-    			(builder.build().toUriString(), 
-				HttpMethod.GET,
-				entity,
-    			new ParameterizedTypeReference<RestResponsePage<Proposition>>(){});
+		
+		  ResponseEntity<RestResponsePage<Proposition>> propositions = 
+				  restTemplate.exchange(
+						  builder.build().toUriString(), 
+						  HttpMethod.GET, entity,
+						  new ParameterizedTypeReference<RestResponsePage<Proposition>>(){});
+		 
+    	    	
         Page<Proposition> pageProposition = propositions.getBody();
  
         return pageProposition;
 	}
 	
-	/*
-	 * @Override public Page<Proposition> searchByCriteria(PropositionCriteria
-	 * propositionCriteria, HttpServletRequest request, Pageable pageable) {
-	 * 
-	 * 
-	 * HttpHeaders headers = httpHeadersFactory.createHeaders(request);
-	 * 
-	 * //headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-	 * 
-	 * HttpEntity<?> entity = new HttpEntity<>(headers);
-	 * 
-	 * UriComponentsBuilder builder =
-	 * UriComponentsBuilder.fromHttpUrl(uRLProposition)
-	 * .queryParam("codeEnumTradeType", propositionCriteria.getEnumTradeType())
-	 * .queryParam("titre", propositionCriteria.getTitre()) .queryParam("ville",
-	 * propositionCriteria.getVille()) .queryParam("codePostal",
-	 * propositionCriteria.getCodePostal()) .queryParam("nomCategorie",
-	 * propositionCriteria.getEnumCategorie()) .queryParam("statut",
-	 * propositionCriteria.getEnumStatutProposition()) .queryParam("page",
-	 * pageable.getPageNumber()) .queryParam("size", pageable.getPageSize());
-	 * 
-	 * System.out.println("header" + headers.toString());
-	 * System.out.println("entity" + entity.toString());
-	 * 
-	 * ResponseEntity<RestResponsePage<Proposition>> propositions =
-	 * restTemplate.exchange (builder.build().toUriString(), HttpMethod.GET, entity,
-	 * new ParameterizedTypeReference<RestResponsePage<Proposition>>(){});
-	 * Page<Proposition> pageProposition = propositions.getBody();
-	 * 
-	 * return pageProposition; }
-	 */
-	
 
 	@Override
 	public Proposition createProposition(PropositionDTO propositionDTO) {
-		HttpHeaders headers = new HttpHeaders();
-    	headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-    	headers.setContentType(MediaType.APPLICATION_JSON);
-
-    	HttpEntity<PropositionDTO> requestEntity = new HttpEntity<>(propositionDTO, headers);
-    	ResponseEntity<Proposition> response =restTemplate.exchange(uRLProposition, HttpMethod.POST, requestEntity, 
-			              Proposition.class);
+		
+		/*
+		 * HttpHeaders headers = new HttpHeaders();
+		 * headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		 * headers.setContentType(MediaType.APPLICATION_JSON);
+		 */
+		
+		 HttpHeaders headers = httpHeadersFactory.createHeaders(zuulu, zuulp);
+		  
+		  headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		  //headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+	    	//headers.setContentType(MediaType.APPLICATION_JSON);
+		  HttpEntity<?> entity = new HttpEntity<>(headers);
+		  
+		  HttpEntity<PropositionDTO> requestEntity = new HttpEntity<>(propositionDTO,
+		  headers);
+	
+		  
+		  //String url = uRLProposition+"/create" ;
+		
+			
+			/*
+			 * HttpEntity<PropositionDTO> requestEntity = new HttpEntity<>(propositionDTO);
+			 * 
+			 * 
+			 * ResponseEntity<Proposition> response =keycloakRestTemplate.postForEntity(url,
+			 * propositionDTO, Proposition.class);
+			 */
+		
+			  ResponseEntity<Proposition> response= restTemplate.exchange(uRLProposition, HttpMethod.POST, requestEntity, Proposition.class);
 			
 		  return response.getBody();
 	}
@@ -124,6 +127,7 @@ public class PropositionServiceImpl implements IPropositionService{
 	@Override
 	public Proposition searchById(long id) {
 		HttpHeaders headers = new HttpHeaders();
+		
     	headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
     	headers.setContentType(MediaType.APPLICATION_JSON);
     	
@@ -147,6 +151,8 @@ public class PropositionServiceImpl implements IPropositionService{
 		// FIXME Auto-generated method stub
 		
 	}
+
+	
 
 	
 

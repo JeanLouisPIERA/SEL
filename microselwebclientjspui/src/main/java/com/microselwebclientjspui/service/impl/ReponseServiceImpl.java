@@ -33,6 +33,7 @@ import com.microselwebclientjspui.service.IReponseService;
 @Service
 public class ReponseServiceImpl implements IReponseService {
 	
+      @Autowired private KeycloakRestTemplate keycloakRestTemplate;		
 	
 	  @Autowired private RestTemplate restTemplate;
 	  
@@ -43,20 +44,20 @@ public class ReponseServiceImpl implements IReponseService {
 
 	@Override
 	public Reponse createReponse(Long id, HttpServletRequest request, ReponseDTO reponseDTO) {
-		/*
-		 * HttpHeaders headers = new HttpHeaders();
-		 * headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-		 * headers.setContentType(MediaType.APPLICATION_JSON);
-		 */
 		
-		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+		  HttpHeaders headers = new HttpHeaders();
+		  headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		  headers.setContentType(MediaType.APPLICATION_JSON);
+		 
+		
+		//HttpHeaders headers = httpHeadersFactory.createHeaders(request);
     	
     	String url = uRLReponse + "/" + id;
 
-    	HttpEntity<ReponseDTO> requestEntity = new HttpEntity<>(reponseDTO, headers);
-    	ResponseEntity<Reponse> response =restTemplate.exchange(url, HttpMethod.POST, requestEntity, 
-			              Reponse.class);
-			
+    	HttpEntity<ReponseDTO> requestEntity = new HttpEntity<>(reponseDTO);
+    	//ResponseEntity<Reponse> response =restTemplate.exchange(url, HttpMethod.POST, requestEntity, Reponse.class);
+    	
+    	ResponseEntity<Reponse> response =keycloakRestTemplate.exchange(url, HttpMethod.POST, requestEntity, Reponse.class);	
 		  return response.getBody();
 	}
 

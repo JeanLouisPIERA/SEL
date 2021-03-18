@@ -36,7 +36,7 @@ public class Proposition implements Serializable {
 	 * Cet id est vérifié avec le UserBean en consommant le microservice adhérent****************************************************
 	 */
 	
-	@Column(name = "emetteur_id", length = 5, nullable=false)
+	
 	private Long emetteurId; 
 	
 	/*

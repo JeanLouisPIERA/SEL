@@ -32,5 +32,27 @@ databaseChangeLog:
           path: scripts/03_alter_table_users.sql
           relativeToChangelogFile: true
           splitStatements: true
-          stripComments: true          
+          stripComments: true
+ - changeSet:
+      id: script04
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/04_alter_table_users.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true 
+ - changeSet:
+      id: script05
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/05_alter_table_users.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true                                                 
  
