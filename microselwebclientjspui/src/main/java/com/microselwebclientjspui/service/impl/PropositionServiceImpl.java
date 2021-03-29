@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +25,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.microselwebclientjspui.criteria.PropositionCriteria;
 import com.microselwebclientjspui.dto.PropositionDTO;
+import com.microselwebclientjspui.objets.KeycloakClientCredentialsRestTemplate;
 import com.microselwebclientjspui.objets.Proposition;
+import com.microselwebclientjspui.security.KeycloakClientCredentialsConfig;
 import com.microselwebclientjspui.service.IPropositionService;
 
 
@@ -36,30 +39,37 @@ public class PropositionServiceImpl implements IPropositionService{
 	
 	 @Autowired private RestTemplate restTemplate; 
 	 
-	 @Autowired private KeycloakRestTemplate keycloakRestTemplate; 
+	 //@Autowired private KeycloakRestTemplate keycloakRestTemplate; 
+	 
+	 @Autowired private KeycloakClientCredentialsConfig keycloakClientCredentialsConfig;
 	 
 	@Autowired
 	private HttpHeadersFactory httpHeadersFactory;
 	
+	@Autowired
+    private HttpServletRequest request;
+	
 	@Value("${application.uRLProposition}") private String uRLProposition;
 	
-	@Value("${zuul.u}")
-	private String zuulu;
 	
-	@Value("${zuul.p}")
-	private String zuulp;
 	
-	 
+	
 	@Override
 	public Page<Proposition> searchByCriteria(PropositionCriteria propositionCriteria, Pageable pageable) {
 	
 		
-		  HttpHeaders headers = httpHeadersFactory.createHeaders(zuulu, zuulp);
+		 //HttpHeaders headers = httpHeadersFactory.createHeaders(zuulu, zuulp);
+		//HttpHeaders headers = new HttpHeaders();
+		//HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+		
+		//System.out.println("Request" + request.getHeader(uRLProposition));
 		  
 		  //headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		  headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-	    	headers.setContentType(MediaType.APPLICATION_JSON);
-		  HttpEntity<?> entity = new HttpEntity<>(headers);
+		  //headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+	    	//headers.setContentType(MediaType.APPLICATION_JSON);
+		  //HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		KeycloakClientCredentialsRestTemplate keycloakRestTemplate = keycloakClientCredentialsConfig.createRestTemplate();
 		 
 		 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLProposition)
@@ -72,12 +82,13 @@ public class PropositionServiceImpl implements IPropositionService{
     	        .queryParam("page", pageable.getPageNumber())
     	        .queryParam("size", pageable.getPageSize());
     	
-
+		 System.out.println("keycloak = " + restTemplate.getUriTemplateHandler().toString()); 
 		
 		  ResponseEntity<RestResponsePage<Proposition>> propositions = 
-				  restTemplate.exchange(
+				  keycloakRestTemplate.exchange(
 						  builder.build().toUriString(), 
-						  HttpMethod.GET, entity,
+						  HttpMethod.GET, 
+						  null,
 						  new ParameterizedTypeReference<RestResponsePage<Proposition>>(){});
 		 
     	    	
@@ -96,29 +107,42 @@ public class PropositionServiceImpl implements IPropositionService{
 		 * headers.setContentType(MediaType.APPLICATION_JSON);
 		 */
 		
-		 HttpHeaders headers = httpHeadersFactory.createHeaders(zuulu, zuulp);
+		/*
+		 * HttpHeaders headers = httpHeadersFactory.createHeaders(zuulu, zuulp);
+		 * headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		 */
 		  
-		  headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		  
 		  //headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 	    	//headers.setContentType(MediaType.APPLICATION_JSON);
-		  HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		 HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+		 
+		 System.out.println("headers1 = " + headers.toString());
+		
+		  //HttpEntity<?> entity = new HttpEntity<>(headers);
 		  
-		  HttpEntity<PropositionDTO> requestEntity = new HttpEntity<>(propositionDTO,
-		  headers);
+		  HttpEntity<PropositionDTO> requestEntity = new HttpEntity<>(propositionDTO,headers);
 	
 		  
-		  //String url = uRLProposition+"/create" ;
+		  String url = uRLProposition+"/create" ;
+		
+		      //String url = uRLProposition ;
+			
+			  //HttpEntity<PropositionDTO> requestEntity = new HttpEntity<>(propositionDTO);
+			  
+			
+		  
+				/*
+				 * ResponseEntity<Proposition> response =keycloakRestTemplate.postForEntity(url,
+				 * propositionDTO, Proposition.class);
+				 */
+			 
 		
 			
-			/*
-			 * HttpEntity<PropositionDTO> requestEntity = new HttpEntity<>(propositionDTO);
-			 * 
-			 * 
-			 * ResponseEntity<Proposition> response =keycloakRestTemplate.postForEntity(url,
-			 * propositionDTO, Proposition.class);
-			 */
-		
-			  ResponseEntity<Proposition> response= restTemplate.exchange(uRLProposition, HttpMethod.POST, requestEntity, Proposition.class);
+			  ResponseEntity<Proposition> response= restTemplate.exchange(url,
+			  HttpMethod.POST, requestEntity, Proposition.class);
+			 
 			
 		  return response.getBody();
 	}
@@ -152,6 +176,8 @@ public class PropositionServiceImpl implements IPropositionService{
 		
 	}
 
+
+	
 	
 
 	

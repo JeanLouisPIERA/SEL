@@ -19,6 +19,7 @@ public enum RoleEnum {
 	}
 	
 	
+	
 	public static RoleEnum getRoleEnumByCode(String code) {
 		for (RoleEnum roleEnum : RoleEnum.values()) {
 			if(roleEnum.code.equals(code)){

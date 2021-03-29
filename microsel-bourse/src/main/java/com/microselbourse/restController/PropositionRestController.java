@@ -57,7 +57,7 @@ public class PropositionRestController {
 		  @ApiResponse(code = 409, message = 
 				  "Une autre proposition existe déjà avec ces attributs"), })
 	 
-	  @PostMapping("/propositions")
+	  @PostMapping("/propositions/create")
 	  public ResponseEntity<Proposition> createProposition(@Valid @RequestBody PropositionDTO propositionDTO) throws EntityAlreadyExistsException, EntityNotFoundException, DeniedAccessException {
 	    return new ResponseEntity<Proposition>(propositionService.createProposition(propositionDTO), HttpStatus.OK);
 	  }

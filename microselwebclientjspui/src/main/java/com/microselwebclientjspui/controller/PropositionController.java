@@ -51,6 +51,7 @@ public class PropositionController {
     private PropositionExceptionMessage propositionExceptionMessage;
     @Autowired
     private IReponseService reponseService;
+    
 
     //CREATE PROPOSITION *****************************************************************************************************
     
@@ -104,7 +105,7 @@ public class PropositionController {
      * Permet d'afficher une sélection de propositions sous forme de page
      */
     @GetMapping(value="/propositions")
-    public String searchByCriteria(Model model, @PathParam(value = "propositionCriteria") PropositionCriteria propositionCriteria, @RequestParam(name="page", defaultValue="0") int page, 
+    public String searchByCriteria(Model model, HttpServletRequest request, @PathParam(value = "propositionCriteria") PropositionCriteria propositionCriteria, @RequestParam(name="page", defaultValue="0") int page, 
 			@RequestParam(name="size", defaultValue="6") int size){
     	
     	model.addAttribute("propositionCriteria", new PropositionCriteria());

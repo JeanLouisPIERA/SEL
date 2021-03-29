@@ -1,5 +1,12 @@
 package com.microseladherent.configurations;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,10 +27,11 @@ public class SpringFoxConfig {
 	
 	
 	@Bean
-    public Docket api() {
-
+    public Docket api() throws FileNotFoundException, IOException, XmlPullParserException {
+		MavenXpp3Reader reader = new MavenXpp3Reader();
+        Model model = reader.read(new FileReader("pom.xml"));
         return new Docket(DocumentationType.SWAGGER_2)
-        		.groupName("SEL")
+        		//.groupName("SEL")
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
                 .paths(PathSelectors.any())
@@ -39,9 +47,9 @@ public class SpringFoxConfig {
 
          return new ApiInfoBuilder()
 
-                 .title("SEL")
+                 .title("ADHERENTS DU SEL")
 
-                 .description("Microservice de gestion des adhérenst à une association de bourse d'échanges SEL")
+                 .description("Microservice de gestion des adhérents à une association de bourse d'échanges SEL")
 
                  .version("0.0.1")
 

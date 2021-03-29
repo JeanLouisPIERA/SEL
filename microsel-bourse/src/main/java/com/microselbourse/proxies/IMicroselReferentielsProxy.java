@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.microselbourse.beans.CategorieBean;
 
 
-/*@FeignClient(name = "zuul-server") 
-@RibbonClient(name = "microselreferentiels")*/
+@FeignClient(name = "microselreferentiels") 
+@RibbonClient(name = "microselreferentiels")
 public interface IMicroselReferentielsProxy {
 	
-	/*
-	 * @GetMapping( value = "/microselreferentiels/sel/referentiels/{typeName}")
-	 * CategorieBean consulterTypeProposition(@PathVariable("typeName") String
-	 * typeName);
-	 * 
-	 * @GetMapping( value = "/microselreferentiels/sel/referentiels")
-	 * List<CategorieBean> getAllTypePropositions();
-	 */
+	
+	  @GetMapping( value = "/sel/referentiels/{typeName}")
+	  CategorieBean consulterTypeProposition(@PathVariable("typeName") String
+	  typeName);
+	  
+	  @GetMapping( value = "/sel/referentiels")
+	  List<CategorieBean> getAllTypePropositions();
+	 
 
 }

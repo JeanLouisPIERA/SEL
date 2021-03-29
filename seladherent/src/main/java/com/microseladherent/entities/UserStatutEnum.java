@@ -6,7 +6,6 @@ public enum UserStatutEnum {
 	LOCKED ("LOCKED", "LOCKED"),
 	CLOSED("CLOSED", "CLOSED");
 	
-	
 	 private String code;
 	  private String text;
 	  

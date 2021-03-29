@@ -46,7 +46,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping("/sel")
+@RequestMapping("/sel/adherents")
 @Validated
 public class UserRestController {
 	

@@ -15,7 +15,6 @@ import com.microselwebclientjspui.objets.Proposition;
 
 public interface IPropositionService {
 	
-	public Page<Proposition>searchByCriteria(PropositionCriteria propositionCriteria, Pageable pageable);
 
 	public Proposition createProposition(PropositionDTO propositionDTO);
 
@@ -25,13 +24,7 @@ public interface IPropositionService {
 
 	public void closeProposition(Long id);
 
-	/*
-	 * public Proposition createProposition(HttpServletRequest request,
-	 * PropositionDTO propositionDTO);
-	 */
-	/*
-	 * public Page<Proposition> searchByCriteria(PropositionCriteria
-	 * propositionCriteria, HttpServletRequest request, Pageable pageable);
-	 */
+	public Page<Proposition> searchByCriteria(PropositionCriteria propositionCriteria,Pageable pageable);
+
 
 }

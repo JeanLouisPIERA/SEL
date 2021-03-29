@@ -9,29 +9,29 @@ import org.springframework.security.web.authentication.session.RegisterSessionAu
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;*/
 
 /*@KeycloakConfiguration*/
-public class KeycloakSecurityConfig {
-	/*
-	 * extends KeycloakWebSecurityConfigurerAdapter{
-	 * 
-	 * @Override protected SessionAuthenticationStrategy
-	 * sessionAuthenticationStrategy() { return new
-	 * RegisterSessionAuthenticationStrategy(new SessionRegistryImpl()); }
-	 * 
-	 * @Override protected void configure(AuthenticationManagerBuilder auth) throws
-	 * Exception { auth.authenticationProvider(keycloakAuthenticationProvider()); }
-	 * 
-	 * @Override protected void configure(HttpSecurity http) throws Exception {
-	 * super.configure(http); http.authorizeRequests()
-	 * .antMatchers("/sel/bourse/propositions", "/sel/bourse/echanges").permitAll()
-	 * .antMatchers("/sel/bourse/propositions/create",
-	 * "/sel/bourse/propositions/update","/sel/bourse/propositions/close",
-	 * "/reponses/newReponse/**").hasAuthority("USER")
-	 * .antMatchers("/wallets/**","/evaluations/echange/**").hasAuthority("BUREAU")
-	 * .antMatchers("/referentiels", "/referentiels/**").hasAuthority("ADMIN") ;
-	 * 
-	 * }
-	 */
-										 
+public class KeycloakSecurityConfig 
 	
+	  /*extends KeycloakWebSecurityConfigurerAdapter{
+	  
+	  @Override protected SessionAuthenticationStrategy
+	  sessionAuthenticationStrategy() { return new
+	  RegisterSessionAuthenticationStrategy(new SessionRegistryImpl()); }
+	  
+	  @Override protected void configure(AuthenticationManagerBuilder auth) throws
+	  Exception { auth.authenticationProvider(keycloakAuthenticationProvider()); }
+	  
+	  @Override protected void configure(HttpSecurity http) throws Exception {
+	  super.configure(http); http.authorizeRequests()
+	  .antMatchers("/sel/bourse/propositions", "/sel/bourse/echanges").permitAll()
+	  .antMatchers("/sel/bourse/propositions/create",
+	  "/sel/bourse/propositions/update","/sel/bourse/propositions/close",
+	  "/reponses/newReponse/**").hasAuthority("USER")
+	  .antMatchers("/wallets/**","/evaluations/echange/**").hasAuthority("BUREAU")
+	  .antMatchers("/referentiels", "/referentiels/**").hasAuthority("ADMIN") ;
+	  
+	  }
+	 
+										 */
+{	
 
 }

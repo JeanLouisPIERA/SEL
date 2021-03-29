@@ -64,15 +64,21 @@ public class PropositionServiceImpl implements IPropositionService {
 	@Override
 	public Proposition createProposition(PropositionDTO propositionDTO) throws EntityAlreadyExistsException, EntityNotFoundException, DeniedAccessException {
 		
-		UserBean emetteurProposition = microselAdherentsProxy.consulterCompteAdherent(propositionDTO.getEmetteurId());
-		if(emetteurProposition.getId()!= propositionDTO.getEmetteurId())
-			throw new EntityNotFoundException(
-					"Vous n'êtes pas identifié comme adhérent de l'association");
 		
-		Optional<Blocage> blocageEmetteurId = blocageRepository.findByAdherentIdAndStatutBlocage(emetteurProposition.getId(), EnumStatutBlocage.ENCOURS);
-		if(blocageEmetteurId.isPresent())
-			throw new DeniedAccessException("La proposition ne peut pas être créée : il existe un blocage encours concernant l'émetteur de la proposition.");
+		  UserBean emetteurProposition =
+		  microselAdherentsProxy.consulterCompteAdherent(propositionDTO.getEmetteurId()
+		  ); if(emetteurProposition.getId()!= propositionDTO.getEmetteurId()) throw new
+		  EntityNotFoundException(
+		  "Vous n'êtes pas identifié comme adhérent de l'association");
+		 
 		
+		
+		  Optional<Blocage> blocageEmetteurId =
+		  blocageRepository.findByAdherentIdAndStatutBlocage(emetteurProposition.getId(
+		  ), EnumStatutBlocage.ENCOURS); if(blocageEmetteurId.isPresent()) throw new
+		  DeniedAccessException("La proposition ne peut pas être créée : il existe un blocage encours concernant l'émetteur de la proposition."
+		  );
+		 
 		Optional<EnumTradeType> enumTradeType = EnumTradeType.getEnumTradeTypeByCode(propositionDTO.getEnumTradeTypeCode());
 		if(enumTradeType.isEmpty())
 			throw new EntityNotFoundException(
@@ -102,7 +108,8 @@ public class PropositionServiceImpl implements IPropositionService {
 		Proposition propositionToCreate = propositionMapper.propositionDTOToProposition(propositionDTO);
 		
 		propositionToCreate.setCategorie(categorieFound.get());
-	    propositionToCreate.setEmetteurId(emetteurProposition.getId());
+	    propositionToCreate.setEmetteurId(propositionDTO.getEmetteurId());
+	    //(emetteurProposition.getId());
 	    propositionToCreate.setDateDebut(LocalDate.now());
 	    propositionToCreate.setStatut(EnumStatutProposition.ENCOURS);
 	    

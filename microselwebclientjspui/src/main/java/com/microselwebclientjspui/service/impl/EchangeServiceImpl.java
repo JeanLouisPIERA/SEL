@@ -30,17 +30,19 @@ public class EchangeServiceImpl implements IEchangeService {
 	
 	  @Autowired private RestTemplate restTemplate;
 	 
-	
+	  @Autowired private KeycloakRestTemplate keycloakRestTemplate; 
 	
 	@Value("${application.uRLEchange}") private String uRLEchange;
 
 	@Override
 	public Page<Echange> searchByCriteria(EchangeCriteria echangeCriteria, Pageable pageable) {
 
-		HttpHeaders headers = new HttpHeaders();
-    	headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-    	
-    	HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		  HttpHeaders headers = new HttpHeaders(); headers.set("Accept",
+		  MediaType.APPLICATION_JSON_VALUE);
+		  
+		  HttpEntity<?> entity = new HttpEntity<>(headers);
+		 
  
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLEchange)
     	        .queryParam("id", echangeCriteria.getId())
@@ -51,7 +53,7 @@ public class EchangeServiceImpl implements IEchangeService {
     	        .queryParam("page", pageable.getPageNumber())
     	        .queryParam("size", pageable.getPageSize());
     	
-		System.out.println("metierBuilder" + builder.toUriString().toString());
+		/* System.out.println("metierBuilder" + builder.toUriString().toString()); */
     	        
     	ResponseEntity<RestResponsePage<Echange>> echanges = restTemplate.exchange
     			(builder.build().toUriString(), 

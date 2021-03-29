@@ -1,4 +1,4 @@
-package com.microselbourse.configurations;
+package com.microselreferentiels.configurations;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -22,8 +22,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-public class SpringFoxConfig {               
-	
+public class SpringFoxConfig {
 	
 	@Bean
     public Docket api() throws FileNotFoundException, IOException, XmlPullParserException {
@@ -46,9 +45,9 @@ public class SpringFoxConfig {
 
          return new ApiInfoBuilder()
 
-                 .title("BOURSE D'ECHANGES DU SEL")
+                 .title("REFERENTIELS DU SEL")
 
-                 .description("Microservice de gestion de la bourse d'échanges d'un Système d'Echanges Local associatif de type SEL")
+                 .description("Microservice de gestion des référentiels d'un Système d'Echanges Local associatif de type SEL")
 
                  .version("0.0.1")
 
@@ -62,4 +61,5 @@ public class SpringFoxConfig {
 
 	 }
    
+
 }
