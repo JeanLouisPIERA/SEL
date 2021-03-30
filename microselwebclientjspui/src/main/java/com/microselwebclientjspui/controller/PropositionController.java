@@ -27,6 +27,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microselwebclientjspui.criteria.PropositionCriteria;
 import com.microselwebclientjspui.dto.PropositionDTO;
+import com.microselwebclientjspui.errors.NotAuthorizedException;
 import com.microselwebclientjspui.errors.PropositionExceptionMessage;
 
 import com.microselwebclientjspui.objets.EnumCategorie;
@@ -103,10 +104,11 @@ public class PropositionController {
     
 	/**
      * Permet d'afficher une sélection de propositions sous forme de page
+	 * @throws NotAuthorizedException 
      */
     @GetMapping(value="/propositions")
     public String searchByCriteria(Model model, HttpServletRequest request, @PathParam(value = "propositionCriteria") PropositionCriteria propositionCriteria, @RequestParam(name="page", defaultValue="0") int page, 
-			@RequestParam(name="size", defaultValue="6") int size){
+			@RequestParam(name="size", defaultValue="6") int size) throws NotAuthorizedException{
     	
     	model.addAttribute("propositionCriteria", new PropositionCriteria());
     	model.addAttribute("enumTradeTypeList", EnumTradeType.getListEnumTradeType());

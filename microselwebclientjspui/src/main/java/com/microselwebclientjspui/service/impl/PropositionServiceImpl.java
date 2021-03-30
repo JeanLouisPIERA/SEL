@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -25,8 +26,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.microselwebclientjspui.criteria.PropositionCriteria;
 import com.microselwebclientjspui.dto.PropositionDTO;
+import com.microselwebclientjspui.errors.NotAuthorizedException;
+import com.microselwebclientjspui.objets.AccessTokenResponse;
 import com.microselwebclientjspui.objets.KeycloakClientCredentialsRestTemplate;
+import com.microselwebclientjspui.objets.KeycloakUser;
 import com.microselwebclientjspui.objets.Proposition;
+import com.microselwebclientjspui.security.AuthService;
 import com.microselwebclientjspui.security.KeycloakClientCredentialsConfig;
 import com.microselwebclientjspui.service.IPropositionService;
 
@@ -41,7 +46,7 @@ public class PropositionServiceImpl implements IPropositionService{
 	 
 	 //@Autowired private KeycloakRestTemplate keycloakRestTemplate; 
 	 
-	 @Autowired private KeycloakClientCredentialsConfig keycloakClientCredentialsConfig;
+	 //@Autowired private KeycloakClientCredentialsConfig keycloakClientCredentialsConfig;
 	 
 	@Autowired
 	private HttpHeadersFactory httpHeadersFactory;
@@ -49,13 +54,16 @@ public class PropositionServiceImpl implements IPropositionService{
 	@Autowired
     private HttpServletRequest request;
 	
+	@Autowired
+	private AuthService auth;
+	
 	@Value("${application.uRLProposition}") private String uRLProposition;
 	
 	
 	
 	
 	@Override
-	public Page<Proposition> searchByCriteria(PropositionCriteria propositionCriteria, Pageable pageable) {
+	public Page<Proposition> searchByCriteria(PropositionCriteria propositionCriteria, Pageable pageable) throws NotAuthorizedException {
 	
 		
 		 //HttpHeaders headers = httpHeadersFactory.createHeaders(zuulu, zuulp);
@@ -69,8 +77,26 @@ public class PropositionServiceImpl implements IPropositionService{
 	    	//headers.setContentType(MediaType.APPLICATION_JSON);
 		  //HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		KeycloakClientCredentialsRestTemplate keycloakRestTemplate = keycloakClientCredentialsConfig.createRestTemplate();
+		//KeycloakClientCredentialsRestTemplate keycloakRestTemplate = keycloakClientCredentialsConfig.createRestTemplate();
 		 
+		/*
+		 * KeycloakAuthenticationToken token = (KeycloakAuthenticationToken)
+		 * request.getUserPrincipal(); KeycloakUser keycloakUser = new KeycloakUser();
+		 * keycloakUser.setUsername(token.getName());
+		 * keycloakUser.setPassword(token.getCredentials().toString());
+		 * 
+		 * AccessTokenResponse accessToken = auth.login(keycloakUser);
+		 */
+		
+		
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+		
+		/*
+		 * HttpHeaders headers = new HttpHeaders(); headers.set("Authorization",
+		 * "Bearer" + accessToken.getAccess_token());
+		 */
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 		 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLProposition)
     	        .queryParam("codeEnumTradeType", propositionCriteria.getEnumTradeType())
@@ -85,10 +111,10 @@ public class PropositionServiceImpl implements IPropositionService{
 		 System.out.println("keycloak = " + restTemplate.getUriTemplateHandler().toString()); 
 		
 		  ResponseEntity<RestResponsePage<Proposition>> propositions = 
-				  keycloakRestTemplate.exchange(
+				  restTemplate.exchange(
 						  builder.build().toUriString(), 
 						  HttpMethod.GET, 
-						  null,
+						  entity,
 						  new ParameterizedTypeReference<RestResponsePage<Proposition>>(){});
 		 
     	    	

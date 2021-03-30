@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.microselwebclientjspui.criteria.PropositionCriteria;
 import com.microselwebclientjspui.dto.PropositionDTO;
+import com.microselwebclientjspui.errors.NotAuthorizedException;
 import com.microselwebclientjspui.objets.Proposition;
 
 
@@ -24,7 +25,7 @@ public interface IPropositionService {
 
 	public void closeProposition(Long id);
 
-	public Page<Proposition> searchByCriteria(PropositionCriteria propositionCriteria,Pageable pageable);
+	public Page<Proposition> searchByCriteria(PropositionCriteria propositionCriteria,Pageable pageable) throws NotAuthorizedException;
 
 
 }

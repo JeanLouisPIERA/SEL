@@ -33,13 +33,17 @@ public class HttpHeadersFactory {
 		KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) request.getUserPrincipal(); 
 		KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
 		KeycloakSecurityContext session = principal.getKeycloakSecurityContext();
-		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.add("Authorization", "Bearer "+session.getTokenString());
+		//HttpHeaders httpHeaders = new HttpHeaders();
+		//httpHeaders.add("Authorization", "Bearer "+session.getTokenString());
+		
+		
+		HttpHeaders headers = new HttpHeaders(); headers.set("Authorization", "Bearer " + session.getTokenString());
+		 
 		
 		System.out.println("headerFactoryToken =" + session.getTokenString());
-		System.out.println("headerFactory =" + httpHeaders.toString());
+		System.out.println("headerFactory =" + headers.toString());
 		
-		return httpHeaders;
+		return headers;
 		
 		
 	}
