@@ -109,7 +109,7 @@ public class PropositionRestController {
 			  ),
 			  @ApiResponse(code = 413, message = "Cette proposition n'existe pas"), })
 		 
-	  @PutMapping(value = "/users/propositions/update/{id}")
+	  @PutMapping(value = "/propositions/update/{id}")
 	  public ResponseEntity<Proposition> updateProposition(
   			@PathVariable @Valid Long id, @Valid @RequestBody PropositionDTO propositionDTO) throws EntityNotFoundException, DeniedAccessException, EntityAlreadyExistsException {
 		  return new ResponseEntity<Proposition>(propositionService.updateProposition(id, propositionDTO), HttpStatus.OK);

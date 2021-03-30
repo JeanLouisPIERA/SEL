@@ -27,10 +27,7 @@ import com.microselwebclientjspui.service.IEchangeService;
 @Service
 public class EchangeServiceImpl implements IEchangeService {
 	
-	
-	  @Autowired private RestTemplate restTemplate;
-	 
-	  @Autowired private KeycloakRestTemplate keycloakRestTemplate; 
+	@Autowired private RestTemplate restTemplate;
 	
 	@Value("${application.uRLEchange}") private String uRLEchange;
 
@@ -38,8 +35,8 @@ public class EchangeServiceImpl implements IEchangeService {
 	public Page<Echange> searchByCriteria(EchangeCriteria echangeCriteria, Pageable pageable) {
 
 		
-		  HttpHeaders headers = new HttpHeaders(); headers.set("Accept",
-		  MediaType.APPLICATION_JSON_VALUE);
+		  HttpHeaders headers = new HttpHeaders(); 
+		  headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		  
 		  HttpEntity<?> entity = new HttpEntity<>(headers);
 		 

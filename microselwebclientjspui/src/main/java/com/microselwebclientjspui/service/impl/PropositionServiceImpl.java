@@ -1,19 +1,13 @@
 package com.microselwebclientjspui.service.impl;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.keycloak.KeycloakSecurityContext;
-import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
-import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,26 +21,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.microselwebclientjspui.criteria.PropositionCriteria;
 import com.microselwebclientjspui.dto.PropositionDTO;
 import com.microselwebclientjspui.errors.NotAuthorizedException;
-import com.microselwebclientjspui.objets.AccessTokenResponse;
-import com.microselwebclientjspui.objets.KeycloakClientCredentialsRestTemplate;
-import com.microselwebclientjspui.objets.KeycloakUser;
 import com.microselwebclientjspui.objets.Proposition;
-import com.microselwebclientjspui.security.AuthService;
-import com.microselwebclientjspui.security.KeycloakClientCredentialsConfig;
 import com.microselwebclientjspui.service.IPropositionService;
-
-
 
 
 @Service
 public class PropositionServiceImpl implements IPropositionService{
 	
-	
-	 @Autowired private RestTemplate restTemplate; 
-	 
-	 //@Autowired private KeycloakRestTemplate keycloakRestTemplate; 
-	 
-	 //@Autowired private KeycloakClientCredentialsConfig keycloakClientCredentialsConfig;
+	@Autowired private RestTemplate restTemplate; 
 	 
 	@Autowired
 	private HttpHeadersFactory httpHeadersFactory;
@@ -54,47 +36,14 @@ public class PropositionServiceImpl implements IPropositionService{
 	@Autowired
     private HttpServletRequest request;
 	
-	@Autowired
-	private AuthService auth;
-	
 	@Value("${application.uRLProposition}") private String uRLProposition;
-	
-	
-	
+	@Value("${application.uRLPropositionAll}") private String uRLPropositionAll;
+	@Value("${application.uRLPropositionUser}") private String uRLPropositionUser;
 	
 	@Override
 	public Page<Proposition> searchByCriteria(PropositionCriteria propositionCriteria, Pageable pageable) throws NotAuthorizedException {
 	
-		
-		 //HttpHeaders headers = httpHeadersFactory.createHeaders(zuulu, zuulp);
-		//HttpHeaders headers = new HttpHeaders();
-		//HttpHeaders headers = httpHeadersFactory.createHeaders(request);
-		
-		//System.out.println("Request" + request.getHeader(uRLProposition));
-		  
-		  //headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		  //headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-	    	//headers.setContentType(MediaType.APPLICATION_JSON);
-		  //HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		//KeycloakClientCredentialsRestTemplate keycloakRestTemplate = keycloakClientCredentialsConfig.createRestTemplate();
-		 
-		/*
-		 * KeycloakAuthenticationToken token = (KeycloakAuthenticationToken)
-		 * request.getUserPrincipal(); KeycloakUser keycloakUser = new KeycloakUser();
-		 * keycloakUser.setUsername(token.getName());
-		 * keycloakUser.setPassword(token.getCredentials().toString());
-		 * 
-		 * AccessTokenResponse accessToken = auth.login(keycloakUser);
-		 */
-		
-		
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
-		
-		/*
-		 * HttpHeaders headers = new HttpHeaders(); headers.set("Authorization",
-		 * "Bearer" + accessToken.getAccess_token());
-		 */
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 		 
@@ -117,7 +66,6 @@ public class PropositionServiceImpl implements IPropositionService{
 						  entity,
 						  new ParameterizedTypeReference<RestResponsePage<Proposition>>(){});
 		 
-    	    	
         Page<Proposition> pageProposition = propositions.getBody();
  
         return pageProposition;
@@ -127,50 +75,15 @@ public class PropositionServiceImpl implements IPropositionService{
 	@Override
 	public Proposition createProposition(PropositionDTO propositionDTO) {
 		
-		/*
-		 * HttpHeaders headers = new HttpHeaders();
-		 * headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-		 * headers.setContentType(MediaType.APPLICATION_JSON);
-		 */
-		
-		/*
-		 * HttpHeaders headers = httpHeadersFactory.createHeaders(zuulu, zuulp);
-		 * headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		 */
-		  
-		  
-		  //headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-	    	//headers.setContentType(MediaType.APPLICATION_JSON);
-		
 		 HttpHeaders headers = httpHeadersFactory.createHeaders(request);
-		 
-		 System.out.println("headers1 = " + headers.toString());
-		
-		  //HttpEntity<?> entity = new HttpEntity<>(headers);
-		  
-		  HttpEntity<PropositionDTO> requestEntity = new HttpEntity<>(propositionDTO,headers);
-	
-		  
-		  String url = uRLProposition+"/create" ;
-		
-		      //String url = uRLProposition ;
+
+		 HttpEntity<PropositionDTO> requestEntity = new HttpEntity<>(propositionDTO,headers);
+	  
+		 String url = uRLProposition+"/create" ;
 			
-			  //HttpEntity<PropositionDTO> requestEntity = new HttpEntity<>(propositionDTO);
-			  
+		 ResponseEntity<Proposition> response= restTemplate.exchange(url, HttpMethod.POST, requestEntity, Proposition.class);
 			
-		  
-				/*
-				 * ResponseEntity<Proposition> response =keycloakRestTemplate.postForEntity(url,
-				 * propositionDTO, Proposition.class);
-				 */
-			 
-		
-			
-			  ResponseEntity<Proposition> response= restTemplate.exchange(url,
-			  HttpMethod.POST, requestEntity, Proposition.class);
-			 
-			
-		  return response.getBody();
+		 return response.getBody();
 	}
 
 
