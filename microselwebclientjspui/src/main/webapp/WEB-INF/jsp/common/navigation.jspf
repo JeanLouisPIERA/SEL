@@ -46,11 +46,11 @@
 					        </form> --%>
 					
 					       <%--  <div>${pageContext.request.userPrincipal.name} est connecté| <a onclick="document.forms['logoutForm'].submit()">Logout</a></div> --%>
-					    	<div>${pageContext.request.userPrincipal.name} est connecté || <a href="/logout""> Logout</a></div>
+					    	<div>${pageContext.request.userPrincipal.name} est connecté || <a href="/logout""> Logout</a> || <a href="/profile""> Changer Mot de Passe</a></div>
 					    	
 					    </c:if>
 					  
-		         </li> 
+		         
 		         <li>
 			         <a href="mailto:jeanlouispiera@yahoo.fr?subject=Premiercontact&cc=jlp340105@gmail.com&body=Bonjour,"> Nous Contacter</a>
 		         </li>

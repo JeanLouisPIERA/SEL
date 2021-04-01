@@ -14,6 +14,13 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+
+
 
 
 @Entity
@@ -72,6 +79,10 @@ public class Reponse {
 	@Column(name = "valeur", length = 10, nullable=false)
 	private Integer valeur;
 	
+	
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "date_echeance", length = 25, nullable=false)
 	private LocalDate dateEcheance; 
 	
@@ -84,6 +95,9 @@ public class Reponse {
 	 * Le système renseigne la date de publication de la réponse ********************************************************************
 	 */
 	
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "date_reponse", length = 25, nullable=false)
 	private LocalDate dateReponse; 
 	
@@ -110,27 +124,6 @@ public class Reponse {
 	}
 	
 	
-
-	public Reponse(Long id, Long recepteurId, EnumTradeType enumTradeType, String titre, String description,
-			String image, String ville, Integer codePostal, Integer valeur, LocalDate dateEcheance,
-			LocalDate dateReponse, Proposition proposition, Echange echange) {
-		super();
-		this.id = id;
-		this.recepteurId = recepteurId;
-		this.enumTradeType = enumTradeType;
-		this.titre = titre;
-		this.description = description;
-		this.image = image;
-		this.ville = ville;
-		this.codePostal = codePostal;
-		this.valeur = valeur;
-		this.dateEcheance = dateEcheance;
-		this.dateReponse = dateReponse;
-		this.proposition = proposition;
-		this.echange = echange;
-	}
-
-
 
 	public Long getId() {
 		return id;
@@ -235,6 +228,16 @@ public class Reponse {
 	public void setEchange(Echange echange) {
 		this.echange = echange;
 	}
+
+
+	/*
+	 * @Override public String toString() { return "Reponse [id=" + id +
+	 * ", recepteurId=" + recepteurId + ", enumTradeType=" + enumTradeType +
+	 * ", titre=" + titre + ", description=" + description + ", image=" + image +
+	 * ", ville=" + ville + ", codePostal=" + codePostal + ", valeur=" + valeur +
+	 * ", dateEcheance=" + dateEcheance + ", dateReponse=" + dateReponse +
+	 * ", proposition=" + proposition + ", echange=" + echange + "]"; }
+	 */
 	
 	
 	

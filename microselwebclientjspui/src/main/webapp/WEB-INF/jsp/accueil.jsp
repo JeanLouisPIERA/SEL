@@ -98,7 +98,7 @@
   <h4>Déjà parus</h4>
   	<a href="/accueil">Article 1</a> 
   	<br></br> <a href="/accueil">Article 2</a> 
-  	<br></br> <a href="/accueil">Article 3</a> 
+  	<!-- <br></br> <a href="/accueil">Article 3</a>  -->
   	<br></br>
   </ul>
   <ul>
@@ -110,6 +110,7 @@
   </ul>
   <ul>
   <h4>Adhérez</h4>
+  <a href="http://localhost:8180/auth/realms/microsel-realm/login-actions/registration?client_id=microselwebclientjspui&tab_id=mM2utuJ_IjE">Enregistrez-vous </a> 
   <!-- <ul>
     <li><a th:href="@{/registration}" href="#">Sign-Up </a></li>
   </ul> -->

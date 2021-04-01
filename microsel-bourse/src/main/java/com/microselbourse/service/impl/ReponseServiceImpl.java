@@ -33,6 +33,7 @@ import com.microselbourse.entities.EnumStatutBlocage;
 import com.microselbourse.entities.EnumStatutEchange;
 import com.microselbourse.entities.EnumStatutProposition;
 import com.microselbourse.entities.EnumTradeType;
+import com.microselbourse.entities.MessageMailReponse;
 import com.microselbourse.entities.Proposition;
 import com.microselbourse.entities.Reponse;
 import com.microselbourse.entities.Transaction;
@@ -80,6 +81,9 @@ public class ReponseServiceImpl implements IReponseService{
 	
 	@Autowired
 	private IBlocageRepository blocageRepository;
+	
+	@Autowired
+	RabbitMQSender rabbitMQSender;
 
 	@Override
 	public Reponse createReponse(Long propositionId, ReponseDTO reponseDTO) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException, EntityAlreadyExistsException {
@@ -121,20 +125,24 @@ public class ReponseServiceImpl implements IReponseService{
 				
 				UserBean emetteurProposition = microselAdherentsProxy.consulterCompteAdherent(propositionToRespond.get().getEmetteurId());
 				
-				mailSender.sendMailEchangeCreation(reponseToCreate, recepteurProposition, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
-				mailSender.sendMailEchangeCreation(reponseToCreate, emetteurProposition, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
-				/*
-				 * Long recepteurPropositionId = reponseDTO.getRecepteurId(); Long
-				 * emetteurPropositionId = propositionToRespond.get().getEmetteurId();
-				 * mailSender.sendMessageMailEchangeCreation(reponseToCreate,
-				 * recepteurPropositionId, "Creation d'un nouvel échange",
-				 * "01_RecepteurReponse_EchangeCreation");
-				 * mailSender.sendMessageMailEchangeCreation(reponseToCreate,
-				 * emetteurPropositionId, "Reponse a votre Proposition",
-				 * "02_EmetteurProposition_EchangeCreation");
-				 * 
-				 */
+				//mailSender.sendMailEchangeCreation(reponseToCreate, recepteurProposition, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
+				//mailSender.sendMailEchangeCreation(reponseToCreate, emetteurProposition, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
+
+				MessageMailReponse messageToRecepteur = new MessageMailReponse();
+				messageToRecepteur.setReponse(reponseToCreate);
+				messageToRecepteur.setDestinataire(recepteurProposition);
+				messageToRecepteur.setSubject("Creation d'un nouvel échange");
+				messageToRecepteur.setMicroselBourseMailTemplate("01_RecepteurReponse_EchangeCreation");
+				rabbitMQSender.sendMessageMailReponse(messageToRecepteur);
 				
+				MessageMailReponse messageToEmetteur = new MessageMailReponse();
+				messageToEmetteur.setReponse(reponseToCreate);
+				messageToEmetteur.setDestinataire(emetteurProposition);
+				messageToEmetteur.setSubject("Reponse a votre Proposition");
+				messageToEmetteur.setMicroselBourseMailTemplate("02_EmetteurProposition_EchangeCreation");
+				rabbitMQSender.sendMessageMailReponse(messageToEmetteur);
+				
+
 				Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId(recepteurProposition.getId()); 
 			    if(walletRecepteur.isEmpty()) {
 			    	Wallet recepteurWalletCreated = walletService.createWallet(recepteurProposition.getId());
@@ -157,19 +165,22 @@ public class ReponseServiceImpl implements IReponseService{
 		
 		UserBean emetteurProposition = microselAdherentsProxy.consulterCompteAdherent(propositionToRespond.get().getEmetteurId());
 		
-		mailSender.sendMailEchangeCreation(reponseToCreate, recepteurProposition, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
-		mailSender.sendMailEchangeCreation(reponseToCreate, emetteurProposition, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
-		/*
-		 * Long recepteurPropositionId = reponseDTO.getRecepteurId(); Long
-		 * emetteurPropositionId = propositionToRespond.get().getEmetteurId();
-		 * mailSender.sendMessageMailEchangeCreation(reponseToCreate,
-		 * recepteurPropositionId, "Creation d'un nouvel échange",
-		 * "01_RecepteurReponse_EchangeCreation");
-		 * mailSender.sendMessageMailEchangeCreation(reponseToCreate,
-		 * emetteurPropositionId, "Reponse a votre Proposition",
-		 * "02_EmetteurProposition_EchangeCreation");
-		 */
+		//mailSender.sendMailEchangeCreation(reponseToCreate, recepteurProposition, "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
+		//mailSender.sendMailEchangeCreation(reponseToCreate, emetteurProposition, "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
 		
+		MessageMailReponse messageToRecepteur = new MessageMailReponse();
+		messageToRecepteur.setReponse(reponseToCreate);
+		messageToRecepteur.setDestinataire(recepteurProposition);
+		messageToRecepteur.setSubject("Creation d'un nouvel échange");
+		messageToRecepteur.setMicroselBourseMailTemplate("01_RecepteurReponse_EchangeCreation");
+		rabbitMQSender.sendMessageMailReponse(messageToRecepteur);
+		
+		MessageMailReponse messageToEmetteur = new MessageMailReponse();
+		messageToEmetteur.setReponse(reponseToCreate);
+		messageToEmetteur.setDestinataire(emetteurProposition);
+		messageToEmetteur.setSubject("Reponse a votre Proposition");
+		messageToEmetteur.setMicroselBourseMailTemplate("02_EmetteurProposition_EchangeCreation");
+		rabbitMQSender.sendMessageMailReponse(messageToEmetteur);
 		
 		Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId(recepteurProposition.getId()); 
 	    if(walletRecepteur.isEmpty()) {

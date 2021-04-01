@@ -47,7 +47,7 @@ public class ReponseRestController {
 	IReponseService reponseService;
 	
 	
-	@PostMapping("/reponses/{id}")
+	@PostMapping("/bureau/reponses/{id}")
 	  public ResponseEntity<Reponse> createReponse(
 			  @PathVariable @Valid Long id, @Valid @RequestBody ReponseDTO reponseDTO) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException, EntityAlreadyExistsException  {
 	    return new ResponseEntity<Reponse>(reponseService.createReponse(id, reponseDTO), HttpStatus.OK);

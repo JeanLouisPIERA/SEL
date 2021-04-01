@@ -11,6 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+
 @Entity
 @Table(name="evaluations")
 public class Evaluation {
@@ -32,6 +38,9 @@ public class Evaluation {
 	@Column(name = "note", length = 25, nullable=false)
 	private EnumNoteEchange enumNoteEchange;
 	
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "date_evaluation", length = 25, nullable=false)
 	private LocalDate dateEvaluation; 
 	
@@ -99,6 +108,13 @@ public class Evaluation {
 
 	public void setEchange(Echange echange) {
 		this.echange = echange;
+	}
+
+	@Override
+	public String toString() {
+		return "Evaluation [id=" + id + ", adherentId=" + adherentId + ", adherentUsername=" + adherentUsername
+				+ ", commentaire=" + commentaire + ", enumNoteEchange=" + enumNoteEchange + ", dateEvaluation="
+				+ dateEvaluation + ", echange=" + echange + "]";
 	}
 	
 	

@@ -28,6 +28,7 @@ public class MailSenderServiceImpl implements IMailSenderService {
 	
 	@Autowired
 	private IMicroselAdherentsProxy microselAdherentsProxy;
+
 	
 	@Value("${application.mail}")
 	private String mailFrom;

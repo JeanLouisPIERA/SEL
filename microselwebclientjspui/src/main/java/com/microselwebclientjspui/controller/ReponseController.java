@@ -58,7 +58,7 @@ public class ReponseController {
      * Permet de valider l'enregistrement d'une nouvelle reponse
      */
     @PostMapping("/reponses/newReponse/{id}")
-    public String createReponse(Model model, HttpServletRequest request, @PathVariable Long id, @ModelAttribute("reponseDTO") ReponseDTO reponseDTO, BindingResult result) {
+    public String createReponse(Model model, @PathVariable Long id, @ModelAttribute("reponseDTO") ReponseDTO reponseDTO, BindingResult result) {
 		
 		/*
 		 * Proposition propositionToRespond = propositionService.searchById(id);
@@ -71,7 +71,7 @@ public class ReponseController {
     	
     	try {
     		System.out.println("reponseDTO recepteurId" + reponseDTO.getRecepteurId());
-			Reponse reponseToCreate = reponseService.createReponse(id, request, reponseDTO);
+			Reponse reponseToCreate = reponseService.createReponse(id, reponseDTO);
 			model.addAttribute("reponse", reponseToCreate);
 		} catch (HttpClientErrorException e) {
 			 String errorMessage = propositionExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);

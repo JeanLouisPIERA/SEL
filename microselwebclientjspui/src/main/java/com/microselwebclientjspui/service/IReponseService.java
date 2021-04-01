@@ -13,7 +13,7 @@ import com.microselwebclientjspui.objets.Reponse;
 
 public interface IReponseService {
 	
-	public Reponse createReponse(Long id, HttpServletRequest request, ReponseDTO reponseDTO);
+	public Reponse createReponse(Long id, ReponseDTO reponseDTO);
 
 	public Page<Reponse> findAllByPropositionId(Long id, Pageable pageable);
 

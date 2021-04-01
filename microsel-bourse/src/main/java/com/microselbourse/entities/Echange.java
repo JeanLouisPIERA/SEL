@@ -19,7 +19,12 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 @Entity
 @Table(name="echanges")
@@ -33,7 +38,9 @@ public class Echange implements Serializable {
 	 * Lorsque un adhérent publie répond à une proposition, le système génère automatiquement un échange
 	 * Le système enregistre alors la date d'enregistrement**********************************************************************
 	 */
-	
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name="date_enregistrement")
 	private LocalDate dateEnregistrement;
 	
@@ -59,6 +66,9 @@ public class Echange implements Serializable {
 	@Column(name="recepteur_username")
 	private String recepteurUsername;
 	
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name="date_echeance")
 	private LocalDate dateEcheance;
 	
@@ -74,9 +84,15 @@ public class Echange implements Serializable {
 	@Column(name="statut")
 	private EnumStatutEchange statutEchange;
 	
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name="date_confirmation")
 	private LocalDate dateConfirmation;
 	
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name="date_annulation")
 	private LocalDate dateAnnulation;
 	
@@ -97,6 +113,9 @@ public class Echange implements Serializable {
 	@Column(name="avis_recepteur")
 	private EnumEchangeAvis avisRecepteur;
 	
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name="date_fin")
 	private LocalDate dateFin;
 	
@@ -157,38 +176,6 @@ public class Echange implements Serializable {
 		super();
 		
 	}
-
-
-	public Echange(Long id, LocalDate dateEnregistrement, Long emetteurId, Long recepteurId, String emetteurUsername,
-			String recepteurUsername, LocalDate dateEcheance, String titre, String emetteurMail, String recepteurMail,
-			EnumStatutEchange statutEchange, LocalDate dateConfirmation, LocalDate dateAnnulation,
-			EnumEchangeAvis avisEmetteur, EnumEchangeAvis avisRecepteur, LocalDate dateFin, String commentaireEmetteur,
-			String commentaireRecepteur, EnumEchangeAvis noteEmetteur, EnumEchangeAvis noteRecepteur,
-			Transaction transaction) {
-		super();
-		this.id = id;
-		this.dateEnregistrement = dateEnregistrement;
-		this.emetteurId = emetteurId;
-		this.recepteurId = recepteurId;
-		this.emetteurUsername = emetteurUsername;
-		this.recepteurUsername = recepteurUsername;
-		this.dateEcheance = dateEcheance;
-		this.titre = titre;
-		this.emetteurMail = emetteurMail;
-		this.recepteurMail = recepteurMail;
-		this.statutEchange = statutEchange;
-		this.dateConfirmation = dateConfirmation;
-		this.dateAnnulation = dateAnnulation;
-		this.avisEmetteur = avisEmetteur;
-		this.avisRecepteur = avisRecepteur;
-		this.dateFin = dateFin;
-		this.commentaireEmetteur = commentaireEmetteur;
-		this.commentaireRecepteur = commentaireRecepteur;
-		this.noteEmetteur = noteEmetteur;
-		this.noteRecepteur = noteRecepteur;
-		this.transaction = transaction;
-	}
-
 
 
 
@@ -386,6 +373,21 @@ public class Echange implements Serializable {
 
 	public void setEvaluations(List<Evaluation> evaluations) {
 		this.evaluations = evaluations;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "Echange [id=" + id + ", dateEnregistrement=" + dateEnregistrement + ", emetteurId=" + emetteurId
+				+ ", recepteurId=" + recepteurId + ", emetteurUsername=" + emetteurUsername + ", recepteurUsername="
+				+ recepteurUsername + ", dateEcheance=" + dateEcheance + ", titre=" + titre + ", emetteurMail="
+				+ emetteurMail + ", recepteurMail=" + recepteurMail + ", statutEchange=" + statutEchange
+				+ ", dateConfirmation=" + dateConfirmation + ", dateAnnulation=" + dateAnnulation + ", avisEmetteur="
+				+ avisEmetteur + ", avisRecepteur=" + avisRecepteur + ", dateFin=" + dateFin + ", commentaireEmetteur="
+				+ commentaireEmetteur + ", commentaireRecepteur=" + commentaireRecepteur + ", noteEmetteur="
+				+ noteEmetteur + ", noteRecepteur=" + noteRecepteur + ", transaction=" + transaction + ", blocages="
+				+ blocages + ", evaluations=" + evaluations + "]";
 	}
 	
 	

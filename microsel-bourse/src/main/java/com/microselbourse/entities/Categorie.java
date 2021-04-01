@@ -42,11 +42,6 @@ public class Categorie implements Serializable {
 		super();
 	}
 
-	public Categorie(Long id, EnumCategorie name) {
-		super();
-		this.id = id;
-		this.name = name;
-	}
 
 	public Long getId() {
 		return id;
@@ -72,10 +67,13 @@ public class Categorie implements Serializable {
 		this.propositions = propositions;
 	}
 
+
 	@Override
 	public String toString() {
 		return "Categorie [id=" + id + ", name=" + name + ", propositions=" + propositions + "]";
 	}
+
+
 	
 
 

@@ -28,6 +28,8 @@ import com.microselbourse.entities.EnumEchangeAvis;
 import com.microselbourse.entities.EnumStatutBlocage;
 import com.microselbourse.entities.EnumStatutEchange;
 import com.microselbourse.entities.EnumTradeType;
+import com.microselbourse.entities.MessageMailEchange;
+import com.microselbourse.entities.MessageMailReponse;
 import com.microselbourse.entities.Proposition;
 import com.microselbourse.entities.Reponse;
 import com.microselbourse.entities.Transaction;
@@ -65,6 +67,9 @@ public class EchangeServiceImpl implements IEchangeService{
 	
 	@Autowired
 	private IBlocageRepository blocageRepository;
+	
+	@Autowired
+	RabbitMQSender rabbitMQSender;
 	
 	
 	@Override
@@ -160,8 +165,26 @@ public class EchangeServiceImpl implements IEchangeService{
 				if(echangeToValidate.getAvisRecepteur().equals(EnumEchangeAvis.VALIDE)) {
 					echangeToValidate.setStatutEchange(EnumStatutEchange.LITIGE);
 					echangeToValidate.setDateFin(LocalDate.now());
-					mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Cloture de l'echange", "05B_EmetteurProposition_EchangeValidation_Litige");
-					mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Cloture de l'echange", "05B_RecepteurReponse_EchangeValidation_Litige");
+					//mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Cloture de l'echange", "05B_EmetteurProposition_EchangeValidation_Litige");
+					//mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Cloture de l'echange", "05B_RecepteurReponse_EchangeValidation_Litige");
+					
+					MessageMailEchange messageToRecepteur = new MessageMailEchange();
+					messageToRecepteur.setEchange(echangeToValidate);
+					messageToRecepteur.setDestinataire(recepteur);
+					messageToRecepteur.setSubject("Cloture de l'echange");
+					messageToRecepteur.setMicroselBourseMailTemplate("05B_EmetteurProposition_EchangeValidation_Litige");
+					rabbitMQSender.sendMessageMailEchange(messageToRecepteur);
+					
+					MessageMailEchange messageToEmetteur = new MessageMailEchange();
+					messageToEmetteur.setEchange(echangeToValidate);
+					messageToEmetteur.setDestinataire(emetteur);
+					messageToEmetteur.setSubject("Cloture de l'echange");
+					messageToEmetteur.setMicroselBourseMailTemplate("05B_RecepteurReponse_EchangeValidation_Litige");
+					rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
+					
+					
+					
+					
 					Transaction transactionCreated = transactionService.createTransaction(id);
 					echangeToValidate.setTransaction(transactionCreated);
 					return echangeRepository.save(echangeToValidate);
@@ -346,7 +369,16 @@ public class EchangeServiceImpl implements IEchangeService{
 		
 		echangeToAnnuler.setStatutEchange(EnumStatutEchange.ANNULE);
 		echangeToAnnuler.setDateAnnulation(LocalDate.now());
-		mailSender.sendMailEchangeConfirmation(echangeToAnnuler, recepteur, "Annulation de l'echange", "04_RecepteurReponse_EchangeAnnulation");
+		//mailSender.sendMailEchangeConfirmation(echangeToAnnuler, recepteur, "Annulation de l'echange", "04_RecepteurReponse_EchangeAnnulation");
+		
+		MessageMailEchange messageToRecepteur = new MessageMailEchange();
+		messageToRecepteur.setEchange(echangeToAnnuler);
+		messageToRecepteur.setDestinataire(recepteur);
+		messageToRecepteur.setSubject("Annulation de l'echange");
+		messageToRecepteur.setMicroselBourseMailTemplate("04_RecepteurReponse_EchangeAnnulation");
+		rabbitMQSender.sendMessageMailEchange(messageToRecepteur);
+		
+		
 		return echangeRepository.save(echangeToAnnuler);	
 	}
 
@@ -367,7 +399,15 @@ public class EchangeServiceImpl implements IEchangeService{
 		
 		echangeToConfirm.setStatutEchange(EnumStatutEchange.CONFIRME);
 		echangeToConfirm.setDateConfirmation(LocalDate.now());
-		mailSender.sendMailEchangeConfirmation(echangeToConfirm, recepteur, "Confirmation de l'echange", "03_RecepteurReponse_EchangeConfirmation");
+		//mailSender.sendMailEchangeConfirmation(echangeToConfirm, recepteur, "Confirmation de l'echange", "03_RecepteurReponse_EchangeConfirmation");
+		MessageMailEchange messageToRecepteur = new MessageMailEchange();
+		messageToRecepteur.setEchange(echangeToConfirm);
+		messageToRecepteur.setDestinataire(recepteur);
+		messageToRecepteur.setSubject("Confirmation de l'echange");
+		messageToRecepteur.setMicroselBourseMailTemplate("03_RecepteurReponse_EchangeConfirmation");
+		rabbitMQSender.sendMessageMailEchange(messageToRecepteur);
+		
+		
 		return echangeRepository.save(echangeToConfirm);
 	
 		

@@ -17,9 +17,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id", scope = Proposition.class)
 @Entity
 @Table(name="propositions")
 public class Proposition implements Serializable {
@@ -77,10 +84,15 @@ public class Proposition implements Serializable {
 	 * @Column(name = "monnaie", length = 10, nullable=false) private MonnaieBean
 	 * monnaie;
 	 */
-	
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "date_fin", length = 25, nullable=false)
 	private LocalDate dateFin; 
 	
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "date_echeance", length = 25, nullable=false)
 	private LocalDate dateEcheance; 
 	
@@ -95,6 +107,9 @@ public class Proposition implements Serializable {
 	 * Le système renseigne la date de publication de la proposition ***************************************************************
 	 */
 	
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "date_debut", length = 25, nullable=false)
 	private LocalDate dateDebut; 
 	
@@ -116,55 +131,6 @@ public class Proposition implements Serializable {
 		super();
 		
 	}
-	
-
-	public Proposition(Long id, Long emetteurId, EnumTradeType enumTradeType, String titre, String description,
-			String ville, Integer codePostal, Integer valeur, LocalDate dateFin, LocalDate dateEcheance,
-			Categorie categorie, LocalDate dateDebut) {
-		super();
-		this.id = id;
-		this.emetteurId = emetteurId;
-		this.enumTradeType = enumTradeType;
-		this.titre = titre;
-		this.description = description;
-		this.ville = ville;
-		this.codePostal = codePostal;
-		this.valeur = valeur;
-		this.dateFin = dateFin;
-		this.dateEcheance = dateEcheance;
-		this.categorie = categorie;
-		this.dateDebut = dateDebut;
-	}
-	
-	
-
-
-
-
-
-
-
-	public Proposition(Long id, Long emetteurId, EnumTradeType enumTradeType, String titre, String description,
-			String image, String ville, Integer codePostal, Integer valeur, LocalDate dateFin, LocalDate dateEcheance,
-			EnumStatutProposition statut, Categorie categorie, LocalDate dateDebut) {
-		super();
-		this.id = id;
-		this.emetteurId = emetteurId;
-		this.enumTradeType = enumTradeType;
-		this.titre = titre;
-		this.description = description;
-		this.image = image;
-		this.ville = ville;
-		this.codePostal = codePostal;
-		this.valeur = valeur;
-		this.dateFin = dateFin;
-		this.dateEcheance = dateEcheance;
-		this.statut = statut;
-		this.categorie = categorie;
-		this.dateDebut = dateDebut;
-	}
-
-
 	
 	
 	public Long getId() {
@@ -312,5 +278,19 @@ public class Proposition implements Serializable {
 		this.reponses = reponses;
 	}
 
+
+	/*
+	 * @Override public String toString() { return "Proposition [id=" + id +
+	 * ", emetteurId=" + emetteurId + ", enumTradeType=" + enumTradeType +
+	 * ", titre=" + titre + ", description=" + description + ", image=" + image +
+	 * ", ville=" + ville + ", codePostal=" + codePostal + ", valeur=" + valeur +
+	 * ", dateFin=" + dateFin + ", dateEcheance=" + dateEcheance + ", statut=" +
+	 * statut + ", categorie=" + categorie + ", dateDebut=" + dateDebut +
+	 * ", reponses=" + reponses + "]"; }
+	 */
+
+
+	
+	
 
 }

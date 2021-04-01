@@ -2,6 +2,8 @@ package com.microselwebclientjspui.service.impl;
 
 import java.util.Arrays;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.microselwebclientjspui.criteria.EchangeCriteria;
+import com.microselwebclientjspui.dto.ReponseDTO;
 import com.microselwebclientjspui.objets.Echange;
 import com.microselwebclientjspui.objets.Proposition;
 import com.microselwebclientjspui.service.IEchangeService;
@@ -29,19 +32,36 @@ public class EchangeServiceImpl implements IEchangeService {
 	
 	@Autowired private RestTemplate restTemplate;
 	
+	@Autowired
+	  private HttpHeadersFactory httpHeadersFactory;
+	  
+	  @Autowired
+	  private HttpServletRequest request;
+	
 	@Value("${application.uRLEchange}") private String uRLEchange;
+	
+	@Value("${application.uRLEchangeUser}") private String uRLEchangeUser;
+	
+	@Value("${application.uRLEchangeBureau}") private String uRLEchangeBureau;
+
 
 	@Override
 	public Page<Echange> searchByCriteria(EchangeCriteria echangeCriteria, Pageable pageable) {
 
 		
-		  HttpHeaders headers = new HttpHeaders(); 
-		  headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		  
-		  HttpEntity<?> entity = new HttpEntity<>(headers);
+		/*
+		 * HttpHeaders headers = new HttpHeaders(); headers.set("Accept",
+		 * MediaType.APPLICATION_JSON_VALUE);
+		 * 
+		 * HttpEntity<?> entity = new HttpEntity<>(headers);
+		 */
 		 
+		
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
  
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLEchange)
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLEchangeBureau)
     	        .queryParam("id", echangeCriteria.getId())
     	        .queryParam("titre", echangeCriteria.getTitre())
     	        .queryParam("statutEchange", echangeCriteria.getStatutEchange())
@@ -65,15 +85,21 @@ public class EchangeServiceImpl implements IEchangeService {
 
 	@Override
 	public Echange searchById(Long id) {
-		HttpHeaders headers = new HttpHeaders();
-    	headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-    	headers.setContentType(MediaType.APPLICATION_JSON);
-    	
-    	HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+		/*
+		 * HttpHeaders headers = new HttpHeaders();
+		 * headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		 * headers.setContentType(MediaType.APPLICATION_JSON);
+		 * 
+		 * HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+		 */
 		
-		String url = uRLEchange+"/" + id;
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+		
+		String url = uRLEchangeBureau+"/" + id;
     	
-		ResponseEntity<Echange> response = restTemplate.exchange(url , HttpMethod.GET, requestEntity, Echange.class);
+		ResponseEntity<Echange> response = restTemplate.exchange(url , HttpMethod.GET, entity, Echange.class);
 		
 		return response.getBody();
 	}
@@ -81,14 +107,19 @@ public class EchangeServiceImpl implements IEchangeService {
 
 	@Override
 	public Echange confirmerEchange(Long id) {
-		HttpHeaders headers = new HttpHeaders();
-    	headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-    	headers.setContentType(MediaType.APPLICATION_JSON);
-    	
-    	HttpEntity<?> requestEntity = 
-       	     new HttpEntity<>(headers);
+		/*
+		 * HttpHeaders headers = new HttpHeaders();
+		 * headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		 * headers.setContentType(MediaType.APPLICATION_JSON);
+		 * 
+		 * HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+		 */
 		
-		String url = uRLEchange+"/confirmer/"+ id;
+		String url = uRLEchangeUser+"/confirmer/"+ id;
+		
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+		HttpEntity<?> requestEntity = new HttpEntity<>(headers);
     	
 		ResponseEntity<Echange> response = restTemplate.exchange(url , HttpMethod.PUT, requestEntity, Echange.class);
 		
@@ -98,14 +129,19 @@ public class EchangeServiceImpl implements IEchangeService {
 	
 	@Override
 	public Echange annulerEchange(Long id) {
-		HttpHeaders headers = new HttpHeaders();
-    	headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-    	headers.setContentType(MediaType.APPLICATION_JSON);
-    	
-    	HttpEntity<?> requestEntity = 
-       	     new HttpEntity<>(headers);
+		/*
+		 * HttpHeaders headers = new HttpHeaders();
+		 * headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		 * headers.setContentType(MediaType.APPLICATION_JSON);
+		 * 
+		 * HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+		 */
 		
-		String url = uRLEchange+"/annuler/"+ id;
+		String url = uRLEchangeUser+"/annuler/"+ id;
+		
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+		HttpEntity<?> requestEntity = new HttpEntity<>(headers);
     	
 		ResponseEntity<Echange> response = restTemplate.exchange(url , HttpMethod.PUT, requestEntity, Echange.class);
 		

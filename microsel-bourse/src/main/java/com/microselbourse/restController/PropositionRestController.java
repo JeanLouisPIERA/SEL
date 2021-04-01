@@ -34,6 +34,7 @@ import com.microselbourse.exceptions.DeniedAccessException;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.service.IPropositionService;
+import com.microselbourse.service.impl.RabbitMQSender;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -47,6 +48,8 @@ public class PropositionRestController {
 	@Autowired
 	private IPropositionService propositionService;
 	
+	@Autowired
+	RabbitMQSender rabbitMQSender;
 	
 	  @ApiOperation(value = "Enregistrement d'une proposition par un adhérent",  response = Proposition.class)
 		  @ApiResponses(value = {
@@ -57,9 +60,10 @@ public class PropositionRestController {
 		  @ApiResponse(code = 409, message = 
 				  "Une autre proposition existe déjà avec ces attributs"), })
 	 
-	  @PostMapping("/propositions/create")
+	  @PostMapping("/user/propositions/create")
 	  public ResponseEntity<Proposition> createProposition(@Valid @RequestBody PropositionDTO propositionDTO) throws EntityAlreadyExistsException, EntityNotFoundException, DeniedAccessException {
-	    return new ResponseEntity<Proposition>(propositionService.createProposition(propositionDTO), HttpStatus.OK);
+		  //rabbitMQSender.send(propositionDTO);
+		  return new ResponseEntity<Proposition>(propositionService.createProposition(propositionDTO), HttpStatus.OK);
 	  }
 	  
 	  
@@ -69,7 +73,7 @@ public class PropositionRestController {
 		  @ApiResponse(code = 200, message = 
 				  "La recherche a été réalisée avec succés"), })
 		  
-		  @GetMapping(value="/propositions", produces="application/json") 
+		  @GetMapping(value="/user/propositions", produces="application/json") 
 		  public ResponseEntity<Page<Proposition>> searchAllPropositionsByCriteria(
 				  @PathParam("propositionCriteria") PropositionCriteria propositionCriteria,
 				  @RequestParam(name = "page", defaultValue= "0") int page, @RequestParam(name="size", defaultValue= "10") int size) { 
@@ -92,7 +96,7 @@ public class PropositionRestController {
 			  @ApiResponse(code = 413, message = 
 			  "L'offre ou la demande que vous voulez consulter n'existe pas"), })
 		 
-	  @GetMapping("/propositions/{id}")
+	  @GetMapping("/user/propositions/{id}")
 	  public ResponseEntity<Proposition> readProposition(@PathVariable @Valid Long id) throws EntityNotFoundException {
 		return new ResponseEntity<Proposition>(propositionService.readProposition(id), HttpStatus.OK);  
 	  }
@@ -109,7 +113,7 @@ public class PropositionRestController {
 			  ),
 			  @ApiResponse(code = 413, message = "Cette proposition n'existe pas"), })
 		 
-	  @PutMapping(value = "/propositions/update/{id}")
+	  @PutMapping(value = "/user/propositions/update/{id}")
 	  public ResponseEntity<Proposition> updateProposition(
   			@PathVariable @Valid Long id, @Valid @RequestBody PropositionDTO propositionDTO) throws EntityNotFoundException, DeniedAccessException, EntityAlreadyExistsException {
 		  return new ResponseEntity<Proposition>(propositionService.updateProposition(id, propositionDTO), HttpStatus.OK);
@@ -129,7 +133,7 @@ public class PropositionRestController {
 		  ),
 		  @ApiResponse(code = 413, message = "Cette proposition n'existe pas"), })
 		 
-	  @PutMapping(value = "/propositions/close/{id}")
+	  @PutMapping(value = "/user/propositions/close/{id}")
 	  public ResponseEntity<Proposition> closeProposition(
   			@PathVariable @Valid Long id) throws EntityNotFoundException, DeniedAccessException, EntityAlreadyExistsException {
 		 return new ResponseEntity<Proposition>(propositionService.closeProposition(id), HttpStatus.OK);

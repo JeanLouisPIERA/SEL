@@ -19,7 +19,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 @Entity
 @Table(name="transactions")
@@ -46,6 +51,9 @@ public class Transaction implements Serializable {
 	 * ****************************************************************************************************************************
 	 */
 	
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name="date_transaction")
 	private LocalDate dateTransaction;
 	
@@ -92,16 +100,6 @@ public class Transaction implements Serializable {
 	}
 	
 	
-
-	public Transaction(Long id, Integer montant, LocalDate dateTransaction, List<Wallet> wallets) {
-		super();
-		this.id = id;
-		this.montant = montant;
-		this.dateTransaction = dateTransaction;
-		this.wallets = wallets;
-	}
-
-
 
 	public Long getId() {
 		return id;
@@ -170,6 +168,15 @@ public class Transaction implements Serializable {
 
 	public void setWallets(List<Wallet> wallets) {
 		this.wallets = wallets;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "Transaction [id=" + id + ", montant=" + montant + ", dateTransaction=" + dateTransaction
+				+ ", titreEchange=" + titreEchange + ", emetteurUsername=" + emetteurUsername + ", recepteurUsername="
+				+ recepteurUsername + ", wallets=" + wallets + "]";
 	}
 
 	

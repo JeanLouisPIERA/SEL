@@ -38,26 +38,41 @@ public class ReponseServiceImpl implements IReponseService {
 	  @Autowired private RestTemplate restTemplate;
 	  
 	  @Autowired
-		private HttpHeadersFactory httpHeadersFactory;
+	  private HttpHeadersFactory httpHeadersFactory;
+	  
+	  @Autowired
+	  private HttpServletRequest request;
+	  
+	@Value("${application.uRLReponseBureau}") private String uRLReponseBureau;
+	
+	@Value("${application.uRLReponseUser}") private String uRLReponseUser;
 	
 	@Value("${application.uRLReponse}") private String uRLReponse;
 
 	@Override
-	public Reponse createReponse(Long id, HttpServletRequest request, ReponseDTO reponseDTO) {
+	public Reponse createReponse(Long id, ReponseDTO reponseDTO) {
 		
-		  HttpHeaders headers = new HttpHeaders();
-		  headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-		  headers.setContentType(MediaType.APPLICATION_JSON);
-		 
-		
-		//HttpHeaders headers = httpHeadersFactory.createHeaders(request);
-    	
-    	String url = uRLReponse + "/" + id;
-
-    	HttpEntity<ReponseDTO> requestEntity = new HttpEntity<>(reponseDTO);
+		/*
+		 * HttpHeaders headers = new HttpHeaders();
+		 * headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		 * headers.setContentType(MediaType.APPLICATION_JSON); String url = uRLReponse +
+		 * "/" + id; HttpEntity<ReponseDTO> requestEntity = new
+		 * HttpEntity<>(reponseDTO); ResponseEntity<Reponse> response
+		 * =keycloakRestTemplate.exchange(url, HttpMethod.POST, requestEntity,
+		 * Reponse.class);
+		 */
+		  
+		//HttpHeaders headers = httpHeadersFactory.createHeaders(request);    	
     	//ResponseEntity<Reponse> response =restTemplate.exchange(url, HttpMethod.POST, requestEntity, Reponse.class);
     	
-    	ResponseEntity<Reponse> response =keycloakRestTemplate.exchange(url, HttpMethod.POST, requestEntity, Reponse.class);	
+		  String url = uRLReponseUser + "/" + id;
+		  
+		  HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+		  HttpEntity<ReponseDTO> requestEntity = new HttpEntity<>(reponseDTO,headers);
+		  
+		  ResponseEntity<Reponse> response= restTemplate.exchange(url, HttpMethod.POST, requestEntity, Reponse.class);
+		  
 		  return response.getBody();
 	}
 

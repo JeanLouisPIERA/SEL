@@ -107,7 +107,7 @@ public class PropositionController {
 	 * @throws NotAuthorizedException 
      */
     @GetMapping(value="/propositions")
-    public String searchByCriteria(Model model, HttpServletRequest request, @PathParam(value = "propositionCriteria") PropositionCriteria propositionCriteria, @RequestParam(name="page", defaultValue="0") int page, 
+    public String searchByCriteria(Model model, @PathParam(value = "propositionCriteria") PropositionCriteria propositionCriteria, @RequestParam(name="page", defaultValue="0") int page, 
 			@RequestParam(name="size", defaultValue="6") int size) throws NotAuthorizedException{
     	
     	model.addAttribute("propositionCriteria", new PropositionCriteria());

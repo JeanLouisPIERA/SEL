@@ -37,8 +37,10 @@ public class PropositionServiceImpl implements IPropositionService{
     private HttpServletRequest request;
 	
 	@Value("${application.uRLProposition}") private String uRLProposition;
-	@Value("${application.uRLPropositionAll}") private String uRLPropositionAll;
+	
 	@Value("${application.uRLPropositionUser}") private String uRLPropositionUser;
+	
+	@Value("${application.uRLPropositionBureau}") private String uRLPropositionBureau;
 	
 	@Override
 	public Page<Proposition> searchByCriteria(PropositionCriteria propositionCriteria, Pageable pageable) throws NotAuthorizedException {
@@ -47,7 +49,7 @@ public class PropositionServiceImpl implements IPropositionService{
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 		 
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLProposition)
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLPropositionUser)
     	        .queryParam("codeEnumTradeType", propositionCriteria.getEnumTradeType())
     	        .queryParam("titre", propositionCriteria.getTitre())
     	        .queryParam("ville", propositionCriteria.getVille())
@@ -79,7 +81,7 @@ public class PropositionServiceImpl implements IPropositionService{
 
 		 HttpEntity<PropositionDTO> requestEntity = new HttpEntity<>(propositionDTO,headers);
 	  
-		 String url = uRLProposition+"/create" ;
+		 String url = uRLPropositionUser + "/create" ;
 			
 		 ResponseEntity<Proposition> response= restTemplate.exchange(url, HttpMethod.POST, requestEntity, Proposition.class);
 			
@@ -89,16 +91,21 @@ public class PropositionServiceImpl implements IPropositionService{
 
 	@Override
 	public Proposition searchById(long id) {
-		HttpHeaders headers = new HttpHeaders();
-		
-    	headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-    	headers.setContentType(MediaType.APPLICATION_JSON);
-    	
-    	HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-		
+		/*
+		 * HttpHeaders headers = new HttpHeaders();
+		 * 
+		 * headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		 * headers.setContentType(MediaType.APPLICATION_JSON);
+		 * 
+		 * HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+		 */
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        
 		String url = uRLProposition+"/" + id;
     	
-		ResponseEntity<Proposition> response = restTemplate.exchange(url , HttpMethod.GET, requestEntity, Proposition.class);
+		ResponseEntity<Proposition> response = restTemplate.exchange(url , HttpMethod.GET, entity, Proposition.class);
 		
 		return response.getBody(); 
 	}
