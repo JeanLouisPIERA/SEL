@@ -20,44 +20,45 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.microselbourse.beans.UserBean;
 
 @Entity
-@Table(name="wallets")
+@Table(name = "wallets")
 public class Wallet implements Serializable {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "wallet_id", length=5)
+	@Column(name = "wallet_id", length = 5)
 	private Long id;
-	
+
 	/*
-	 * Un wallet est rattaché à un seul adhérent et chaque adhérent n'a qu'un portefeuille
-	 * Il existe un seul wallet COUNTERPART ouvert pour le compte du SEL pour enregistrer la contrepartie d'échanges en conflit
+	 * Un wallet est rattaché à un seul adhérent et chaque adhérent n'a qu'un
+	 * portefeuille Il existe un seul wallet COUNTERPART ouvert pour le compte du
+	 * SEL pour enregistrer la contrepartie d'échanges en conflit
 	 */
-	@Column(name="titulaire_id", length = 5, nullable = false, unique = true)
-	private Long titulaireId;
-	
-	@Column(name="titulaire_username", length = 25, nullable = false)
+	@Column(name = "titulaire_id", length = 5, nullable = false, unique = true)
+	private String titulaireId;
+
+	@Column(name = "titulaire_username", length = 25, nullable = false)
 	private String titulaireUsername;
-	
-	
+
 	/*
-	 * Un wallet se définit comme un solde modifié par des opérations au débit ou au crédit
+	 * Un wallet se définit comme un solde modifié par des opérations au débit ou au
+	 * crédit
 	 */
-	
-	@Column(name="solde_wallet", length=6)
+
+	@Column(name = "solde_wallet", length = 6)
 	private Integer soldeWallet;
-	
+
 	/*
-	 * Un wallet enregistre les opérations de multiples transactions 
-	 * et une transaction se réalise toujours sur 2 portefeuilles @ManyToMany
+	 * Un wallet enregistre les opérations de multiples transactions et une
+	 * transaction se réalise toujours sur 2 portefeuilles @ManyToMany
 	 */
-	
-	@JsonIgnore 
+
+	@JsonIgnore
 	@ManyToMany(mappedBy = "wallets")
-    private List<Transaction> transactions = new ArrayList<Transaction>();
+	private List<Transaction> transactions = new ArrayList<Transaction>();
 
 	public Wallet() {
 		super();
-		
+
 	}
 
 	public Long getId() {
@@ -68,14 +69,14 @@ public class Wallet implements Serializable {
 		this.id = id;
 	}
 
-	public Long getTitulaireId() {
+	public String getTitulaireId() {
 		return titulaireId;
 	}
 
-	public void setTitulaireId(Long titulaireId) {
+	public void setTitulaireId(String titulaireId) {
 		this.titulaireId = titulaireId;
 	}
-	
+
 	public String getTitulaireUsername() {
 		return titulaireUsername;
 	}
@@ -105,10 +106,5 @@ public class Wallet implements Serializable {
 		return "Wallet [id=" + id + ", titulaireId=" + titulaireId + ", titulaireUsername=" + titulaireUsername
 				+ ", soldeWallet=" + soldeWallet + ", transactions=" + transactions + "]";
 	}
-
-	
-	
-	
-	
 
 }

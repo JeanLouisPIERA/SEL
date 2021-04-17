@@ -147,6 +147,17 @@
 								          <c:if test="${echange.statutEchange.getCode() == 'CONFIRME'}">
 								          <td>
 								          	<a type="button"  class="btn btn-success" 
+								        	href="/echanges/validation/${echange.id}">Avis ( + ) </a>
+								          </td>
+								           <td>
+								          	<a type="button"  class="btn btn-danger" 
+								        	href="/echanges/refus/${echange.id}">Avis ( - )</a>
+								          </td>
+								          </c:if>
+								          </sec:authorize>
+								          
+								          <%-- <td>
+								          	<a type="button"  class="btn btn-success" 
 								        	href="/echanges/emetteurValidation/${echange.id}">Avis + (E)</a>
 								          </td>
 								          <td>
@@ -160,9 +171,7 @@
 								          <td>
 								          	<a type="button"  class="btn btn-danger" 
 								        	href="/echanges/recepteurRefus/${echange.id}">Avis - (R)</a>
-								          </td>
-								          </c:if>
-								          </sec:authorize>
+								          </td> --%>
 								          
 								          
 					    				 </tr>

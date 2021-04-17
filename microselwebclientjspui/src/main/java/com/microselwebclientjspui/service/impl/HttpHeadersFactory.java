@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class HttpHeadersFactory {
-	
+
 	@Autowired
-    private HttpServletRequest request;
-	
+	private HttpServletRequest request;
+
 	/*
 	 * public HttpHeaders createHeaders(String username, String password){ return
 	 * new HttpHeaders() {{ String auth = username + ":" + password; byte[]
@@ -24,17 +24,17 @@ public class HttpHeadersFactory {
 	 * 
 	 * }
 	 */
-	 
-	
+
 	public HttpHeaders createHeaders(HttpServletRequest request) {
-		KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) request.getUserPrincipal(); 
+		KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) request.getUserPrincipal();
 		KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
 		KeycloakSecurityContext session = principal.getKeycloakSecurityContext();
-			
-		HttpHeaders headers = new HttpHeaders(); headers.set("Authorization", "Bearer " + session.getTokenString());
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", "Bearer " + session.getTokenString());
 
 		return headers;
-		
+
 	}
 
 }

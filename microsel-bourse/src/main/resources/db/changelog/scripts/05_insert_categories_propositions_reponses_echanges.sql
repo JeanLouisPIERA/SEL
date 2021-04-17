@@ -11,11 +11,11 @@ INSERT INTO categories (CATEGORIE_ID, NAME) VALUES
 
 INSERT INTO propositions( PROPOSITION_ID, EMETTEUR_ID, TRADE_TYPE, TITRE, DESCRIPTION, IMAGE, VILLE, CODE_POSTAL, VALEUR,
 DATE_FIN, DATE_ECHEANCE, STATUT, CATEGORIE_ID, DATE_DEBUT) VALUES
-('1', '1', '0', 'coup de main bricolage', 'travaux électriques', '1', 'Paris', '75000', '25', '2020-12-20', '2021-01-30', '1', '1', '2020-11-05');
+('1', 'fd65f1e7-d1d6-4c6c-bacb-d5847895c97a', '0', 'coup de main bricolage', 'travaux électriques', '1', 'Paris', '75000', '25', '2020-12-20', '2021-01-30', '1', '1', '2020-11-05');
 
 INSERT INTO reponses (REPONSE_ID, RECEPTEUR_ID, TRADE_TYPE, TITRE, DESCRIPTION, IMAGE, VILLE, CODE_POSTAL, VALEUR, DATE_ECHEANCE, 
 DATE_REPONSE, PROPOSITION_ID) VALUES
-('1', '2','1','coup de main bricolage', 'travaux électriques', '1', 'Paris', '75000', '10', '2021-01-15', '2020-12-15', '1');
+('1', '93f9c550-0a5c-4adc-861c-f91ebf09c328','1','coup de main bricolage', 'travaux électriques', '1', 'Paris', '75000', '10', '2021-01-15', '2020-12-15', '1');
 
 INSERT INTO echanges (ECHANGE_ID, DATE_ENREGISTREMENT, STATUT, DATE_CONFIRMATION, DATE_ANNULATION, AVIS_EMETTEUR, AVIS_RECEPTEUR,
 DATE_FIN, COMMENT_EMETTEUR, COMMENT_RECEPTEUR, NOTE_EMETTEUR, NOTE_RECEPTEUR) VALUES

@@ -34,7 +34,7 @@
        <br>
      <form:form class="form-inline d-flex bd-highlight" method="POST" modelAttribute="propositionDTO">
         
-       <fieldset class="form-row">
+       <%-- <fieldset class="form-row">
        <fieldset class="form-group">
 	       <form:label path="emetteurId" class="col-auto col-form-label">Identifiant Adhérent :</form:label>
 	       <form:input path="emetteurId" type="text" class="form-control"
@@ -43,7 +43,7 @@
       	</fieldset>
       	</fieldset>
       
-      <br>
+      <br> --%>
       
       <fieldset class="form-row">
        <fieldset class="form-group">

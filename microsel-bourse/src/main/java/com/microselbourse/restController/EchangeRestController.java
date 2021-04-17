@@ -43,174 +43,198 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/sel/bourse")
 @Validated
 public class EchangeRestController {
-	
+
 	@Autowired
 	private IEchangeService echangeService;
-	
+
 	@Autowired
 	private IReponseService reponseService;
-	
-	
-	@ApiOperation(value = "Recherche multi-critères d'un ou plusieurs echanges", response = Echange.class)  
-	  @ApiResponses(value = {
-	  @ApiResponse(code = 200, message = 
-			  "La recherche a été réalisée avec succés"), })
-	  
-	  @GetMapping(value="/bureau/echanges", produces="application/json") 
-	  public ResponseEntity<Page<Echange>> searchAllEchangesByCriteria(
-			  @PathParam("echangeCriteria") EchangeCriteria echangeCriteria, 
-			  @RequestParam(name = "page", defaultValue= "0") int page, 
-			  @RequestParam(name="size", defaultValue= "6") int size) { 
-	  	  Page<Echange> echanges = echangeService.searchAllEchangesByCriteria(echangeCriteria, PageRequest.of(page, size)); 
-		  return new ResponseEntity<Page<Echange>>(echanges, HttpStatus.OK); 
-	  }
-	
-	
-	@ApiOperation(value = "Consultation d'un echange par un adhérent", response = Echange.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Léchange recherché a été trouvée"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "L'échangeque vous voulez consulter n'existe pas"), })
-	 
-	@GetMapping("/bureau/echanges/{id}")
+
+	@ApiOperation(value = "Recherche multi-critères d'un ou plusieurs echanges", response = Echange.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "La recherche a été réalisée avec succés"), })
+
+	@GetMapping(value = "/all/echanges", produces = "application/json")
+	public ResponseEntity<Page<Echange>> searchAllEchangesByCriteria(
+			@PathParam("echangeCriteria") EchangeCriteria echangeCriteria,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "6") int size) {
+		Page<Echange> echanges = echangeService.searchAllEchangesByCriteria(echangeCriteria,
+				PageRequest.of(page, size));
+		return new ResponseEntity<Page<Echange>>(echanges, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "Consultation d'un echange par un adhérent", response = Echange.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Léchange recherché a été trouvée"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "L'échangeque vous voulez consulter n'existe pas"), })
+
+	@GetMapping("/user/echanges/{id}")
 	public ResponseEntity<Echange> readEchange(@PathVariable @Valid Long id) throws EntityNotFoundException {
-	
-		return new ResponseEntity<Echange>(echangeService.readEchange(id), HttpStatus.OK);  
+
+		return new ResponseEntity<Echange>(echangeService.readEchange(id), HttpStatus.OK);
 	}
-	
-	@ApiOperation(value = "Consultation du détail d'un echange par un adhérent", response = Reponse.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Léchange recherché a été trouvée"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "L'échangeque vous voulez consulter n'existe pas"), })
-	 
-	@GetMapping("/bureau/echanges/details/{id}")
+
+	@ApiOperation(value = "Consultation du détail d'un echange par un adhérent", response = Reponse.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Léchange recherché a été trouvée"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "L'échangeque vous voulez consulter n'existe pas"), })
+
+	@GetMapping("/user/echanges/details/{id}")
 	public ResponseEntity<Reponse> readDetailsEchange(@PathVariable @Valid Long id) throws EntityNotFoundException {
-	
-		return new ResponseEntity<Reponse>(reponseService.readReponse(id), HttpStatus.OK);  
+
+		return new ResponseEntity<Reponse>(reponseService.readReponse(id), HttpStatus.OK);
 	}
-	
-	
-	@ApiOperation(value = "Confirmation d'un echange par l'adhérent émetteur de la proposition initiale", response = Proposition.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Léchange recherché a été confirmé"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "L'échange que vous voulez confirmer n'existe pas"), })
-	@PutMapping("/bureau/echanges/confirmer/{id}") 
-	public ResponseEntity<Echange> confirmerEchange(
-			@PathVariable @Valid Long id) 
-					throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException{
-		return new ResponseEntity<Echange> (echangeService.confirmerEchange(id), HttpStatus.OK);
+
+	@ApiOperation(value = "Confirmation d'un echange par l'adhérent émetteur de la proposition initiale", response = Proposition.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Léchange recherché a été confirmé"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "L'échange que vous voulez confirmer n'existe pas"), })
+	@PostMapping("/user/echanges/confirmer/{id}")
+	public ResponseEntity<Echange> confirmerEchange(@PathVariable @Valid Long id, @RequestBody String intervenantId)
+			throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException {
+		return new ResponseEntity<Echange>(echangeService.confirmerEchange(id, intervenantId), HttpStatus.OK);
 	}
-	
-	@ApiOperation(value = "Annulation d'un echange par l'adhérent émetteur de la proposition initiale", response = Proposition.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Léchange recherché a été annulé"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "L'échange que vous voulez annuler n'existe pas"), })
-	@PutMapping("/bureau/echanges/annuler/{id}") 
-	public ResponseEntity<Echange> annulerEchange(
-			@PathVariable @Valid Long id) 
-					throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException{
-		return new ResponseEntity<Echange> (echangeService.annulerEchange(id), HttpStatus.OK);
+
+	@ApiOperation(value = "Annulation d'un echange par l'adhérent émetteur de la proposition initiale", response = Proposition.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Léchange recherché a été annulé"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "L'échange que vous voulez annuler n'existe pas"), })
+	@PutMapping("/user/echanges/annuler/{id}")
+	public ResponseEntity<Echange> annulerEchange(@PathVariable @Valid Long id, @RequestBody String intervenantId)
+			throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException {
+		return new ResponseEntity<Echange>(echangeService.annulerEchange(id, intervenantId), HttpStatus.OK);
 	}
-	
-	@ApiOperation(value = "Validation d'un echange par l'adhérent émetteur de la proposition initiale ", response = Echange.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Léchange recherché a été validé"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "L'échange que vous voulez valider n'existe pas"), })
-	@PutMapping("/bureau/echanges/emetteurValider/{id}")
-	public ResponseEntity<Echange> emetteurValiderEchange (
-			@PathVariable @Valid Long id) throws UnsupportedEncodingException, EntityNotFoundException, DeniedAccessException, MessagingException, EntityAlreadyExistsException {
-		return new ResponseEntity<Echange> (echangeService.validerEchangeEmetteur(id), HttpStatus.OK);
+
+	/*
+	 * @ApiOperation(value =
+	 * "Validation d'un echange par l'adhérent émetteur de la proposition initiale "
+	 * , response = Echange.class)
+	 * 
+	 * @ApiResponses(value = { @ApiResponse(code = 201, message =
+	 * "Léchange recherché a été validé"),
+	 * 
+	 * @ApiResponse(code = 400, message =
+	 * "Les informations fournies ne sont pas correctes"),
+	 * 
+	 * @ApiResponse(code = 413, message =
+	 * "L'échange que vous voulez valider n'existe pas"), })
+	 * 
+	 * @PutMapping("/user/echanges/emetteurValider/{id}") public
+	 * ResponseEntity<Echange> emetteurValiderEchange(@PathVariable @Valid Long id)
+	 * throws UnsupportedEncodingException, EntityNotFoundException,
+	 * DeniedAccessException, MessagingException, EntityAlreadyExistsException {
+	 * return new ResponseEntity<Echange>(echangeService.validerEchangeEmetteur(id),
+	 * HttpStatus.OK); }
+	 * 
+	 * @ApiOperation(value =
+	 * "Validation d'un echange par l'adhérent récepteur de la proposition initiale"
+	 * , response = Echange.class)
+	 * 
+	 * @ApiResponses(value = { @ApiResponse(code = 201, message =
+	 * "Léchange recherché a été validé"),
+	 * 
+	 * @ApiResponse(code = 400, message =
+	 * "Les informations fournies ne sont pas correctes"),
+	 * 
+	 * @ApiResponse(code = 413, message =
+	 * "L'échange que vous voulez valider n'existe pas"), })
+	 * 
+	 * @PutMapping("/user/echanges/recepteurValider/{id}") public
+	 * ResponseEntity<Echange> recepteurValiderEchange(@PathVariable @Valid Long id)
+	 * throws UnsupportedEncodingException, EntityNotFoundException,
+	 * DeniedAccessException, MessagingException, EntityAlreadyExistsException {
+	 * return new
+	 * ResponseEntity<Echange>(echangeService.validerEchangeRecepteur(id),
+	 * HttpStatus.OK); }
+	 */
+
+	/*
+	 * @ApiOperation(value =
+	 * "Refus de valider un echange par l'adhérent émetteur de la proposition initiale"
+	 * , response = Echange.class)
+	 * 
+	 * @ApiResponses(value = { @ApiResponse(code = 201, message =
+	 * "Léchange recherché a été refusé"),
+	 * 
+	 * @ApiResponse(code = 400, message =
+	 * "Les informations fournies ne sont pas correctes"),
+	 * 
+	 * @ApiResponse(code = 413, message =
+	 * "L'échange que vous voulez refuser n'existe pas"), })
+	 * 
+	 * @PutMapping("/user/echanges/emetteurRefuser/{id}") public
+	 * ResponseEntity<Echange> emetteurRefuserEchange(@PathVariable @Valid Long id)
+	 * throws UnsupportedEncodingException, EntityNotFoundException,
+	 * DeniedAccessException, MessagingException, EntityAlreadyExistsException {
+	 * return new ResponseEntity<Echange>(echangeService.refuserEchangeEmetteur(id),
+	 * HttpStatus.OK); }
+	 * 
+	 * @ApiOperation(value =
+	 * "Refus de valider un echange par l'adhérent récepteur de la proposition initiale"
+	 * , response = Echange.class)
+	 * 
+	 * @ApiResponses(value = { @ApiResponse(code = 201, message =
+	 * "Léchange recherché a été validé"),
+	 * 
+	 * @ApiResponse(code = 400, message =
+	 * "Les informations fournies ne sont pas correctes"),
+	 * 
+	 * @ApiResponse(code = 413, message =
+	 * "L'échange que vous voulez valider n'existe pas"), })
+	 * 
+	 * @PutMapping("/user/echanges/recepteurRefuser/{id}") public
+	 * ResponseEntity<Echange> recepteurRefuserEchange(@PathVariable @Valid Long id)
+	 * throws UnsupportedEncodingException, EntityNotFoundException,
+	 * DeniedAccessException, MessagingException, EntityAlreadyExistsException {
+	 * return new
+	 * ResponseEntity<Echange>(echangeService.refuserEchangeRecepteur(id),
+	 * HttpStatus.OK); }
+	 */
+
+	@ApiOperation(value = "Validation d'un echange par l'adhérent émetteur de la proposition initiale ou l'adhérent récepteur", response = Echange.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Léchange recherché a été validé"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "L'échange que vous voulez valider n'existe pas"), })
+	@PutMapping("/user/echanges/valider/{id}")
+	public ResponseEntity<Echange> validerEchange(@PathVariable @Valid Long id, @RequestBody String intervenantId)
+			throws UnsupportedEncodingException, EntityNotFoundException, DeniedAccessException, MessagingException,
+			EntityAlreadyExistsException {
+		return new ResponseEntity<Echange>(echangeService.validerEchange(id, intervenantId), HttpStatus.OK);
 	}
-	
-	@ApiOperation(value = "Validation d'un echange par l'adhérent récepteur de la proposition initiale", response = Echange.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Léchange recherché a été validé"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "L'échange que vous voulez valider n'existe pas"), })
-	@PutMapping("/bureau/echanges/recepteurValider/{id}")
-	public ResponseEntity<Echange> recepteurValiderEchange (
-			@PathVariable @Valid Long id) throws UnsupportedEncodingException, EntityNotFoundException, DeniedAccessException, MessagingException, EntityAlreadyExistsException {
-		return new ResponseEntity<Echange> (echangeService.validerEchangeRecepteur(id), HttpStatus.OK);
+
+	@ApiOperation(value = "Refus de valider un echange par l'adhérent émetteur de la proposition initiale ou l'adherent récepteur", response = Echange.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Léchange recherché a été refusé"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "L'échange que vous voulez refuser n'existe pas"), })
+	@PutMapping("/user/echanges/refuser/{id}")
+	public ResponseEntity<Echange> refuserEchange(@PathVariable @Valid Long id, @RequestBody String intervenantId)
+			throws UnsupportedEncodingException, EntityNotFoundException, DeniedAccessException, MessagingException,
+			EntityAlreadyExistsException {
+		return new ResponseEntity<Echange>(echangeService.refuserEchange(id, intervenantId), HttpStatus.OK);
 	}
-	
-	@ApiOperation(value = "Refus de valider un echange par l'adhérent émetteur de la proposition initiale", response = Echange.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Léchange recherché a été refusé"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "L'échange que vous voulez refuser n'existe pas"), })
-	@PutMapping("/bureau/echanges/emetteurRefuser/{id}")
-	public ResponseEntity<Echange> emetteurRefuserEchange (
-			@PathVariable @Valid Long id) throws UnsupportedEncodingException, EntityNotFoundException, DeniedAccessException, MessagingException, EntityAlreadyExistsException {
-		return new ResponseEntity<Echange> (echangeService.refuserEchangeEmetteur(id), HttpStatus.OK);
-	}
-	
-	@ApiOperation(value = "Refus de valider un echange par l'adhérent récepteur de la proposition initiale", response = Echange.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Léchange recherché a été validé"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "L'échange que vous voulez valider n'existe pas"), })
-	@PutMapping("/bureau/echanges/recepteurRefuser/{id}")
-	public ResponseEntity<Echange> recepteurRefuserEchange (
-			@PathVariable @Valid Long id) throws UnsupportedEncodingException, EntityNotFoundException, DeniedAccessException, MessagingException, EntityAlreadyExistsException {
-		return new ResponseEntity<Echange> (echangeService.refuserEchangeRecepteur(id), HttpStatus.OK);
-	}
-	
-	@ApiOperation(value = "Passage au statut SUPPRIME des echanges dont le statut est toujours CONFIRME à l'échéance et sans aucun avis émetteur ou récepteur ", response = Echange.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Les échanges ont été supprimés")})
-	@GetMapping(value="/bureau/echanges/toStatutSupprime", produces="application/json")
+
+	@ApiOperation(value = "Passage au statut SUPPRIME des echanges dont le statut est toujours CONFIRME à l'échéance et sans aucun avis émetteur ou récepteur ", response = Echange.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Les échanges ont été supprimés") })
+	@GetMapping(value = "/user/echanges/toStatutSupprime", produces = "application/json")
 	public ResponseEntity<List<Echange>> selectEchangesASupprimer() {
 		List<Echange> echangesASupprimerListe = echangeService.searchAndUpdateEchangesASupprimer();
-		return new ResponseEntity<List<Echange>>(echangesASupprimerListe, HttpStatus.OK); 
+		return new ResponseEntity<List<Echange>>(echangesASupprimerListe, HttpStatus.OK);
 	}
-	
-	@ApiOperation(value = "Passage au statut FORCEVALID d'un echange dont le statut est toujours CONFIRME à l'échéance, avec un seul avis VALIDE ", response = Echange.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Les échanges ont été cloturés en force")})
-	@GetMapping(value="/bureau/echanges/toStatutForceValid", produces="application/json")
+
+	@ApiOperation(value = "Passage au statut FORCEVALID d'un echange dont le statut est toujours CONFIRME à l'échéance, avec un seul avis VALIDE ", response = Echange.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Les échanges ont été cloturés en force") })
+	@GetMapping(value = "/user/echanges/toStatutForceValid", produces = "application/json")
 	public ResponseEntity<List<Echange>> selectEchangesAForceValider() {
 		List<Echange> echangesAForceValiderListe = echangeService.searchAndUpdateEchangesAForceValider();
-		return new ResponseEntity<List<Echange>>(echangesAForceValiderListe, HttpStatus.OK); 
+		return new ResponseEntity<List<Echange>>(echangesAForceValiderListe, HttpStatus.OK);
 	}
-	
-	@ApiOperation(value = "Passage au statut FORCEREFUS d'un echange dont le statut est toujours CONFIRME à l'échéance, avec un seul avis REFUSE ", response = Echange.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Les échanges ont été mis en litige en force")})
-	@GetMapping(value="/bureau/echanges/toStatutForceRefus", produces="application/json")
+
+	@ApiOperation(value = "Passage au statut FORCEREFUS d'un echange dont le statut est toujours CONFIRME à l'échéance, avec un seul avis REFUSE ", response = Echange.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Les échanges ont été mis en litige en force") })
+	@GetMapping(value = "/user/echanges/toStatutForceRefus", produces = "application/json")
 	public ResponseEntity<List<Echange>> selectEchangesAForceRefuser() {
 		List<Echange> echangesAForceRefuserListe = echangeService.searchAndUpdateEchangesAForceRefuser();
-		return new ResponseEntity<List<Echange>>(echangesAForceRefuserListe, HttpStatus.OK); 
+		return new ResponseEntity<List<Echange>>(echangesAForceRefuserListe, HttpStatus.OK);
 	}
 
 }

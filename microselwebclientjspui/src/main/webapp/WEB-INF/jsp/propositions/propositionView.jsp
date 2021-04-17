@@ -130,12 +130,11 @@
 					   		 <thead>		  	  	 
 					    			 <tr>
 									      <th style="text-align:center">N° Réponse</th>
-									      <th style="text-align:center">N° Adherent</th>
-									      <th style="text-align:center">Nom Adherent</th>
+									      <th style="text-align:center">Pseudo Adhérent</th>
+									      <th style="text-align:center">Type</th>
+									      <th style="text-align:center">Rubrique</th>
 									      <th style="text-align:center">Date Réponse</th>
-									      <th style="text-align:center">Titre </th>
-									      <th style="text-align:center">Description</th>
-									      <th style="text-align:center">Image</th>
+									      <th style="text-align:center">Valeur</th>
 									      <th style="text-align:center">Ville</th>
 									      <th style="text-align:center">Code Postal</th>
 									      <th style="text-align:center">Echéance</th>
@@ -148,12 +147,11 @@
 					   				 <c:forEach var="reponse" items="${reponses}">
 					   				 <tr>
 								          <td>${reponse.id}</td>
-								          <td>${reponse.recepteurId}</td>
-								          <td>${reponse.echange.getRecepteurUsername()}</td>
-								          <td>${reponse.dateReponse}</td>
+								          <td>${reponse.recepteurUsername}</td>
+								          <td>${reponse.enumTradeType}</td>
 								          <td>${reponse.titre}</td>
-								          <td>${reponse.description}</td>
-								          <td>${reponse.image}</td>
+								          <td>${reponse.dateReponse}</td>
+								          <td>${reponse.valeur}</td>
 								          <td>${reponse.ville}</td>
 								          <td>${reponse.codePostal}</td>
 								          <td>${reponse.dateEcheance}</td>

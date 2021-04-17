@@ -3,18 +3,18 @@ package com.microselwebclientjspui.objets;
 import java.time.LocalDate;
 
 public class Document {
-	
+
 	private Long id;
 	private String titre;
-	private Long auteurId; 
+	private Long auteurId;
 	private String auteurUsername;
-	private LocalDate dateCreation; 
+	private LocalDate dateCreation;
 	private LocalDate dateLastUpdate;
 	private String image;
 	private String contenu;
 	private EnumStatutDocument statutDocument;
 	private TypeDocument typeDocument;
-	
+
 	public Document() {
 		super();
 	}
@@ -83,7 +83,6 @@ public class Document {
 		this.contenu = contenu;
 	}
 
-	
 	public EnumStatutDocument getStatutDocument() {
 		return statutDocument;
 	}
@@ -99,7 +98,5 @@ public class Document {
 	public void setTypeDocument(TypeDocument typeDocument) {
 		this.typeDocument = typeDocument;
 	}
-	
-	
 
 }

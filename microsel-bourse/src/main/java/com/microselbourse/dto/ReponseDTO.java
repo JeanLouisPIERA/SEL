@@ -11,32 +11,40 @@ import com.microselbourse.entities.EnumTradeType;
 import io.swagger.annotations.ApiModelProperty;
 
 public class ReponseDTO {
-	
-	
-	@ApiModelProperty(notes= "indique l'identifiant de l'adhérent récepteur - saisie obligatoire")
-	@NotNull(message="Merci d'indiquer l'identifiant de l'adhérent qui répond à l'OFFRE ou à la DEMANDE d'origine")
-	private Long recepteurId; 
 
-	private String titre; 
-	private String description; 
-	private String image; 
-	private String ville;  
-	private Integer codePostal; 
-	private Integer valeur; 
-	private String dateEcheance; 
+	@ApiModelProperty(notes = "indique l'identifiant de l'adhérent récepteur - saisie obligatoire")
+	@NotNull(message = "Merci d'indiquer l'identifiant de l'adhérent qui répond à l'OFFRE ou à la DEMANDE d'origine")
+	private String recepteurId;
 
-	
+	private String recepteurUsername;
+
+	private String titre;
+	private String description;
+	private String image;
+	private String ville;
+	private Integer codePostal;
+	private Integer valeur;
+	private String dateEcheance;
+
 	public ReponseDTO() {
 		super();
-		
+
 	}
 
-	public Long getRecepteurId() {
+	public String getRecepteurId() {
 		return recepteurId;
 	}
 
-	public void setRecepteurId(Long recepteurId) {
+	public void setRecepteurId(String recepteurId) {
 		this.recepteurId = recepteurId;
+	}
+
+	public String getRecepteurUsername() {
+		return recepteurUsername;
+	}
+
+	public void setRecepteurUsername(String recepteurUSername) {
+		this.recepteurUsername = recepteurUSername;
 	}
 
 	public String getTitre() {
@@ -94,10 +102,5 @@ public class ReponseDTO {
 	public void setDateEcheance(String dateEcheance) {
 		this.dateEcheance = dateEcheance;
 	}
-
-	
-	
-	
-	
 
 }

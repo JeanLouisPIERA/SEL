@@ -1,15 +1,13 @@
 package com.microselwebclientjspui.dto;
 
-import java.time.LocalDate;
-
 public class DocumentDTO {
-	
+
 	private String titre;
-	private Long auteurId; 
+	private String auteurId;
 	private String image;
 	private String contenu;
 	private String typeDocument;
-	
+
 	public DocumentDTO() {
 		super();
 	}
@@ -22,15 +20,13 @@ public class DocumentDTO {
 		this.titre = titre;
 	}
 
-	public Long getAuteurId() {
+	public String getAuteurId() {
 		return auteurId;
 	}
 
-	public void setAuteurId(Long auteurId) {
+	public void setAuteurId(String auteurId) {
 		this.auteurId = auteurId;
 	}
-
-	
 
 	public String getImage() {
 		return image;
@@ -48,7 +44,6 @@ public class DocumentDTO {
 		this.contenu = contenu;
 	}
 
-
 	public String getTypeDocument() {
 		return typeDocument;
 	}
@@ -56,15 +51,5 @@ public class DocumentDTO {
 	public void setTypeDocument(String typeDocument) {
 		this.typeDocument = typeDocument;
 	}
-
-	
-
-	
-
-	
-	
-	
-	
-	
 
 }

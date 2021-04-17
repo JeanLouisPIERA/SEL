@@ -62,6 +62,11 @@
 				 <input type="text" name="titulaireId" value="${walletCriteria.titulaireId}"/>
 				 </fieldset>
 				 
+				 <fieldset class="form-group">
+				 <label>Pseudo du Titulaire :</label>
+				 <input type="text" name="titulaireUsername" value="${walletCriteria.titulaireUsername}"/>
+				 </fieldset>
+				 
 				 
 				 <fieldset class="form-group">
 				 <label>Solde du portefeuille supérieur à :</label>

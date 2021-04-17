@@ -10,10 +10,10 @@ import com.microselbourse.entities.EnumCategorie;
 import com.microselbourse.entities.Proposition;
 
 @Repository
-public interface ICategorieRepository extends JpaRepository<Categorie, Long>{
-	
+public interface ICategorieRepository extends JpaRepository<Categorie, Long> {
+
 	Optional<Categorie> findById(Long id);
-	
+
 	Optional<Categorie> findByName(EnumCategorie name);
 
 }

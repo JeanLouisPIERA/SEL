@@ -3,19 +3,19 @@ package com.microselwebclientjspui.objets;
 import java.time.LocalDate;
 
 public class Evaluation {
-	
+
 	private Long id;
-	
-	private Long adherentId;
-	
+
+	private String adherentId;
+
 	private String adherentUsername;
-	
+
 	private String commentaire;
-	
+
 	private EnumNoteEchange enumNoteEchange;
-	
+
 	private LocalDate dateEvaluation;
-	
+
 	private Echange echange;
 
 	public Evaluation() {
@@ -30,11 +30,11 @@ public class Evaluation {
 		this.id = id;
 	}
 
-	public Long getAdherentId() {
+	public String getAdherentId() {
 		return adherentId;
 	}
 
-	public void setAdherentId(Long adherentId) {
+	public void setAdherentId(String adherentId) {
 		this.adherentId = adherentId;
 	}
 
@@ -53,8 +53,6 @@ public class Evaluation {
 	public void setCommentaire(String commentaire) {
 		this.commentaire = commentaire;
 	}
-
-	
 
 	public EnumNoteEchange getEnumNoteEchange() {
 		return enumNoteEchange;
@@ -79,7 +77,5 @@ public class Evaluation {
 	public void setEchange(Echange echange) {
 		this.echange = echange;
 	}
-	
-	
-	
+
 }

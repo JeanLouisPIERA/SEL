@@ -1,80 +1,54 @@
 package com.microselwebclientjspui.objets;
 
-import java.time.LocalDate;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.microselwebclientjspui.beans.RoleBean;
 
 
 
 public class User {
 	
-	
-	private Long id;
-	
-	/*
-	 * Long sel;
-	 */
-	
-	private String username;
-	
-	private String password;
-	
-	private String passwordConfirm;
-	
-	private String email;
-	
-	private UserStatutEnum statut;
-	
-	private LocalDate dateAdhesion;
-	
-	private LocalDate dateClotureDebut;
-	
-	private LocalDate dateClotureFin;
-	
-	private LocalDate dateBlocageDebut;
-	
-	private LocalDate dateBlocageFin;
-	
-	private LocalDate dateBureauDebut;
-	
-	private LocalDate dateBureauFin;
+	String id;
 
-	private LocalDate dateAdminDebut;
+	String email;
 
-	private LocalDate dateAdminFin;
+	String emailConstraint;
+
+	Boolean emailVerified;
+
+	Boolean enabled;
+
+	String federationLink;
+
+	String firstName;
+
+	String lastName;
+
+	String realmId;
+
+	String username;
+
+	Long createdTimestamp;
+
+	String serviceAccountClientLink;
+
+	Integer notBefore;
+
+	List<RoleBean> roles = new ArrayList<RoleBean>();
 
 	public User() {
 		super();
+
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getPasswordConfirm() {
-		return passwordConfirm;
-	}
-
-	public void setPasswordConfirm(String passwordConfirm) {
-		this.passwordConfirm = passwordConfirm;
 	}
 
 	public String getEmail() {
@@ -85,99 +59,101 @@ public class User {
 		this.email = email;
 	}
 
-	
-
-	public UserStatutEnum getStatut() {
-		return statut;
+	public String getEmailConstraint() {
+		return emailConstraint;
 	}
 
-	public void setStatut(UserStatutEnum statut) {
-		this.statut = statut;
+	public void setEmailConstraint(String emailConstraint) {
+		this.emailConstraint = emailConstraint;
 	}
 
-	public LocalDate getDateAdhesion() {
-		return dateAdhesion;
+	public Boolean getEmailVerified() {
+		return emailVerified;
 	}
 
-	public void setDateAdhesion(LocalDate dateAdhesion) {
-		this.dateAdhesion = dateAdhesion;
+	public void setEmailVerified(Boolean emailVerified) {
+		this.emailVerified = emailVerified;
 	}
 
-	public LocalDate getDateClotureDebut() {
-		return dateClotureDebut;
+	public Boolean getEnabled() {
+		return enabled;
 	}
 
-	public void setDateClotureDebut(LocalDate dateClotureDebut) {
-		this.dateClotureDebut = dateClotureDebut;
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
 	}
 
-	public LocalDate getDateClotureFin() {
-		return dateClotureFin;
+	public String getFederationLink() {
+		return federationLink;
 	}
 
-	public void setDateClotureFin(LocalDate dateClotureFin) {
-		this.dateClotureFin = dateClotureFin;
+	public void setFederationLink(String federationLink) {
+		this.federationLink = federationLink;
 	}
 
-	public LocalDate getDateBlocageDebut() {
-		return dateBlocageDebut;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setDateBlocageDebut(LocalDate dateBlocageDebut) {
-		this.dateBlocageDebut = dateBlocageDebut;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public LocalDate getDateBlocageFin() {
-		return dateBlocageFin;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setDateBlocageFin(LocalDate dateBlocageFin) {
-		this.dateBlocageFin = dateBlocageFin;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
-	public LocalDate getDateBureauDebut() {
-		return dateBureauDebut;
+	public String getRealmId() {
+		return realmId;
 	}
 
-	public void setDateBureauDebut(LocalDate dateBureauDebut) {
-		this.dateBureauDebut = dateBureauDebut;
+	public void setRealmId(String realmId) {
+		this.realmId = realmId;
 	}
 
-	public LocalDate getDateBureauFin() {
-		return dateBureauFin;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setDateBureauFin(LocalDate dateBureauFin) {
-		this.dateBureauFin = dateBureauFin;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
-	public LocalDate getDateAdminDebut() {
-		return dateAdminDebut;
+	public Long getCreatedTimestamp() {
+		return createdTimestamp;
 	}
 
-	public void setDateAdminDebut(LocalDate dateAdminDebut) {
-		this.dateAdminDebut = dateAdminDebut;
+	public void setCreatedTimestamp(Long createdTimestamp) {
+		this.createdTimestamp = createdTimestamp;
 	}
 
-	public LocalDate getDateAdminFin() {
-		return dateAdminFin;
+	public String getServiceAccountClientLink() {
+		return serviceAccountClientLink;
 	}
 
-	public void setDateAdminFin(LocalDate dateAdminFin) {
-		this.dateAdminFin = dateAdminFin;
+	public void setServiceAccountClientLink(String serviceAccountClientLink) {
+		this.serviceAccountClientLink = serviceAccountClientLink;
 	}
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", passwordConfirm="
-				+ passwordConfirm + ", email=" + email + ", statut=" + statut + ", dateAdhesion=" + dateAdhesion
-				+ ", dateClotureDebut=" + dateClotureDebut + ", dateClotureFin=" + dateClotureFin
-				+ ", dateBlocageDebut=" + dateBlocageDebut + ", dateBlocageFin=" + dateBlocageFin + ", dateBureauDebut="
-				+ dateBureauDebut + ", dateBureauFin=" + dateBureauFin + ", dateAdminDebut=" + dateAdminDebut
-				+ ", dateAdminFin=" + dateAdminFin + "]";
+	public Integer getNotBefore() {
+		return notBefore;
 	}
 
-	
+	public void setNotBefore(Integer notBefore) {
+		this.notBefore = notBefore;
+	}
+
+	public List<RoleBean> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<RoleBean> roles) {
+		this.roles = roles;
+	}
 	
 
 }

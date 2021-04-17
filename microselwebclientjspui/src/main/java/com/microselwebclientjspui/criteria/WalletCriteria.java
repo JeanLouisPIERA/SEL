@@ -1,17 +1,14 @@
 package com.microselwebclientjspui.criteria;
 
-import java.util.List;
-
-import com.microselwebclientjspui.objets.Transaction;
-
 public class WalletCriteria {
-	
+
 	private Long id;
-	
-	private Long titulaireId;
-	
+
+	private String titulaireId;
+
+	private String titulaireUsername;
+
 	private Integer soldeWallet;
-	
 
 	public WalletCriteria() {
 		super();
@@ -25,12 +22,20 @@ public class WalletCriteria {
 		this.id = id;
 	}
 
-	public Long getTitulaireId() {
+	public String getTitulaireId() {
 		return titulaireId;
 	}
 
-	public void setTitulaireId(Long titulaireId) {
+	public void setTitulaireId(String titulaireId) {
 		this.titulaireId = titulaireId;
+	}
+
+	public String getTitulaireUsername() {
+		return titulaireUsername;
+	}
+
+	public void setTitulaireUsername(String titulaireUsername) {
+		this.titulaireUsername = titulaireUsername;
 	}
 
 	public Integer getSoldeWallet() {
@@ -40,9 +45,5 @@ public class WalletCriteria {
 	public void setSoldeWallet(Integer soldeWallet) {
 		this.soldeWallet = soldeWallet;
 	}
-
-	
-	
-	
 
 }

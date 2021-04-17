@@ -2,41 +2,38 @@ package com.microselwebclientjspui.objets;
 
 import java.time.LocalDate;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-
-
 public class Proposition {
-	
+
 	private Long id;
-	
-	private Long emetteurId;
-	
-	private EnumTradeType enumTradeType; 
-	
-	private String titre; 
-	
-	private String description; 
-	
-	private String image; 
-	
+
+	private String emetteurId;
+
+	private String emetteurUsername;
+
+	private EnumTradeType enumTradeType;
+
+	private String titre;
+
+	private String description;
+
+	private String image;
+
 	private String ville;
-	
-	private Integer codePostal; 
-	
-	private Integer valeur; 
-	
-	private LocalDate dateFin; 
-	
-	private LocalDate dateEcheance; 
-	
+
+	private Integer codePostal;
+
+	private Integer valeur;
+
+	private LocalDate dateFin;
+
+	private LocalDate dateEcheance;
+
 	private EnumStatutProposition statut;
-	
+
 	private Categorie categorie;
-	
+
 	private LocalDate dateDebut;
 
-	
 	public Long getId() {
 		return id;
 	}
@@ -45,12 +42,20 @@ public class Proposition {
 		this.id = id;
 	}
 
-	public Long getEmetteurId() {
+	public String getEmetteurId() {
 		return emetteurId;
 	}
 
-	public void setEmetteurId(Long emetteurId) {
+	public void setEmetteurId(String emetteurId) {
 		this.emetteurId = emetteurId;
+	}
+
+	public String getEmetteurUsername() {
+		return emetteurUsername;
+	}
+
+	public void setEmetteurUsername(String emetteurUsername) {
+		this.emetteurUsername = emetteurUsername;
 	}
 
 	public EnumTradeType getEnumTradeType() {
@@ -148,16 +153,5 @@ public class Proposition {
 	public void setDateDebut(LocalDate dateDebut) {
 		this.dateDebut = dateDebut;
 	}
-
-	@Override
-	public String toString() {
-		return "Proposition [id=" + id + ", emetteurId=" + emetteurId + ", enumTradeType=" + enumTradeType
-				+ ", titre=" + titre + ", description=" + description + ", image=" + image + ", ville=" + ville
-				+ ", codePostal=" + codePostal + ", valeur=" + valeur + ", dateFin=" + dateFin + ", dateEcheance="
-				+ dateEcheance + ", statut=" + statut + ", categorie=" + categorie + ", dateDebut=" + dateDebut + "]";
-	}
-	
-	
-	
 
 }

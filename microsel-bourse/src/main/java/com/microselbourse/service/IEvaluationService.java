@@ -13,7 +13,8 @@ import com.microselbourse.exceptions.EntityNotFoundException;
 
 public interface IEvaluationService {
 
-	Evaluation createEvaluation(Long echangeId, @Valid EvaluationDTO evaluationDTO) throws EntityNotFoundException, EntityAlreadyExistsException, UnsupportedEncodingException, MessagingException;
+	Evaluation createEvaluation(Long echangeId, @Valid EvaluationDTO evaluationDTO) throws EntityNotFoundException,
+			EntityAlreadyExistsException, UnsupportedEncodingException, MessagingException;
 
 	List<Evaluation> findAllByEchangeId(Long id);
 

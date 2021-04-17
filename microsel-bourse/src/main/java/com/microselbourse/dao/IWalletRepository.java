@@ -9,9 +9,8 @@ import org.springframework.stereotype.Repository;
 import com.microselbourse.entities.Wallet;
 
 @Repository
-public interface IWalletRepository extends JpaRepository<Wallet, Long>, JpaSpecificationExecutor<Wallet>{
-	
-	Optional<Wallet> readByTitulaireId (Long titulaireId);
+public interface IWalletRepository extends JpaRepository<Wallet, Long>, JpaSpecificationExecutor<Wallet> {
 
-	
+	Optional<Wallet> readByTitulaireId(String titulaireId);
+
 }

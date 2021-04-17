@@ -29,6 +29,7 @@ public class DocumentDTO {
 		super();
 	}
 
+	
 	public String getTitre() {
 		return titre;
 	}

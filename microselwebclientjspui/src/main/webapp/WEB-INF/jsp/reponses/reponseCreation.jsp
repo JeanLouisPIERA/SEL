@@ -35,14 +35,14 @@
      <form:form class="form-inline d-flex bd-highlight" method="POST" modelAttribute="reponseDTO">
      <input type="hidden" name="id" value="${proposition.id}" />
         
-       <fieldset class="form-row">
+       <%-- <fieldset class="form-row">
        <fieldset class="form-group">
 	       <form:label path="recepteurId" class="col-auto col-form-label">Identifiant Adhérent :</form:label>
 	       <form:input path="recepteurId" type="text" class="form-control"
 	        placeholder=" votre identifiant " required="required" />
 	       <form:errors path="recepteurId" cssClass="text-warning" />
       	</fieldset>
-      	</fieldset>
+      	</fieldset> --%>
       
       <br>
 	   <fieldset class="form-row">     

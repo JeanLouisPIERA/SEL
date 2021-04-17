@@ -5,22 +5,20 @@ import java.util.List;
 import java.util.Optional;
 
 public enum EnumTradeType {
-	
-	OFFRE ("OFFRE", "OFFRE"),
-	DEMANDE ("DEMANDE", "DEMANDE"),
-	INCONNU ("INCONNU", "INCONNU");
-	
-	 private String code;
-	  private String text;
-	  
+
+	OFFRE("OFFRE", "OFFRE"), DEMANDE("DEMANDE", "DEMANDE"), INCONNU("INCONNU", "INCONNU");
+
+	private String code;
+	private String text;
+
 	private EnumTradeType(String code, String text) {
 		this.code = code;
 		this.text = text;
 	}
-	
+
 	public static Optional<EnumTradeType> getEnumTradeTypeByCode(String code) {
 		for (EnumTradeType enumTradeType : EnumTradeType.values()) {
-			if(enumTradeType.code.equals(code)){
+			if (enumTradeType.code.equals(code)) {
 				return Optional.of(enumTradeType);
 			}
 		}
@@ -45,30 +43,30 @@ public enum EnumTradeType {
 
 	@Override
 	public String toString() {
-		if(this==OFFRE) {
-			return"Offre";
-		}else if (this==DEMANDE) {
-			return"Demande";
+		if (this == OFFRE) {
+			return "Offre";
+		} else if (this == DEMANDE) {
+			return "Demande";
 		}
 		return super.toString();
-	}   
-	
+	}
+
 	public static EnumTradeType fromValueCode(String code) {
 		try {
-	        return valueOf(code);
-	    } catch (IllegalArgumentException e) {
-	        return EnumTradeType.INCONNU;
-	    }
+			return valueOf(code);
+		} catch (IllegalArgumentException e) {
+			return EnumTradeType.INCONNU;
+		}
 	}
-	
+
 	public static List<EnumTradeType> getListEnumTradeType() {
-		
+
 		List<EnumTradeType> ListEnumTradeType = new ArrayList<EnumTradeType>();
 		for (EnumTradeType enumTradeType : values()) {
 			ListEnumTradeType.add(enumTradeType);
 		}
 		return ListEnumTradeType;
-		
+
 	}
 
 }

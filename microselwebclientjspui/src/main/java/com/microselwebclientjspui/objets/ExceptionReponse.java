@@ -3,18 +3,17 @@ package com.microselwebclientjspui.objets;
 import java.time.LocalDate;
 
 /**
- * Cette classe permet de personnaliser l'affichage des messages d'erreurs 
+ * Cette classe permet de personnaliser l'affichage des messages d'erreurs
+ * 
  * @author jeanl
  *
  */
 public class ExceptionReponse {
-	
-	private LocalDate localDate; 
+
+	private LocalDate localDate;
 	private String messageErreur;
 	private int statusCode;
- 
-	
- 
+
 	/**
 	 * @return the localDate
 	 */
@@ -42,7 +41,7 @@ public class ExceptionReponse {
 	public void setMessageErreur(String messageErreur) {
 		this.messageErreur = messageErreur;
 	}
-	
+
 	/**
 	 * 
 	 * @return statusCode présentation du Code Status de l'exception
@@ -50,9 +49,9 @@ public class ExceptionReponse {
 	public int getStatusCode() {
 		return statusCode;
 	}
- 
+
 	/**
-	 * 	
+	 * 
 	 * @param statusCode établissement du Code Status de l'exception
 	 */
 	public void setStatusCode(int statusCode) {

@@ -211,4 +211,26 @@ databaseChangeLog:
           path: scripts/19_create_evaluations.sql
           relativeToChangelogFile: true
           splitStatements: true
-          stripComments: true                                                                                                                                                                      
+          stripComments: true
+ - changeSet:
+      id: script20
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/20_alter_table_propositions.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
+ - changeSet:
+      id: script21
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/21_alter_table_reponses.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true                                                                                                                                                                                                  

@@ -26,6 +26,7 @@ public class ReponseMapperImpl implements IReponseMapper {
         reponseDTO.setDescription(entity.getDescription());
         reponseDTO.setImage(entity.getImage());
         reponseDTO.setRecepteurId(entity.getRecepteurId());
+        reponseDTO.setRecepteurUsername(entity.getRecepteurUsername());
         reponseDTO.setTitre(entity.getTitre());
         reponseDTO.setValeur(entity.getValeur());
         reponseDTO.setVille(entity.getVille());
@@ -46,6 +47,7 @@ public class ReponseMapperImpl implements IReponseMapper {
         reponse.setDescription(dto.getDescription());
         reponse.setImage(dto.getImage());
         reponse.setRecepteurId(dto.getRecepteurId());
+        reponse.setRecepteurUsername(dto.getRecepteurUsername());
         reponse.setTitre(dto.getTitre());
         reponse.setValeur(dto.getValeur());
         reponse.setVille(dto.getVille());

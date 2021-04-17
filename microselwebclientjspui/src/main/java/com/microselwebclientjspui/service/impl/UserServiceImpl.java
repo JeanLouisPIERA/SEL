@@ -1,43 +1,48 @@
 package com.microselwebclientjspui.service.impl;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
-import javax.validation.Valid;
-
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.microselwebclientjspui.dto.UserDTO;
 import com.microselwebclientjspui.objets.User;
 import com.microselwebclientjspui.service.IUserService;
 
-
 @Service
-public class UserServiceImpl implements IUserService{
+public class UserServiceImpl implements IUserService {
+	
+	@Autowired
+	private HttpServletRequest request;
 
 	@Override
-	public ResponseEntity<User> enregistrerCompteAdherent(@Valid UserDTO userDTO) {
-		// FIXME Auto-generated method stub
+	public String identifyPrincipalId() {
+
+		KeycloakAuthenticationToken principal = (KeycloakAuthenticationToken) request.getUserPrincipal();
+		String userId = principal.getAccount().getKeycloakSecurityContext().getIdToken().getSubject();
+		return userId;
+
+	}
+	
+	@Override
+	public String identifyPrincipalUsername() {
+
+		KeycloakAuthenticationToken principal = (KeycloakAuthenticationToken) request.getUserPrincipal();
+		String userUsername = principal.getAccount().getKeycloakSecurityContext().getToken().getPreferredUsername();
+		System.out.println("usernamePrincipal = " + userUsername);
+		return userUsername;
+
+	}
+
+	@Override
+	public User consulterCompteAdherent(String id) {
 		return null;
 	}
 
 	@Override
-	public User consulterCompteAdherent(Long id) {
-		// FIXME Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<User> listeDesAdherents() {
-		// FIXME Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Page<User> findPaginated(List<User> adherents, PageRequest of) {
-		// FIXME Auto-generated method stub
+	public Page<User> consulterListeDesAdherents(Pageable pageable) {
 		return null;
 	}
 

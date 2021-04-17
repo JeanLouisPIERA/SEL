@@ -19,28 +19,30 @@ import com.microselbourse.service.IMailService;
 
 @Service
 public class MailServiceImpl implements IMailService {
-	
+
 	@Autowired
 	private JavaMailSender eMailSender;
-	
+
 	@Autowired
-    private SpringTemplateEngine thymeleafTemplateEngine;
-	
+	private SpringTemplateEngine thymeleafTemplateEngine;
+
 	@Value("${application.mail}")
 	private String mail;
-	
+
 	@Value("${application.nameFrom}")
 	private String nameFrom;
-	
+
 	@Value("${application.template.echange.suppress}")
 	private String templateSuppress;
 	@Value("${application.template.echange.forcevalid}")
 	private String templateForceValid;
 	@Value("${application.template.echange.forcerefus}")
 	private String templateForceRefus;
-	
+
 	/**
-	 * Cette méthode permet de customiser le message envoyé en utilisant le template Thymeleaf indiqué (paramètre String mailTemplate)
+	 * Cette méthode permet de customiser le message envoyé en utilisant le template
+	 * Thymeleaf indiqué (paramètre String mailTemplate)
+	 * 
 	 * @param to
 	 * @param subject
 	 * @param templateModel
@@ -48,33 +50,33 @@ public class MailServiceImpl implements IMailService {
 	 * @throws UnsupportedEncodingException
 	 */
 	@Override
-	 public void sendMessageUsingThymeleafTemplate(
-		        String to, String name, String subject, Map<String, Object> templateModel, String microselBourseMailTemplate)
-		            throws MessagingException, UnsupportedEncodingException {
-		                
-		        Context thymeleafContext = new Context();
-		        thymeleafContext.setVariables(templateModel);
-		        
-		        String htmlBody = thymeleafTemplateEngine.process(microselBourseMailTemplate, thymeleafContext);
+	public void sendMessageUsingThymeleafTemplate(String to, String name, String subject,
+			Map<String, Object> templateModel, String microselBourseMailTemplate)
+			throws MessagingException, UnsupportedEncodingException {
 
-		        sendHtmlMessage(to, name, subject, htmlBody);
-		    }
-	 
-	
-	public void sendMessageUsingThymeleafTemplateSuppress(
-	        String to, String name, String subject, Map<String, Object> templateModel)
-	            throws MessagingException, UnsupportedEncodingException {
-	                
-	        Context thymeleafContext = new Context();
-	        thymeleafContext.setVariables(templateModel);
-	        
-	        String htmlBody = thymeleafTemplateEngine.process(templateSuppress, thymeleafContext);
+		Context thymeleafContext = new Context();
+		thymeleafContext.setVariables(templateModel);
 
-	        sendHtmlMessage(to, name, subject, htmlBody);
-	    } 
-	
+		String htmlBody = thymeleafTemplateEngine.process(microselBourseMailTemplate, thymeleafContext);
+
+		sendHtmlMessage(to, name, subject, htmlBody);
+	}
+
+	public void sendMessageUsingThymeleafTemplateSuppress(String to, String name, String subject,
+			Map<String, Object> templateModel) throws MessagingException, UnsupportedEncodingException {
+
+		Context thymeleafContext = new Context();
+		thymeleafContext.setVariables(templateModel);
+
+		String htmlBody = thymeleafTemplateEngine.process(templateSuppress, thymeleafContext);
+
+		sendHtmlMessage(to, name, subject, htmlBody);
+	}
+
 	/**
-	 * Cette méthode permet de créer un message HTML en renseignant le destinataire, le sujet, l'émetteur et en créant le htmlBody du mail 
+	 * Cette méthode permet de créer un message HTML en renseignant le destinataire,
+	 * le sujet, l'émetteur et en créant le htmlBody du mail
+	 * 
 	 * @param to
 	 * @param subject
 	 * @param htmlBody
@@ -82,26 +84,20 @@ public class MailServiceImpl implements IMailService {
 	 * @throws UnsupportedEncodingException
 	 */
 	@Override
-	public void sendHtmlMessage(String to, String name, String subject, String htmlBody) throws MessagingException, UnsupportedEncodingException {
-        
+	public void sendHtmlMessage(String to, String name, String subject, String htmlBody)
+			throws MessagingException, UnsupportedEncodingException {
+
 		MimeMessage message = eMailSender.createMimeMessage();
-                
+
 		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-     
-        helper.setTo(new InternetAddress(to, name));
-        helper.setSubject(subject);
-        helper.setFrom(new InternetAddress(mail,nameFrom));
-        
-        helper.setText(htmlBody, true);
-        
 
-        eMailSender.send(message);
-    }
+		helper.setTo(new InternetAddress(to, name));
+		helper.setSubject(subject);
+		helper.setFrom(new InternetAddress(mail, nameFrom));
 
+		helper.setText(htmlBody, true);
 
+		eMailSender.send(message);
+	}
 
-	
-
-	
-    
 }

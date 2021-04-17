@@ -7,14 +7,12 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-
 import com.microselbourse.entities.Reponse;
 
-public class ReponseSpecification implements Specification<Reponse>{
+public class ReponseSpecification implements Specification<Reponse> {
 
 	@Override
 	public Predicate toPredicate(Root<Reponse> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-		// FIXME Auto-generated method stub
 		return null;
 	}
 

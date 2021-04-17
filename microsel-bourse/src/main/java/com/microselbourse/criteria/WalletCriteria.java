@@ -5,11 +5,13 @@ import java.util.List;
 import com.microselbourse.entities.Transaction;
 
 public class WalletCriteria {
-	
+
 	private Long id;
-	
-	private Long titulaireId;
-	
+
+	private String titulaireId;
+
+	private String titulaireUsername;
+
 	private Integer soldeWallet;
 
 	public WalletCriteria() {
@@ -24,11 +26,19 @@ public class WalletCriteria {
 		this.id = id;
 	}
 
-	public Long getTitulaireId() {
+	public String getTitulaireId() {
 		return titulaireId;
 	}
 
-	public void setTitulaireId(Long titulaireId) {
+	public String getTitulaireUsername() {
+		return titulaireUsername;
+	}
+
+	public void setTitulaireUsername(String titulaireUsername) {
+		this.titulaireUsername = titulaireUsername;
+	}
+
+	public void setTitulaireId(String titulaireId) {
 		this.titulaireId = titulaireId;
 	}
 
@@ -39,7 +49,5 @@ public class WalletCriteria {
 	public void setSoldeWallet(Integer soldeWallet) {
 		this.soldeWallet = soldeWallet;
 	}
-
-	
 
 }

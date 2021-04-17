@@ -1,28 +1,18 @@
 package com.microselwebclientjspui.service;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 
-import com.microselwebclientjspui.dto.UserDTO;
 import com.microselwebclientjspui.objets.User;
 
-
-
-
 public interface IUserService {
-
-	ResponseEntity<User> enregistrerCompteAdherent(@Valid UserDTO userDTO);
-
-	User consulterCompteAdherent(Long id);
-
-	List<User> listeDesAdherents();
-
-	Page<User> findPaginated(List<User> adherents, PageRequest of);
+	
+	String identifyPrincipalId();
+	
+	String identifyPrincipalUsername();
+	
+	User consulterCompteAdherent(String id);
+	
+	Page<User> consulterListeDesAdherents(Pageable pageable);
 
 }

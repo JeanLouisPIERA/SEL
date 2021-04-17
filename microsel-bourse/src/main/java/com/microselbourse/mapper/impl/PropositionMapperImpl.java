@@ -29,6 +29,7 @@ public class PropositionMapperImpl implements IPropositionMapper{
         PropositionDTO propositionDTO = new PropositionDTO();
         
         propositionDTO.setEmetteurId(entity.getEmetteurId());
+        propositionDTO.setEmetteurUsername(entity.getEmetteurUsername());
         propositionDTO.setCodePostal( entity.getCodePostal() );
         propositionDTO.setDescription( entity.getDescription() );
         propositionDTO.setEnumTradeTypeCode( entity.getEnumTradeType().getCode() );
@@ -53,6 +54,7 @@ public class PropositionMapperImpl implements IPropositionMapper{
 	        Proposition proposition = new Proposition();
 	        
 	        proposition.setEmetteurId(dto.getEmetteurId());
+	        proposition.setEmetteurUsername(dto.getEmetteurUsername());
 	        proposition.setCodePostal( dto.getCodePostal() );
 	        proposition.setDescription( dto.getDescription() );
 	        proposition.setEnumTradeType(EnumTradeType.getEnumTradeTypeByCode(dto.getEnumTradeTypeCode()).get());

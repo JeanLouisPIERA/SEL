@@ -3,23 +3,23 @@ package com.microselwebclientjspui.criteria;
 import java.time.LocalDate;
 
 public class DocumentCriteria {
-	
-	private Long auteurId; 
+
+	private String auteurId;
 	private String auteurUsername;
-	private LocalDate dateCreation; 
+	private LocalDate dateCreation;
 	private LocalDate dateLastUpdate;
 	private String enumStatutDocument;
 	private String nomTypeDocument;
-	
+
 	public DocumentCriteria() {
 		super();
 	}
 
-	public Long getAuteurId() {
+	public String getAuteurId() {
 		return auteurId;
 	}
 
-	public void setAuteurId(Long auteurId) {
+	public void setAuteurId(String auteurId) {
 		this.auteurId = auteurId;
 	}
 
@@ -62,10 +62,5 @@ public class DocumentCriteria {
 	public void setNomTypeDocument(String nomTypeDocument) {
 		this.nomTypeDocument = nomTypeDocument;
 	}
-
-	
-	
-	
-	
 
 }

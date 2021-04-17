@@ -1,10 +1,10 @@
 package com.microselwebclientjspui.dto;
 
 public class TypeDocumentDTO {
-	
+
 	private String typeName;
 	private String description;
-	
+
 	public TypeDocumentDTO() {
 		super();
 	}
@@ -24,9 +24,5 @@ public class TypeDocumentDTO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
-	
-	
 
 }

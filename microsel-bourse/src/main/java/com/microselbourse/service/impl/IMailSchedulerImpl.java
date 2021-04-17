@@ -17,85 +17,75 @@ import com.microselbourse.service.IEchangeService;
 import com.microselbourse.service.IMailScheduler;
 import com.microselbourse.service.IMailService;
 
-
 @Service
-public class IMailSchedulerImpl implements IMailScheduler{
-	
-	private Map<String, Object> model= new HashMap<String, Object>();
-	
+public class IMailSchedulerImpl implements IMailScheduler {
+
+	private Map<String, Object> model = new HashMap<String, Object>();
+
 	@Autowired
 	IMailService mailService;
-	
+
 	@Autowired
 	IEchangeService echangeService;
-	
+
 	private void populateModel(String string, Object object) {
-        model.put(string, object);
+		model.put(string, object);
 	}
-	
+
 	@Value("${application.subject.echange.suppress}")
-    private String subjectSuppress;	
+	private String subjectSuppress;
 
-    @Value("${application.subject.echange.forcevalid}")
-    private String subjectForceValid;	
+	@Value("${application.subject.echange.forcevalid}")
+	private String subjectForceValid;
 
-    @Value("${application.subject.echange.forcerefus}")
-    private String subjectForceRefus;	
+	@Value("${application.subject.echange.forcerefus}")
+	private String subjectForceRefus;
 
-	
-	@Scheduled(cron= "${application.cron}")
+	@Scheduled(cron = "${application.cron}")
 	@Override
 	public void sendMailsEchangesASupprimerToEmetteurList() throws MessagingException, UnsupportedEncodingException {
-		
-		List<Echange> echangesASupprimerList = echangeService.searchAndUpdateEchangesASupprimer(); 
-		
-		for(Echange echangeASupprimer : echangesASupprimerList) {
+
+		List<Echange> echangesASupprimerList = echangeService.searchAndUpdateEchangesASupprimer();
+
+		for (Echange echangeASupprimer : echangesASupprimerList) {
 			String mailTo = echangeASupprimer.getEmetteurMail();
 			String nomEmetteur = echangeASupprimer.getEmetteurUsername();
-			
+
 			this.populateModel("Référence de l'échange à supprimer", echangeASupprimer.getId());
-			
+
 			mailService.sendMessageUsingThymeleafTemplateSuppress(mailTo, nomEmetteur, subjectSuppress, model);
-			
+
 		}
-		
-		
+
 	}
-	
-	@Scheduled(cron= "${application.cron}")
+
+	@Scheduled(cron = "${application.cron}")
 	@Override
-	public void sendMailsEchangesASupprimerToRecepteurList() throws MessagingException, UnsupportedEncodingException{
-		List<Echange> echangesASupprimerList = echangeService.searchAndUpdateEchangesASupprimer(); 
-		
-		for(Echange echangeASupprimer : echangesASupprimerList) {
+	public void sendMailsEchangesASupprimerToRecepteurList() throws MessagingException, UnsupportedEncodingException {
+		List<Echange> echangesASupprimerList = echangeService.searchAndUpdateEchangesASupprimer();
+
+		for (Echange echangeASupprimer : echangesASupprimerList) {
 			String mailTo = echangeASupprimer.getRecepteurMail();
 			String nomRecepteur = echangeASupprimer.getRecepteurUsername();
-			
+
 			this.populateModel("Référence de l'échange à supprimer", echangeASupprimer.getId());
-			
+
 			mailService.sendMessageUsingThymeleafTemplateSuppress(mailTo, nomRecepteur, subjectSuppress, model);
-			
+
 		}
-		
+
 	}
 
 	@Override
 	public void sendMailsEchangesAForceValiderList() throws MessagingException, UnsupportedEncodingException {
 		// FIXME Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void sendMailsEchangesAForceRefuserList() throws MessagingException, UnsupportedEncodingException {
 		// FIXME Auto-generated method stub
-		
+
 	}
 
-	
-		
-	}
-
-
-	
-	
-	
+}

@@ -10,12 +10,12 @@ import com.microselbourse.entities.Blocage;
 import com.microselbourse.entities.EnumStatutBlocage;
 
 @Repository
-public interface IBlocageRepository extends JpaRepository<Blocage, Long>{
-	
-	@Query("select blocage from Blocage blocage where (blocage.adherentId =?1)") 
-	Optional<Blocage> findByAdherentId (Long adherentId);
-	
-	@Query("select blocage from Blocage blocage where (blocage.adherentId =?1)"+ "AND (blocage.statutBlocage = ?2)") 
-	Optional<Blocage> findByAdherentIdAndStatutBlocage(Long adherentId, EnumStatutBlocage statutBlocage);
+public interface IBlocageRepository extends JpaRepository<Blocage, Long> {
+
+	@Query("select blocage from Blocage blocage where (blocage.adherentId =?1)")
+	Optional<Blocage> findByAdherentId(String adherentId);
+
+	@Query("select blocage from Blocage blocage where (blocage.adherentId =?1)" + "AND (blocage.statutBlocage = ?2)")
+	Optional<Blocage> findByAdherentIdAndStatutBlocage(String adherentId, EnumStatutBlocage statutBlocage);
 
 }

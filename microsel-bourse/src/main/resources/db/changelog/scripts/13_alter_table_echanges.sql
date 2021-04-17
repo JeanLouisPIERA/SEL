@@ -1,5 +1,5 @@
 ALTER TABLE echanges  
-  ADD emetteur_mail varchar(50) NOT NULL
+  ADD emetteur_mail varchar(255) NOT NULL
     AFTER titre,
-  ADD recepteur_mail varchar(50) NOT NULL
+  ADD recepteur_mail varchar(255) NOT NULL
     AFTER emetteur_mail;

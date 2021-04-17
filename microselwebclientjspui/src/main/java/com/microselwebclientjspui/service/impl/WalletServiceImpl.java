@@ -2,12 +2,12 @@ package com.microselwebclientjspui.service.impl;
 
 import java.util.Arrays;
 
-import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,76 +19,75 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.microselwebclientjspui.criteria.WalletCriteria;
-import com.microselwebclientjspui.objets.Proposition;
 import com.microselwebclientjspui.objets.Wallet;
 import com.microselwebclientjspui.service.IWalletService;
 
 @Service
 public class WalletServiceImpl implements IWalletService {
 	
+	@Autowired
+	private HttpHeadersFactory httpHeadersFactory;
+
+	@Autowired
+	private HttpServletRequest request;
+
+	@Autowired
+	private RestTemplate restTemplate;
+
+	@Value("${application.uRLWallet}")
+	private String uRLWallet;
 	
-	@Autowired private RestTemplate restTemplate;
-	 
-	
-	
-	@Value("${application.uRLWallet}") private String uRLWallet;
+	@Value("${application.uRLWalletBureau}")
+	private String uRLWalletBureau;
 
 	@Override
-	public Wallet searchByAdherentId(Long adherentId) {
-		HttpHeaders headers = new HttpHeaders();
-    	headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-    	headers.setContentType(MediaType.APPLICATION_JSON);
-    	
-    	HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+	public Wallet searchByAdherentId(String adherentId) {
 		
-		String url = uRLWallet+"/" + adherentId;
-    	
-		ResponseEntity<Wallet> wallet = restTemplate.exchange(url , HttpMethod.GET, requestEntity, Wallet.class);
+		String url = uRLWalletBureau + "/" + adherentId;
 		
-		return wallet.getBody(); 
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		ResponseEntity<Wallet> wallet = restTemplate.exchange(url, HttpMethod.GET, entity, Wallet.class);
+
+		return wallet.getBody();
 	}
 
 	@Override
 	public Page<Wallet> searchByCriteria(WalletCriteria walletCriteria, Pageable pageable) {
-		
-		HttpHeaders headers = new HttpHeaders();
-    	headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-    	
-    	HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLWallet)
-    	        .queryParam("id", walletCriteria.getId())
-    	        .queryParam("titulaireId", walletCriteria.getTitulaireId())
-    	        .queryParam("soldeWallet", walletCriteria.getSoldeWallet())
-    	        .queryParam("page", pageable.getPageNumber())
-    	        .queryParam("size", pageable.getPageSize());
-		
-    
-    	ResponseEntity<RestResponsePage<Wallet>> wallets = restTemplate.exchange
-    			(builder.build().toUriString(), 
-				HttpMethod.GET,
-				entity,
-    			new ParameterizedTypeReference<RestResponsePage<Wallet>>(){});
-        Page<Wallet> pageWallet = wallets.getBody();
- 
-        return pageWallet;
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLWalletBureau)
+				.queryParam("id", walletCriteria.getId())
+				.queryParam("titulaireId", walletCriteria.getTitulaireId())
+				.queryParam("titulaireUsername", walletCriteria.getTitulaireUsername())
+				.queryParam("soldeWallet", walletCriteria.getSoldeWallet()).queryParam("page", pageable.getPageNumber())
+				.queryParam("size", pageable.getPageSize());
+
+		ResponseEntity<RestResponsePage<Wallet>> wallets = restTemplate.exchange(builder.build().toUriString(),
+				HttpMethod.GET, entity, new ParameterizedTypeReference<RestResponsePage<Wallet>>() {
+				});
+		Page<Wallet> pageWallet = wallets.getBody();
+
+		return pageWallet;
 	}
 
 	@Override
 	public Wallet searchById(Long id) {
-		HttpHeaders headers = new HttpHeaders();
-    	headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-    	headers.setContentType(MediaType.APPLICATION_JSON);
-    	
-    	HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 		
-		String url = uRLWallet+"/" + id;
-    	
-		ResponseEntity<Wallet> wallet = restTemplate.exchange(url , HttpMethod.GET, requestEntity, Wallet.class);
+		String url = uRLWalletBureau + "/" + id;
 		
-		return wallet.getBody(); 
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		ResponseEntity<Wallet> wallet = restTemplate.exchange(url, HttpMethod.GET, entity, Wallet.class);
+
+		return wallet.getBody();
 	}
-	
-	
 
 }

@@ -24,6 +24,8 @@ public interface IEchangeService {
 
 	Echange recepteurValiderEchange(Long id);
 
-	
+	Echange validerEchange(Long id);
+
+	Echange refuserEchange(Long id);
 
 }

@@ -2,39 +2,39 @@ package com.microselwebclientjspui.objets;
 
 import java.time.LocalDate;
 
-
 public class Reponse {
-	
-	
+
 	private Long id;
-	
-	private Long recepteurId; 
-	
-	private EnumTradeType enumTradeType; 
-	
-	private String titre; 
-	
-	private String description; 
-	
-	private String image; 
-	
-	private String ville; 
-	
+
+	private String recepteurId;
+
+	private String recepteurUsername;
+
+	private EnumTradeType enumTradeType;
+
+	private String titre;
+
+	private String description;
+
+	private String image;
+
+	private String ville;
+
 	private Integer codePostal;
-	
+
 	private Integer valeur;
-	
-	private LocalDate dateEcheance; 
-	
-	private LocalDate dateReponse; 
-	
+
+	private LocalDate dateEcheance;
+
+	private LocalDate dateReponse;
+
 	private Proposition proposition;
-	
-    private Echange echange;
+
+	private Echange echange;
 
 	public Reponse() {
 		super();
-		
+
 	}
 
 	public Long getId() {
@@ -45,12 +45,20 @@ public class Reponse {
 		this.id = id;
 	}
 
-	public Long getRecepteurId() {
+	public String getRecepteurId() {
 		return recepteurId;
 	}
 
-	public void setRecepteurId(Long recepteurId) {
+	public void setRecepteurId(String recepteurId) {
 		this.recepteurId = recepteurId;
+	}
+
+	public String getRecepteurUsername() {
+		return recepteurUsername;
+	}
+
+	public void setRecepteurUsername(String recepteurUsername) {
+		this.recepteurUsername = recepteurUsername;
 	}
 
 	public EnumTradeType getEnumTradeType() {
@@ -140,7 +148,5 @@ public class Reponse {
 	public void setEchange(Echange echange) {
 		this.echange = echange;
 	}
-	
-	
 
 }

@@ -3,32 +3,31 @@ package com.microselbourse.criteria;
 import java.time.LocalDate;
 
 public class PropositionCriteria {
-	
+
+	private String emetteurUsername;
+
 	private String codeEnumTradeType;
-	
+
 	private String titre;
-	
+
 	private String ville;
-	
+
 	private Integer codePostal;
-	
+
 	private String nomCategorie;
-	
+
 	private String statut;
 
 	public PropositionCriteria() {
 		super();
 	}
 
-	public PropositionCriteria(String codeEnumTradeType, String titre, String ville, Integer codePostal,
-			String nomCategorie, String statut) {
-		super();
-		this.codeEnumTradeType = codeEnumTradeType;
-		this.titre = titre;
-		this.ville = ville;
-		this.codePostal = codePostal;
-		this.nomCategorie = nomCategorie;
-		this.statut = statut;
+	public String getEmetteurUsername() {
+		return emetteurUsername;
+	}
+
+	public void setEmetteurUsername(String emetteurUsername) {
+		this.emetteurUsername = emetteurUsername;
 	}
 
 	public String getCodeEnumTradeType() {
@@ -79,6 +78,4 @@ public class PropositionCriteria {
 		this.statut = statut;
 	}
 
-	
-	
 }

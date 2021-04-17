@@ -13,28 +13,28 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name= "blocages")
-public class Blocage implements Serializable{
-	
+@Table(name = "blocages")
+public class Blocage implements Serializable {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "blocage_id", length=5)
+	@Column(name = "blocage_id", length = 5)
 	private Long id;
-	
-	@Column(name = "adherent_id", length = 5, nullable=false)
-	private Long adherentId; 
-	
-	@Column(name="date_debut_blocage")
+
+	@Column(name = "adherent_id", length = 5, nullable = false)
+	private String adherentId;
+
+	@Column(name = "date_debut_blocage")
 	private LocalDate dateDebutBlocage;
-	
-	@Column(name="date_fin_blocage")
+
+	@Column(name = "date_fin_blocage")
 	private LocalDate dateFinBlocage;
-	
-	@Column(name="statut_blocage")
+
+	@Column(name = "statut_blocage")
 	private EnumStatutBlocage statutBlocage;
-	
-	@ManyToOne 
-	@JoinColumn(name="echange_id")
+
+	@ManyToOne
+	@JoinColumn(name = "echange_id")
 	private Echange echange;
 
 	public Blocage() {
@@ -49,11 +49,11 @@ public class Blocage implements Serializable{
 		this.id = id;
 	}
 
-	public Long getAdherentId() {
+	public String getAdherentId() {
 		return adherentId;
 	}
 
-	public void setAdherentId(Long adherentId) {
+	public void setAdherentId(String adherentId) {
 		this.adherentId = adherentId;
 	}
 
@@ -87,9 +87,6 @@ public class Blocage implements Serializable{
 
 	public void setEchange(Echange echange) {
 		this.echange = echange;
-	} 
-	
-	
-	
+	}
 
 }

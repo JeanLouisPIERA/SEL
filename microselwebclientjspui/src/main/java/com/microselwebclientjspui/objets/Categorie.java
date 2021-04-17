@@ -1,14 +1,10 @@
 package com.microselwebclientjspui.objets;
 
-
-
 public class Categorie {
-	
-	private Long id;
-	
-	private EnumCategorie name;
 
-	
+	private Long id;
+
+	private EnumCategorie name;
 
 	public Long getId() {
 		return id;
@@ -30,9 +26,5 @@ public class Categorie {
 	public String toString() {
 		return "Categorie [id=" + id + ", name=" + name + "]";
 	}
-	
-	
-	
-	
 
 }

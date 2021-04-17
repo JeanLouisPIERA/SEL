@@ -18,34 +18,34 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 @Entity
-@Table(name="evaluations")
+@Table(name = "evaluations")
 public class Evaluation {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "evaluation_id", length=5)
+	@Column(name = "evaluation_id", length = 5)
 	private Long id;
-	
-	@Column(name = "adherent_id", length = 5, nullable=false)
-	private Long adherentId;
-	
-	@Column(name="adherent_username", length = 25, nullable = false)
+
+	@Column(name = "adherent_id", length = 5, nullable = false)
+	private String adherentId;
+
+	@Column(name = "adherent_username", length = 25, nullable = false)
 	private String adherentUsername;
-	
-	@Column(name="commentaire", length = 255)
+
+	@Column(name = "commentaire", length = 255)
 	private String commentaire;
-	
-	@Column(name = "note", length = 25, nullable=false)
+
+	@Column(name = "note", length = 25, nullable = false)
 	private EnumNoteEchange enumNoteEchange;
-	
+
 	@JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	@Column(name = "date_evaluation", length = 25, nullable=false)
-	private LocalDate dateEvaluation; 
-	
-	@ManyToOne 
-	@JoinColumn(name="echange_id")
+	@JsonSerialize(using = LocalDateSerializer.class)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@Column(name = "date_evaluation", length = 25, nullable = false)
+	private LocalDate dateEvaluation;
+
+	@ManyToOne
+	@JoinColumn(name = "echange_id")
 	private Echange echange;
 
 	public Evaluation() {
@@ -60,11 +60,11 @@ public class Evaluation {
 		this.id = id;
 	}
 
-	public Long getAdherentId() {
+	public String getAdherentId() {
 		return adherentId;
 	}
 
-	public void setAdherentId(Long adherentId) {
+	public void setAdherentId(String adherentId) {
 		this.adherentId = adherentId;
 	}
 
@@ -83,8 +83,6 @@ public class Evaluation {
 	public void setCommentaire(String commentaire) {
 		this.commentaire = commentaire;
 	}
-
-
 
 	public EnumNoteEchange getEnumNoteEchange() {
 		return enumNoteEchange;
@@ -116,8 +114,5 @@ public class Evaluation {
 				+ ", commentaire=" + commentaire + ", enumNoteEchange=" + enumNoteEchange + ", dateEvaluation="
 				+ dateEvaluation + ", echange=" + echange + "]";
 	}
-	
-	
-	
 
 }

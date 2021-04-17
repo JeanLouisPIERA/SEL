@@ -40,34 +40,30 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/sel/bourse")
 @Validated
 public class EvaluationRestController {
-	
+
 	@Autowired
 	private IEvaluationService evaluationService;
-	
-	@ApiOperation(value = "Enregistrement d'une évaluation par un adhérent",  response = Evaluation.class)
-	  @ApiResponses(value = {
-	  @ApiResponse(code = 201, message = 
-			  "L'évaluation a été créée"),
-	  @ApiResponse(code = 400, message = 
-			  "Les informations fournies ne sont pas correctes"),
-	  @ApiResponse(code = 409, message = 
-			  "Une autre évaluation existe déjà avec ces attributs"), })
 
-	@PostMapping("/evaluations/echange/{echangeId}")
-	public ResponseEntity<Evaluation> createEvaluation(@PathVariable Long echangeId, @Valid @RequestBody EvaluationDTO evaluationDTO) throws EntityNotFoundException, EntityAlreadyExistsException, UnsupportedEncodingException, MessagingException  {
-	  return new ResponseEntity<Evaluation>(evaluationService.createEvaluation(echangeId, evaluationDTO), HttpStatus.OK);
+	@ApiOperation(value = "Enregistrement d'une évaluation par un adhérent", response = Evaluation.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "L'évaluation a été créée"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 409, message = "Une autre évaluation existe déjà avec ces attributs"), })
+
+	@PostMapping("/user/evaluations/echange/{echangeId}")
+	public ResponseEntity<Evaluation> createEvaluation(@PathVariable Long echangeId,
+			@Valid @RequestBody EvaluationDTO evaluationDTO) throws EntityNotFoundException,
+			EntityAlreadyExistsException, UnsupportedEncodingException, MessagingException {
+		return new ResponseEntity<Evaluation>(evaluationService.createEvaluation(echangeId, evaluationDTO),
+				HttpStatus.OK);
 	}
-	
 
-	@ApiOperation(value = "Recherche des évaluations d'un ééchange", response = Proposition.class)  
-	  @ApiResponses(value = {
-	  @ApiResponse(code = 200, message = 
-			  "La recherche a été réalisée avec succés"), })
-	  
-	  @GetMapping(value="/evaluations/echange/{id}", produces="application/json") 
-	  public ResponseEntity<List<Evaluation>> searchAllByEchangeId(@PathVariable Long id) { 
-		  List<Evaluation> evaluations = evaluationService.findAllByEchangeId(id); 	
-		  return new ResponseEntity<List<Evaluation>>(evaluations, HttpStatus.OK); 
-	  }
+	@ApiOperation(value = "Recherche des évaluations d'un échange", response = Proposition.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "La recherche a été réalisée avec succés"), })
+
+	@GetMapping(value = "/user/evaluations/echange/{id}", produces = "application/json")
+	public ResponseEntity<List<Evaluation>> searchAllByEchangeId(@PathVariable Long id) {
+		List<Evaluation> evaluations = evaluationService.findAllByEchangeId(id);
+		return new ResponseEntity<List<Evaluation>>(evaluations, HttpStatus.OK);
+	}
 
 }

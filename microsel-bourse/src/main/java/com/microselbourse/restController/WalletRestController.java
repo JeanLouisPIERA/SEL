@@ -33,50 +33,40 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/sel/bourse")
 @Validated
 public class WalletRestController {
-	
+
 	@Autowired
 	private IWalletService walletService;
-	
-	@ApiOperation(value = "Recherche multi-critères d'un ou plusieurs portefeuilles", response = Proposition.class)  
-	  @ApiResponses(value = {
-	  @ApiResponse(code = 200, message = 
-			  "La recherche a été réalisée avec succés"), })
-	  
-	  @GetMapping(value="/wallets", produces="application/json") 
-	  public ResponseEntity<Page<Wallet>> searchAllWalletssByCriteria(
-			  @PathParam("walletCriteria") WalletCriteria walletCriteria, @RequestParam(name = "page", defaultValue= "0") int page, @RequestParam(name="size", defaultValue= "6") int size) { 
-	  	  Page<Wallet> wallets = walletService.searchAllWalletsByCriteria(walletCriteria, PageRequest.of(page, size)); 	
-		  return new ResponseEntity<Page<Wallet>>(wallets, HttpStatus.OK); 
-	  }
 
+	@ApiOperation(value = "Recherche multi-critères d'un ou plusieurs portefeuilles", response = Proposition.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "La recherche a été réalisée avec succés"), })
 
-	
-	 @ApiOperation(value = "Consultation d'un portefeuille par un adhérent", response = Wallet.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Le portefeuille recherché a été trouvé"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "Le portefeuille que vous voulez consulter n'existe pas"), })
-	 
-	 @GetMapping("/wallets/user/{id}")
-	 public ResponseEntity<Wallet> readWalletByUserId(@PathVariable @Valid Long id) throws EntityNotFoundException {
-		return new ResponseEntity<Wallet>(walletService.readByUserId(id), HttpStatus.OK);  
-	 }
-	 
-	 @ApiOperation(value = "Consultation d'un portefeuille par son N° identifiant", response = Wallet.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Le portefeuille recherché a été trouvé"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "Le portefeuille que vous voulez consulter n'existe pas"), })
-	 
-	 @GetMapping("/wallets/{id}")
-	 public ResponseEntity<Wallet> readWalletById(@PathVariable @Valid Long id) throws EntityNotFoundException {
-		return new ResponseEntity<Wallet>(walletService.readById(id), HttpStatus.OK);  
-	 }
+	@GetMapping(value = "/bureau/wallets", produces = "application/json")
+	public ResponseEntity<Page<Wallet>> searchAllWalletssByCriteria(
+			@PathParam("walletCriteria") WalletCriteria walletCriteria,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "6") int size) {
+		Page<Wallet> wallets = walletService.searchAllWalletsByCriteria(walletCriteria, PageRequest.of(page, size));
+		return new ResponseEntity<Page<Wallet>>(wallets, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "Consultation d'un portefeuille par un adhérent", response = Wallet.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le portefeuille recherché a été trouvé"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "Le portefeuille que vous voulez consulter n'existe pas"), })
+
+	@GetMapping("/user/wallets/user/{id}")
+	public ResponseEntity<Wallet> readWalletByUserId(@PathVariable @Valid String id) throws EntityNotFoundException {
+		return new ResponseEntity<Wallet>(walletService.readByUserId(id), HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "Consultation d'un portefeuille par son N° identifiant", response = Wallet.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le portefeuille recherché a été trouvé"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "Le portefeuille que vous voulez consulter n'existe pas"), })
+
+	@GetMapping("/bureau/wallets/{id}")
+	public ResponseEntity<Wallet> readWalletById(@PathVariable @Valid Long id) throws EntityNotFoundException {
+		return new ResponseEntity<Wallet>(walletService.readById(id), HttpStatus.OK);
+	}
 
 }

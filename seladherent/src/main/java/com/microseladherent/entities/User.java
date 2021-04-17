@@ -194,6 +194,7 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
+	
 	public String getFirstname() {
 		return firstname;
 	}

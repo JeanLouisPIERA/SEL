@@ -1,27 +1,31 @@
 package com.microselwebclientjspui.criteria;
 
-import java.time.LocalDate;
-
-import com.microselwebclientjspui.objets.EnumCategorie;
-import com.microselwebclientjspui.objets.EnumStatutProposition;
-import com.microselwebclientjspui.objets.EnumTradeType;
-
 public class PropositionCriteria {
-	
+
+	private String emetteurUsername;
+
 	private String enumTradeType;
-	
+
 	private String titre;
-	
+
 	private String ville;
-	
+
 	private Integer codePostal;
-	
+
 	private String enumCategorie;
-	
+
 	private String enumStatutProposition;
 
 	public PropositionCriteria() {
 		super();
+	}
+
+	public String getEmetteurUsername() {
+		return emetteurUsername;
+	}
+
+	public void setEmetteurUsername(String emetteurUsername) {
+		this.emetteurUsername = emetteurUsername;
 	}
 
 	public String getEnumTradeType() {
@@ -72,8 +76,6 @@ public class PropositionCriteria {
 		this.enumStatutProposition = enumStatutProposition;
 	}
 
-	
-
 	/*
 	 * public String convertEnumTradeTypeToString() {
 	 * if(this.getEnumTradeType()==null) { return null; } else { return
@@ -87,9 +89,5 @@ public class PropositionCriteria {
 	 * if(this.getEnumCategorie()==null) { return null; } else { return
 	 * this.getEnumCategorie().getCode(); } }
 	 */
-	
+
 }
-
-	
-
-	

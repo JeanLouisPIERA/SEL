@@ -26,14 +26,14 @@
  <div class="panel panel-primary ">
  
   <div class="panel-heading">
-   <h5>Votre proposition a ete enregistrée</h5>
+   <h5>Merci ${pageContext.request.userPrincipal.name} : votre proposition a bien été enregistrée</h5>
   </div>
   
   <div class="panel-body">
    <table class="table table-striped table-condensed table-bordered">
     <thead>
         <tr>
-            <th colspan="2"> Enregistrement N° : ${proposition.id}</th> sous le N° Adhérent ${proposition.emetteurId}</th>
+            <th colspan="2"> Enregistrement N° : ${proposition.id} sous votre dossier Adhérent N° ${proposition.emetteurId}</th>
         </tr>
     </thead>
     <tbody>

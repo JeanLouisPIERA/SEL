@@ -1,13 +1,13 @@
 package com.microselwebclientjspui.objets;
 
 public class KeycloakUser {
-	
+
 	private String username;
-	 private String password;
-	
-	 public KeycloakUser() {
+	private String password;
+
+	public KeycloakUser() {
 		super();
-		
+
 	}
 
 	public String getUsername() {
@@ -25,7 +25,5 @@ public class KeycloakUser {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	 
-	 
 
 }

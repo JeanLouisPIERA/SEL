@@ -1,6 +1,5 @@
 package com.microselbourse.service;
 
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,17 +11,17 @@ import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
 
 public interface IPropositionService {
-	
-	Proposition createProposition(PropositionDTO propositionDTO) throws EntityAlreadyExistsException, EntityNotFoundException, DeniedAccessException;
-	
+
+	Proposition createProposition(PropositionDTO propositionDTO)
+			throws EntityAlreadyExistsException, EntityNotFoundException, DeniedAccessException;
+
 	Page<Proposition> searchAllPropositionsByCriteria(PropositionCriteria propositionCriteria, Pageable pageable);
-	
+
 	Proposition readProposition(Long id) throws EntityNotFoundException;
-	
-	Proposition updateProposition(Long id, PropositionDTO propositionDTO) throws EntityNotFoundException, DeniedAccessException, EntityAlreadyExistsException;
-	
+
+	Proposition updateProposition(Long id, PropositionDTO propositionDTO)
+			throws EntityNotFoundException, DeniedAccessException, EntityAlreadyExistsException;
+
 	Proposition closeProposition(Long id) throws EntityNotFoundException, DeniedAccessException;
-	 
-	
 
 }

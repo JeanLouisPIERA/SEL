@@ -26,22 +26,17 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/sel/bourse")
 @Validated
 public class BlocageRestController {
-	
+
 	@Autowired
 	private IBlocageService blocageService;
-	
-	@ApiOperation(value = " Annulation d'un blocage d'adherent suite à un échange en anomalie", response = Blocage.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Le blocage recherché a été annulé"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "Le blocage que vous voulez annuler n'existe pas"), })
+
+	@ApiOperation(value = " Annulation d'un blocage d'adherent suite à un échange en anomalie", response = Blocage.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le blocage recherché a été annulé"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "Le blocage que vous voulez annuler n'existe pas"), })
 	@PutMapping("blocages/annuler/{id}")
-	public ResponseEntity<Blocage> annulerBlocage (
-			@PathVariable @Valid Long id) throws EntityNotFoundException {
-		return new ResponseEntity<Blocage> (blocageService.annulerBlocage(id), HttpStatus.OK);
+	public ResponseEntity<Blocage> annulerBlocage(@PathVariable @Valid String id) throws EntityNotFoundException {
+		return new ResponseEntity<Blocage>(blocageService.annulerBlocage(id), HttpStatus.OK);
 	}
 
 }
