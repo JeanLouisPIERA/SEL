@@ -37,7 +37,18 @@ public class TransactionRestController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "La recherche a été réalisée avec succés"), })
 
 	@GetMapping(value = "/bureau/transactions/wallet/{id}", produces = "application/json")
-	public ResponseEntity<Page<Transaction>> searchAllByWalletId(@PathVariable Long id,
+	public ResponseEntity<Page<Transaction>> searchAllByWalletIdByBureau(@PathVariable Long id,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "6") int size) throws EntityNotFoundException {
+		Page<Transaction> transactions = transactionService.findAllByWalletId(id, PageRequest.of(page, size));
+		return new ResponseEntity<Page<Transaction>>(transactions, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "Recherche de toutes les transactions d'un portefeuille", response = Proposition.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "La recherche a été réalisée avec succés"), })
+
+	@GetMapping(value = "/user/transactions/wallet/{id}", produces = "application/json")
+	public ResponseEntity<Page<Transaction>> searchAllByWalletIdByAdherent(@PathVariable Long id,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "6") int size) throws EntityNotFoundException {
 		Page<Transaction> transactions = transactionService.findAllByWalletId(id, PageRequest.of(page, size));

@@ -27,6 +27,14 @@ public class EchangeSpecification implements Specification<Echange> {
 		if (echangeCriteria.getId() != null) {
 			predicates.getExpressions().add(builder.equal(root.get("id"), echangeCriteria.getId()));
 		}
+		
+		if (echangeCriteria.getEmetteurId() != null) {
+			predicates.getExpressions().add(builder.like(root.get("emetteurId"), "%" + echangeCriteria.getEmetteurId() + "%"));
+		}
+		
+		if (echangeCriteria.getRecepteurId() != null) {
+			predicates.getExpressions().add(builder.like(root.get("recepteurId"), "%" + echangeCriteria.getRecepteurId() + "%"));
+		}
 
 		if (echangeCriteria.getStatutEchange() != null && !echangeCriteria.getStatutEchange().isEmpty()) {
 			predicates.getExpressions().add(builder.equal(root.get("statutEchange"),

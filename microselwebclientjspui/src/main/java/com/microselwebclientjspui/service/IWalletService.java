@@ -14,4 +14,6 @@ public interface IWalletService {
 
 	Wallet searchById(Long id);
 
+	Wallet consultWalletByAdherent();
+
 }

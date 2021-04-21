@@ -2,18 +2,16 @@ package com.microselbourse.entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.microselbourse.beans.UserBean;
 
-
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id", scope = MessageMailReponse.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id2", scope = MessageMailReponse.class)
 public class MessageMailReponse {
-	
+
 	Reponse reponse;
 	UserBean destinataire;
 	String subject;
 	String microselBourseMailTemplate;
-	
+
 	public MessageMailReponse() {
 		super();
 	}
@@ -50,12 +48,5 @@ public class MessageMailReponse {
 		this.microselBourseMailTemplate = microselBourseMailTemplate;
 	}
 
-	@Override
-	public String toString() {
-		return "MessageMailReponse [reponse=" + reponse + ", destinataire=" + destinataire + ", subject=" + subject
-				+ ", microselBourseMailTemplate=" + microselBourseMailTemplate + "]";
-	}
 	
-	
-
 }

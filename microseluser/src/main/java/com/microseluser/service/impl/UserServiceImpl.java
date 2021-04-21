@@ -4,9 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.microseluser.criteria.UserCriteria;
 import com.microseluser.dao.IUserRepository;
+import com.microseluser.dao.specs.UserSpecification;
 import com.microseluser.entities.User;
 import com.microseluser.exceptions.EntityNotFoundException;
 import com.microseluser.service.IUserService;
@@ -42,12 +47,19 @@ public class UserServiceImpl implements IUserService {
 	  @Override public List<User> showAllUsers() {
 	  
 	  List<User> listUsers = userRepository.findAll();
-	   
-		/*
-		 * for (User user : listUsers) { user.setPassword(null);
-		 * user.setPasswordConfirm(null); }
-		 */
 	  
 	  return listUsers; }
+	  
+	  /**
+	     * Cette méthode permet à un membre du bureau d'obtenir un tri de la liste de tous les utilisateurs
+		  * Seul un membre du bureau peut consulter cette liste
+		 */	
+	  @Override
+		public Page<User> searchAllUsersByCriteria(UserCriteria userCriteria,
+				Pageable pageable) {
+			Specification<User> userSpecification = new UserSpecification(userCriteria);
+			Page<User> users = userRepository.findAll(userSpecification, pageable);
+			return users;
+		}
 
 }

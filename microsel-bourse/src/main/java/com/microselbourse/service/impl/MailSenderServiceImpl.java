@@ -72,13 +72,13 @@ public class MailSenderServiceImpl implements IMailSenderService {
 
 	@Override
 	public void sendMailEchangeConfirmation(Echange echange, UserBean destinataire, String subject,
-			String microselBourseMailTemplate) throws MessagingException, UnsupportedEncodingException {
+			String microselBourseMailTemplate) throws UnsupportedEncodingException, MessagingException  {
 
 		String mailTo = destinataire.getEmail();
 		String nomUser = destinataire.getUsername();
 
-		this.populateModel("avis_emetteur", echange.getAvisEmetteur());
-		this.populateModel("avis_recepteur", echange.getAvisRecepteur());
+		this.populateModel("avis_emetteur", echange.getAvisEmetteur().toString());
+		this.populateModel("avis_recepteur", echange.getAvisRecepteur().toString());
 		this.populateModel("commentaire_emetteur", echange.getCommentaireEmetteur());
 		this.populateModel("commentaire_recepteur", echange.getCommentaireRecepteur());
 		this.populateModel("dateAnnulation", echange.getDateAnnulation());

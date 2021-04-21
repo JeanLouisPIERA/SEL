@@ -21,14 +21,12 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microselwebclientjspui.criteria.PropositionCriteria;
 import com.microselwebclientjspui.dto.PropositionDTO;
-import com.microselwebclientjspui.errors.NotAuthorizedException;
-import com.microselwebclientjspui.errors.PropositionExceptionMessage;
+import com.microselwebclientjspui.errors.ConvertToExceptionMessage;
 import com.microselwebclientjspui.objets.EnumCategorie;
 import com.microselwebclientjspui.objets.EnumStatutProposition;
 import com.microselwebclientjspui.objets.EnumTradeType;
 import com.microselwebclientjspui.objets.Proposition;
 import com.microselwebclientjspui.objets.Reponse;
-import com.microselwebclientjspui.objets.User;
 import com.microselwebclientjspui.service.IPropositionService;
 import com.microselwebclientjspui.service.IReponseService;
 import com.microselwebclientjspui.service.IUserService;
@@ -41,7 +39,7 @@ public class PropositionController {
 	@Autowired
 	private ObjectMapper mapper;
 	@Autowired
-	private PropositionExceptionMessage propositionExceptionMessage;
+	private ConvertToExceptionMessage convertToExceptionMessage;
 	@Autowired
 	private IReponseService reponseService;
 	@Autowired
@@ -73,22 +71,15 @@ public class PropositionController {
 			return "propositions/propositionCreation";
 		}
 
-		// Object propositionToCreate = new Object();
-
 		try {
 			Proposition propositionToCreate = propositionService.createProposition(propositionDTO);
 			model.addAttribute((Proposition)propositionToCreate);
 		} catch (HttpClientErrorException e) {
-			String errorMessage = propositionExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}
 
-		/*
-		 * Proposition propositionToCreate =
-		 * propositionService.createProposition(propositionDTO);
-		 * model.addAttribute((Proposition) propositionToCreate);
-		 */
 
 		return "propositions/propositionConfirmation";
 	}
@@ -105,7 +96,7 @@ public class PropositionController {
 	public String searchByCriteria(Model model,
 			@PathParam(value = "propositionCriteria") PropositionCriteria propositionCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "6") int size) throws NotAuthorizedException {
+			@RequestParam(name = "size", defaultValue = "10") int size)  {
 
 		model.addAttribute("propositionCriteria", new PropositionCriteria());
 		model.addAttribute("enumTradeTypeList", EnumTradeType.getListEnumTradeType());
@@ -125,9 +116,41 @@ public class PropositionController {
 		return "propositions/propositionsPage";
 
 	}
+	
+	/**
+	 * Permet à un adhérent d'afficher une sélection de ses propositions sous forme de page
+	 * 
+	 * @throws NotAuthorizedException
+	 * @throws EntityNotFoundException 
+	 */
+	@GetMapping(value = "/propositions/adherent")
+	public String searchByCriteriaByAdherent(Model model,
+			@PathParam(value = "propositionCriteria") PropositionCriteria propositionCriteria,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "10") int size)  {
+
+		model.addAttribute("propositionCriteria", new PropositionCriteria());
+		model.addAttribute("enumTradeTypeList", EnumTradeType.getListEnumTradeType());
+		model.addAttribute("enumStatutPropositionList", EnumStatutProposition.getListEnumStatutProposition());
+		model.addAttribute("enumCategorieList", EnumCategorie.getListEnumCategorie());
+
+		Page<Proposition> propositions = propositionService.searchByCriteriaByAdherent(propositionCriteria, 
+				PageRequest.of(page, size));
+
+		model.addAttribute("propositions", propositions.getContent());
+		model.addAttribute("page", Integer.valueOf(page));
+		model.addAttribute("number", propositions.getNumber());
+		model.addAttribute("totalPages", propositions.getTotalPages());
+		model.addAttribute("totalElements", propositions.getTotalElements());
+		model.addAttribute("size", propositions.getSize());
+
+		return "propositions/propositionsPageAdherent";
+
+	}
+
 
 	/**
-	 * Permet de lire la fiche d'une propositionn
+	 * Permet de lire la fiche d'une proposition
 	 */
 	@GetMapping("/propositions/reponses/{id}")
 	public String readProposition(Model model, @PathVariable("id") Long id,
@@ -147,7 +170,7 @@ public class PropositionController {
 			model.addAttribute("size", reponses.getSize());
 
 		} catch (HttpClientErrorException e) {
-			String errorMessage = propositionExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}
@@ -186,7 +209,7 @@ public class PropositionController {
 			Proposition propositionToUpdate = propositionService.updateProposition(proposition);
 			model.addAttribute((Proposition) propositionToUpdate);
 		} catch (HttpClientErrorException e) {
-			String errorMessage = propositionExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}
@@ -206,7 +229,7 @@ public class PropositionController {
 		try {
 			propositionService.closeProposition(id);
 		} catch (HttpClientErrorException e) {
-			String errorMessage = propositionExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}

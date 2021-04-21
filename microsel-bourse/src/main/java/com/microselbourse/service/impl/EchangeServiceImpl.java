@@ -207,8 +207,20 @@ public class EchangeServiceImpl implements IEchangeService {
 
 		// HYPOTHESE 3 : REFUS VALIDATION EMETTEUR
 		echangeToRefuse.setAvisEmetteur(EnumEchangeAvis.REFUSE);
-		mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur,
-				"Refus de valider l'echange par l'emetteur", "07_EmetteurProposition_EchangeRefus");
+		
+		/*
+		 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur,
+		 * "Refus de valider l'echange par l'emetteur",
+		 * "07_EmetteurProposition_EchangeRefus");
+		 */
+		
+		MessageMailEchange messageToRecepteurH3 = new MessageMailEchange();
+		messageToRecepteurH3.setEchange(echangeToRefuse);
+		messageToRecepteurH3.setDestinataire(recepteur);
+		messageToRecepteurH3.setSubject("Refus de valider l'echange par l'emetteur");
+		messageToRecepteurH3.setMicroselBourseMailTemplate("07_EmetteurProposition_EchangeRefus");
+		rabbitMQSender.sendMessageMailEchange(messageToRecepteurH3);
+		
 		// On vérifie si le récepteur a déjà donné un avis et si OUI lequel pour faire
 		// évoluer le statut de l'échange
 
@@ -224,14 +236,14 @@ public class EchangeServiceImpl implements IEchangeService {
 			MessageMailEchange messageToRecepteur = new MessageMailEchange();
 			messageToRecepteur.setEchange(echangeToRefuse);
 			messageToRecepteur.setDestinataire(recepteur);
-			messageToRecepteur.setSubject("Cloture de l'echange");
+			messageToRecepteur.setSubject("Echange en litige");
 			messageToRecepteur.setMicroselBourseMailTemplate("05B_EmetteurProposition_EchangeValidation_Litige");
 			rabbitMQSender.sendMessageMailEchange(messageToRecepteur);
 
 			MessageMailEchange messageToEmetteur = new MessageMailEchange();
 			messageToEmetteur.setEchange(echangeToRefuse);
 			messageToEmetteur.setDestinataire(emetteur);
-			messageToEmetteur.setSubject("Cloture de l'echange");
+			messageToEmetteur.setSubject("Echange en litige");
 			messageToEmetteur.setMicroselBourseMailTemplate("05B_RecepteurReponse_EchangeValidation_Litige");
 			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
 
@@ -243,10 +255,27 @@ public class EchangeServiceImpl implements IEchangeService {
 			// HYPOTHESE 3B : REFUS EMETTEUR / RECEPTEUR DEJA REFUSE
 			echangeToRefuse.setStatutEchange(EnumStatutEchange.LITIGE);
 			echangeToRefuse.setDateFin(LocalDate.now());
-			mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur, "Echange en litige",
-					"05B_EmetteurProposition_EchangeValidation_Litige");
-			mailSender.sendMailEchangeConfirmation(echangeToRefuse, emetteur, "Echange en litige",
-					"05B_RecepteurReponse_EchangeValidation_Litige");
+			/*
+			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur,
+			 * "Echange en litige", "05B_EmetteurProposition_EchangeValidation_Litige");
+			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, emetteur,
+			 * "Echange en litige", "05B_RecepteurReponse_EchangeValidation_Litige");
+			 */
+			
+			MessageMailEchange messageToRecepteur = new MessageMailEchange();
+			messageToRecepteur.setEchange(echangeToRefuse);
+			messageToRecepteur.setDestinataire(recepteur);
+			messageToRecepteur.setSubject("Echange en litige");
+			messageToRecepteur.setMicroselBourseMailTemplate("05B_EmetteurProposition_EchangeValidation_Litige");
+			rabbitMQSender.sendMessageMailEchange(messageToRecepteur);
+
+			MessageMailEchange messageToEmetteur = new MessageMailEchange();
+			messageToEmetteur.setEchange(echangeToRefuse);
+			messageToEmetteur.setDestinataire(emetteur);
+			messageToEmetteur.setSubject("Echange en litige");
+			messageToEmetteur.setMicroselBourseMailTemplate("05B_RecepteurReponse_EchangeValidation_Litige");
+			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
+			
 			Transaction transactionCreated = transactionService.createTransaction(id);
 			echangeToRefuse.setTransaction(transactionCreated);
 			return echangeRepository.save(echangeToRefuse);
@@ -254,8 +283,19 @@ public class EchangeServiceImpl implements IEchangeService {
 
 			// HYPOTHESE 3C : REFUS EMETTEUR / RECEPTEUR SANS AVIS = le STATUT DE L'ECHANGE
 			// reste CONFIRME
-			mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur, "Echange relance pour avis",
-					"09_Relance_pour_avis");
+			
+			/*
+			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur,
+			 * "Echange relance pour avis", "09_Relance_pour_avis");
+			 */
+			
+			MessageMailEchange messageToRecepteur = new MessageMailEchange();
+			messageToRecepteur.setEchange(echangeToRefuse);
+			messageToRecepteur.setDestinataire(recepteur);
+			messageToRecepteur.setSubject("Echange relance pour avis");
+			messageToRecepteur.setMicroselBourseMailTemplate("09_Relance_pour_avis");
+			rabbitMQSender.sendMessageMailEchange(messageToRecepteur);
+			
 			return echangeRepository.save(echangeToRefuse);
 		}
 	}
@@ -287,8 +327,20 @@ public class EchangeServiceImpl implements IEchangeService {
 
 		// HYPOTHESE 4 : REFUS VALIDATION RECEPTEUR
 		echangeToRefuse.setAvisRecepteur(EnumEchangeAvis.REFUSE);
-		mailSender.sendMailEchangeConfirmation(echangeToRefuse, emetteur,
-				"Refus de valider l'echange par le Recepteur", "08_RecepteurReponse_EchangeRefus");
+		
+		/*
+		 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, emetteur,
+		 * "Refus de valider l'echange par le Recepteur",
+		 * "08_RecepteurReponse_EchangeRefus");
+		 */
+		
+		MessageMailEchange messageToEmetteurH4 = new MessageMailEchange();
+		messageToEmetteurH4.setEchange(echangeToRefuse);
+		messageToEmetteurH4.setDestinataire(emetteur);
+		messageToEmetteurH4.setSubject("Refus de valider l'echange par le Recepteur");
+		messageToEmetteurH4.setMicroselBourseMailTemplate("08_RecepteurReponse_EchangeRefus");
+		rabbitMQSender.sendMessageMailEchange(messageToEmetteurH4);
+		
 		// On vérifie si l'émetteur a déjà donné un avis et si OUI lequel pour faire
 		// évoluer le statut de l'échange
 
@@ -296,10 +348,27 @@ public class EchangeServiceImpl implements IEchangeService {
 		if (echangeToRefuse.getAvisEmetteur().equals(EnumEchangeAvis.VALIDE)) {
 			echangeToRefuse.setStatutEchange(EnumStatutEchange.LITIGE);
 			echangeToRefuse.setDateFin(LocalDate.now());
-			mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur, "Cloture de l'echange",
-					"05B_EmetteurProposition_EchangeValidation_Litige");
-			mailSender.sendMailEchangeConfirmation(echangeToRefuse, emetteur, "Cloture de l'echange",
-					"05B_RecepteurReponse_EchangeValidation_Litige");
+			/*
+			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur,
+			 * "Cloture de l'echange", "05B_EmetteurProposition_EchangeValidation_Litige");
+			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, emetteur,
+			 * "Cloture de l'echange", "05B_RecepteurReponse_EchangeValidation_Litige");
+			 */
+			
+			MessageMailEchange messageToRecepteur = new MessageMailEchange();
+			messageToRecepteur.setEchange(echangeToRefuse);
+			messageToRecepteur.setDestinataire(recepteur);
+			messageToRecepteur.setSubject("Cloture de l'echange");
+			messageToRecepteur.setMicroselBourseMailTemplate("05B_EmetteurProposition_EchangeValidation_Litige");
+			rabbitMQSender.sendMessageMailEchange(messageToRecepteur);
+
+			MessageMailEchange messageToEmetteur = new MessageMailEchange();
+			messageToEmetteur.setEchange(echangeToRefuse);
+			messageToEmetteur.setDestinataire(emetteur);
+			messageToEmetteur.setSubject("Cloture de l'echange");
+			messageToEmetteur.setMicroselBourseMailTemplate("05B_RecepteurReponse_EchangeValidation_Litige");
+			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
+			
 			Transaction transactionCreated = transactionService.createTransaction(id);
 			echangeToRefuse.setTransaction(transactionCreated);
 			return echangeRepository.save(echangeToRefuse);
@@ -308,10 +377,27 @@ public class EchangeServiceImpl implements IEchangeService {
 			// HYPOTHESE 4B : REFUS RECEPTEUR / EMETTEUR DEJA REFUSE
 			echangeToRefuse.setStatutEchange(EnumStatutEchange.LITIGE);
 			echangeToRefuse.setDateFin(LocalDate.now());
-			mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur, "Echange en litige",
-					"05B_EmetteurProposition_EchangeValidation_Litige");
-			mailSender.sendMailEchangeConfirmation(echangeToRefuse, emetteur, "Echange en litige",
-					"05B_RecepteurReponse_EchangeValidation_Litige");
+			/*
+			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur,
+			 * "Echange en litige", "05B_EmetteurProposition_EchangeValidation_Litige");
+			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, emetteur,
+			 * "Echange en litige", "05B_RecepteurReponse_EchangeValidation_Litige");
+			 */
+			
+			MessageMailEchange messageToRecepteur = new MessageMailEchange();
+			messageToRecepteur.setEchange(echangeToRefuse);
+			messageToRecepteur.setDestinataire(recepteur);
+			messageToRecepteur.setSubject("Echange en litige");
+			messageToRecepteur.setMicroselBourseMailTemplate("05B_EmetteurProposition_EchangeValidation_Litige");
+			rabbitMQSender.sendMessageMailEchange(messageToRecepteur);
+
+			MessageMailEchange messageToEmetteur = new MessageMailEchange();
+			messageToEmetteur.setEchange(echangeToRefuse);
+			messageToEmetteur.setDestinataire(emetteur);
+			messageToEmetteur.setSubject("Echange en litige");
+			messageToEmetteur.setMicroselBourseMailTemplate("05B_RecepteurReponse_EchangeValidation_Litige");
+			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
+			
 			Transaction transactionCreated = transactionService.createTransaction(id);
 			echangeToRefuse.setTransaction(transactionCreated);
 			return echangeRepository.save(echangeToRefuse);
@@ -319,9 +405,21 @@ public class EchangeServiceImpl implements IEchangeService {
 
 			// HYPOTHESE 4C : REFUS RECEPTEUR / EMETTEUR SANS AVIS = le STATUT DE L'ECHANGE
 			// reste CONFIRME
-			mailSender.sendMailEchangeConfirmation(echangeToRefuse, emetteur, "Echange relance pour avis",
-					"09_Relance_pour_avis");
-			return echangeRepository.save(echangeToRefuse);
+			
+			/*
+			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, emetteur,
+			 * "Echange relance pour avis", "09_Relance_pour_avis");
+			 */
+			
+			MessageMailEchange messageToEmetteur = new MessageMailEchange();
+			messageToEmetteur.setEchange(echangeToRefuse);
+			messageToEmetteur.setDestinataire(emetteur);
+			messageToEmetteur.setSubject("Echange relance pour avis");
+			messageToEmetteur.setMicroselBourseMailTemplate("09_Relance_pour_avis");
+			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
+			
+			return echangeRepository.save(echangeToRefuse);	
+
 		}
 	}
 
@@ -406,8 +504,20 @@ public class EchangeServiceImpl implements IEchangeService {
 		 */
 		// HYPOTHESE 1 : AVIS VALIDATION EMETTEUR
 		echangeToValidate.setAvisEmetteur(EnumEchangeAvis.VALIDE);
-		mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Validation de l'echange par l'emetteur",
-				"05_EmetteurProposition_EchangeValidation");
+		
+		/*
+		 * mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur,
+		 * "Validation de l'echange par l'emetteur",
+		 * "05_EmetteurProposition_EchangeValidation");
+		 */
+		
+		MessageMailEchange messageToRecepteurH1 = new MessageMailEchange();
+		messageToRecepteurH1.setEchange(echangeToValidate);
+		messageToRecepteurH1.setDestinataire(recepteur);
+		messageToRecepteurH1.setSubject("Validation de l'echange par l'emetteur");
+		messageToRecepteurH1.setMicroselBourseMailTemplate("05_EmetteurProposition_EchangeValidation");
+		rabbitMQSender.sendMessageMailEchange(messageToRecepteurH1);
+		
 		// On vérifie si le récepteur a déjà donné un avis et si OUI lequel pour faire
 		// évoluer le statut de l'échange
 
@@ -415,10 +525,28 @@ public class EchangeServiceImpl implements IEchangeService {
 		if (echangeToValidate.getAvisRecepteur().equals(EnumEchangeAvis.VALIDE)) {
 			echangeToValidate.setStatutEchange(EnumStatutEchange.CLOTURE);
 			echangeToValidate.setDateFin(LocalDate.now());
-			mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Cloture de l'echange",
-					"05A_EmetteurProposition_EchangeValidation_Cloture");
-			mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Cloture de l'echange",
-					"05A_RecepteurReponse_EchangeValidation_Cloture");
+			
+			/*
+			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur,
+			 * "Cloture de l'echange", "05A_EmetteurProposition_EchangeValidation_Cloture");
+			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur,
+			 * "Cloture de l'echange", "05A_RecepteurReponse_EchangeValidation_Cloture");
+			 */
+			
+			MessageMailEchange messageToRecepteur = new MessageMailEchange();
+			messageToRecepteur.setEchange(echangeToValidate);
+			messageToRecepteur.setDestinataire(recepteur);
+			messageToRecepteur.setSubject("Cloture de l'echange");
+			messageToRecepteur.setMicroselBourseMailTemplate("05A_EmetteurProposition_EchangeValidation_Cloture");
+			rabbitMQSender.sendMessageMailEchange(messageToRecepteur);
+
+			MessageMailEchange messageToEmetteur = new MessageMailEchange();
+			messageToEmetteur.setEchange(echangeToValidate);
+			messageToEmetteur.setDestinataire(emetteur);
+			messageToEmetteur.setSubject("Cloture de l'echange");
+			messageToEmetteur.setMicroselBourseMailTemplate("05A_RecepteurReponse_EchangeValidation_Cloture");
+			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
+			
 			Transaction transactionCreated = transactionService.createTransaction(id);
 			echangeToValidate.setTransaction(transactionCreated);
 			return echangeRepository.save(echangeToValidate);
@@ -427,10 +555,28 @@ public class EchangeServiceImpl implements IEchangeService {
 			// HYPOTHESE 1B : VALIDATION EMETTEUR / RECEPTEUR DEJA REFUSE
 			echangeToValidate.setStatutEchange(EnumStatutEchange.LITIGE);
 			echangeToValidate.setDateFin(LocalDate.now());
-			mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Echange en litige",
-					"05B_EmetteurProposition_EchangeValidation_Litige");
-			mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Echange en litige",
-					"05B_RecepteurReponse_EchangeValidation_Litige");
+			
+			/*
+			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur,
+			 * "Echange en litige", "05B_EmetteurProposition_EchangeValidation_Litige");
+			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur,
+			 * "Echange en litige", "05B_RecepteurReponse_EchangeValidation_Litige");
+			 */
+			
+			MessageMailEchange messageToRecepteur = new MessageMailEchange();
+			messageToRecepteur.setEchange(echangeToValidate);
+			messageToRecepteur.setDestinataire(recepteur);
+			messageToRecepteur.setSubject("Echange en litige");
+			messageToRecepteur.setMicroselBourseMailTemplate("05B_EmetteurProposition_EchangeValidation_Litige");
+			rabbitMQSender.sendMessageMailEchange(messageToRecepteur);
+
+			MessageMailEchange messageToEmetteur = new MessageMailEchange();
+			messageToEmetteur.setEchange(echangeToValidate);
+			messageToEmetteur.setDestinataire(emetteur);
+			messageToEmetteur.setSubject("Echange en litige");
+			messageToEmetteur.setMicroselBourseMailTemplate("05B_RecepteurReponse_EchangeValidation_Litige");
+			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
+			
 			Transaction transactionCreated = transactionService.createTransaction(id);
 			echangeToValidate.setTransaction(transactionCreated);
 			return echangeRepository.save(echangeToValidate);
@@ -438,8 +584,19 @@ public class EchangeServiceImpl implements IEchangeService {
 
 			// HYPOTHESE 1C : VALIDATION EMETTEUR / RECEPTEUR SANS AVIS = le STATUT DE
 			// L'ECHANGE reste CONFIRME
-			mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Echange relance pour avis",
-					"09_Relance_pour_avis");
+			
+			/*
+			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur,
+			 * "Echange relance pour avis", "09_Relance_pour_avis");
+			 */
+			
+			MessageMailEchange messageToRecepteur = new MessageMailEchange();
+			messageToRecepteur.setEchange(echangeToValidate);
+			messageToRecepteur.setDestinataire(recepteur);
+			messageToRecepteur.setSubject("Echange relance pour avis");
+			messageToRecepteur.setMicroselBourseMailTemplate("09_Relance_pour_avis");
+			rabbitMQSender.sendMessageMailEchange(messageToRecepteur);
+			
 			return echangeRepository.save(echangeToValidate);
 		}
 
@@ -473,8 +630,20 @@ public class EchangeServiceImpl implements IEchangeService {
 
 		// HYPOTHESE 2 : ACCORD VALIDATION RECEPTEUR
 		echangeToValidate.setAvisRecepteur(EnumEchangeAvis.VALIDE);
-		mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Validation de l'echange par le Recepteur",
-				"06_RecepteurReponse_EchangeValidation");
+		
+		/*
+		 * mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur,
+		 * "Validation de l'echange par le Recepteur",
+		 * "06_RecepteurReponse_EchangeValidation");
+		 */
+		
+		MessageMailEchange messageToEmetteurH2 = new MessageMailEchange();
+		messageToEmetteurH2.setEchange(echangeToValidate);
+		messageToEmetteurH2.setDestinataire(emetteur);
+		messageToEmetteurH2.setSubject("Validation de l'echange par le Recepteur");
+		messageToEmetteurH2.setMicroselBourseMailTemplate("06_RecepteurReponse_EchangeValidation");
+		rabbitMQSender.sendMessageMailEchange(messageToEmetteurH2);
+		
 		// On vérifie si l'émetteur a déjà donné un avis et si OUI lequel pour faire
 		// évoluer le statut de l'échange
 
@@ -482,22 +651,59 @@ public class EchangeServiceImpl implements IEchangeService {
 		if (echangeToValidate.getAvisEmetteur().equals(EnumEchangeAvis.VALIDE)) {
 			echangeToValidate.setStatutEchange(EnumStatutEchange.CLOTURE);
 			echangeToValidate.setDateFin(LocalDate.now());
-			mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Cloture de l'echange",
-					"05A_EmetteurProposition_EchangeValidation_Cloture");
-			mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Cloture de l'echange",
-					"05A_RecepteurReponse_EchangeValidation_Cloture");
+			
+			/*
+			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur,
+			 * "Cloture de l'echange", "05A_EmetteurProposition_EchangeValidation_Cloture");
+			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur,
+			 * "Cloture de l'echange", "05A_RecepteurReponse_EchangeValidation_Cloture");
+			 */
+			
+			MessageMailEchange messageToRecepteur = new MessageMailEchange();
+			messageToRecepteur.setEchange(echangeToValidate);
+			messageToRecepteur.setDestinataire(recepteur);
+			messageToRecepteur.setSubject("Cloture de l'echange");
+			messageToRecepteur.setMicroselBourseMailTemplate("05A_EmetteurProposition_EchangeValidation_Cloture");
+			rabbitMQSender.sendMessageMailEchange(messageToRecepteur);
+
+			MessageMailEchange messageToEmetteur = new MessageMailEchange();
+			messageToEmetteur.setEchange(echangeToValidate);
+			messageToEmetteur.setDestinataire(emetteur);
+			messageToEmetteur.setSubject("Cloture de l'echange");
+			messageToEmetteur.setMicroselBourseMailTemplate("05A_EmetteurProposition_EchangeValidation_Cloture");
+			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
+			
 			Transaction transactionCreated = transactionService.createTransaction(id);
 			echangeToValidate.setTransaction(transactionCreated);
 			return echangeRepository.save(echangeToValidate);
+			
 		} else if (echangeToValidate.getAvisEmetteur().equals(EnumEchangeAvis.REFUSE)) {
 
 			// HYPOTHESE 1B : VALIDATION RECEPTEUR / RECEPTEUR DEJA REFUSE
 			echangeToValidate.setStatutEchange(EnumStatutEchange.LITIGE);
 			echangeToValidate.setDateFin(LocalDate.now());
-			mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Echange en litige",
-					"05B_EmetteurProposition_EchangeValidation_Litige");
-			mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Echange en litige",
-					"05B_RecepteurReponse_EchangeValidation_Litige");
+			
+			/*
+			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur,
+			 * "Echange en litige", "05B_EmetteurProposition_EchangeValidation_Litige");
+			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur,
+			 * "Echange en litige", "05B_RecepteurReponse_EchangeValidation_Litige");
+			 */
+			
+			MessageMailEchange messageToRecepteur = new MessageMailEchange();
+			messageToRecepteur.setEchange(echangeToValidate);
+			messageToRecepteur.setDestinataire(recepteur);
+			messageToRecepteur.setSubject("Echange en litige");
+			messageToRecepteur.setMicroselBourseMailTemplate("05B_EmetteurProposition_EchangeValidation_Litige");
+			rabbitMQSender.sendMessageMailEchange(messageToRecepteur);
+
+			MessageMailEchange messageToEmetteur = new MessageMailEchange();
+			messageToEmetteur.setEchange(echangeToValidate);
+			messageToEmetteur.setDestinataire(emetteur);
+			messageToEmetteur.setSubject("Echange en litige");
+			messageToEmetteur.setMicroselBourseMailTemplate("05B_RecepteurReponse_EchangeValidation_Litige");
+			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
+			
 			Transaction transactionCreated = transactionService.createTransaction(id);
 			echangeToValidate.setTransaction(transactionCreated);
 			return echangeRepository.save(echangeToValidate);
@@ -505,8 +711,19 @@ public class EchangeServiceImpl implements IEchangeService {
 
 			// HYPOTHESE 1C : VALIDATION RECEPTEUR / EMETTEUR SANS AVIS = le STATUT DE
 			// L'ECHANGE reste CONFIRME
-			mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Echange relance pour avis",
-					"09_Relance_pour_avis");
+			
+			/*
+			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur,
+			 * "Echange relance pour avis", "09_Relance_pour_avis");
+			 */
+			
+			MessageMailEchange messageToEmetteur = new MessageMailEchange();
+			messageToEmetteur.setEchange(echangeToValidate);
+			messageToEmetteur.setDestinataire(emetteur);
+			messageToEmetteur.setSubject("Echange relance pour avis");
+			messageToEmetteur.setMicroselBourseMailTemplate("09_Relance_pour_avis");
+			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
+			
 			return echangeRepository.save(echangeToValidate);
 		}
 	}
@@ -533,6 +750,7 @@ public class EchangeServiceImpl implements IEchangeService {
 
 		echangeToAnnuler.setStatutEchange(EnumStatutEchange.ANNULE);
 		echangeToAnnuler.setDateAnnulation(LocalDate.now());
+		
 		// mailSender.sendMailEchangeConfirmation(echangeToAnnuler, recepteur,
 		// "Annulation de l'echange", "04_RecepteurReponse_EchangeAnnulation");
 
@@ -568,8 +786,10 @@ public class EchangeServiceImpl implements IEchangeService {
 
 		echangeToConfirm.setStatutEchange(EnumStatutEchange.CONFIRME);
 		echangeToConfirm.setDateConfirmation(LocalDate.now());
+		
 		// mailSender.sendMailEchangeConfirmation(echangeToConfirm, recepteur,
 		// "Confirmation de l'echange", "03_RecepteurReponse_EchangeConfirmation");
+		
 		MessageMailEchange messageToRecepteur = new MessageMailEchange();
 		messageToRecepteur.setEchange(echangeToConfirm);
 		messageToRecepteur.setDestinataire(recepteur);

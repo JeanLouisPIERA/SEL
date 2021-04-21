@@ -101,10 +101,8 @@ public class Wallet implements Serializable {
 		this.transactions = transactions;
 	}
 
-	@Override
-	public String toString() {
-		return "Wallet [id=" + id + ", titulaireId=" + titulaireId + ", titulaireUsername=" + titulaireUsername
-				+ ", soldeWallet=" + soldeWallet + ", transactions=" + transactions + "]";
-	}
+	
+
+	
 
 }

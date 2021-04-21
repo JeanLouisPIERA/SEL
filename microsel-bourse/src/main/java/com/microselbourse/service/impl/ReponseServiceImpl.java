@@ -34,7 +34,6 @@ import com.microselbourse.exceptions.DeniedAccessException;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.mapper.IReponseMapper;
-import com.microselbourse.proxies.IMicroselAdherentsProxy;
 import com.microselbourse.proxies.IMicroselUsersProxy;
 import com.microselbourse.service.IEchangeService;
 import com.microselbourse.service.IMailSenderService;

@@ -108,11 +108,5 @@ public class Evaluation {
 		this.echange = echange;
 	}
 
-	@Override
-	public String toString() {
-		return "Evaluation [id=" + id + ", adherentId=" + adherentId + ", adherentUsername=" + adherentUsername
-				+ ", commentaire=" + commentaire + ", enumNoteEchange=" + enumNoteEchange + ", dateEvaluation="
-				+ dateEvaluation + ", echange=" + echange + "]";
-	}
-
+	
 }

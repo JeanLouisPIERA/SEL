@@ -20,12 +20,15 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
+//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id", scope = Echange.class)
 @Entity
 @Table(name = "echanges")
 public class Echange implements Serializable {
@@ -366,17 +369,8 @@ public class Echange implements Serializable {
 		this.evaluations = evaluations;
 	}
 
-	@Override
-	public String toString() {
-		return "Echange [id=" + id + ", dateEnregistrement=" + dateEnregistrement + ", emetteurId=" + emetteurId
-				+ ", recepteurId=" + recepteurId + ", emetteurUsername=" + emetteurUsername + ", recepteurUsername="
-				+ recepteurUsername + ", dateEcheance=" + dateEcheance + ", titre=" + titre + ", emetteurMail="
-				+ emetteurMail + ", recepteurMail=" + recepteurMail + ", statutEchange=" + statutEchange
-				+ ", dateConfirmation=" + dateConfirmation + ", dateAnnulation=" + dateAnnulation + ", avisEmetteur="
-				+ avisEmetteur + ", avisRecepteur=" + avisRecepteur + ", dateFin=" + dateFin + ", commentaireEmetteur="
-				+ commentaireEmetteur + ", commentaireRecepteur=" + commentaireRecepteur + ", noteEmetteur="
-				+ noteEmetteur + ", noteRecepteur=" + noteRecepteur + ", transaction=" + transaction + ", blocages="
-				+ blocages + ", evaluations=" + evaluations + "]";
-	}
+	
+
+	
 
 }

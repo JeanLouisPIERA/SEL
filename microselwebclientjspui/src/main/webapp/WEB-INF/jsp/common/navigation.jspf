@@ -17,17 +17,18 @@
 		          <li><a href="/echanges">Echanges</a></li>
 		          
 		          <li>
-		           <sec:authorize access="hasAuthority('ADMIN')">
-		          <a href="/wallets">Portefeuilles</a>
+		           <sec:authorize access="hasAuthority('USER')">
+		          <a href="/accounts/account">Espace Personnel</a>
 		          </sec:authorize>
 		          </li>
 		          
 		          <li>
 		          <sec:authorize access="hasAuthority('ADMIN')">
-		          <a href="/referentiels">Gestion des Référentiels</a>
+		          <a href="/accueilAdmin">Espace Administrateur</a>
 		          </sec:authorize>
-		          
 		          </li>
+		          
+		          
 		     </ul>
 		    
 		     </div>

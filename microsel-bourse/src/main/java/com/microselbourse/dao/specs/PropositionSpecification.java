@@ -25,6 +25,11 @@ public class PropositionSpecification implements Specification<Proposition> {
 	public Predicate toPredicate(Root<Proposition> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 
 		Predicate predicates = builder.conjunction();
+		
+		if (propositionCriteria.getEmetteurId() != null) {
+			predicates.getExpressions()
+					.add(builder.like(root.get("emetteurId"), "%" + propositionCriteria.getEmetteurId()+ "%"));
+		}
 
 		if (propositionCriteria.getEmetteurUsername() != null) {
 			predicates.getExpressions()

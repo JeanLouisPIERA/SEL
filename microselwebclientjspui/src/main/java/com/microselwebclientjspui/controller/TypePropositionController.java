@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.microselwebclientjspui.dto.TypePropositionDTO;
-import com.microselwebclientjspui.errors.TypePropositionExceptionMessage;
+import com.microselwebclientjspui.errors.ConvertToExceptionMessage;
 import com.microselwebclientjspui.objets.TypeProposition;
 import com.microselwebclientjspui.service.ITypePropositionService;
 
@@ -24,7 +24,7 @@ public class TypePropositionController {
 	private ITypePropositionService typePropositionService;
 
 	@Autowired
-	private TypePropositionExceptionMessage typePropositionExceptionMessage;
+	private ConvertToExceptionMessage convertToExceptionMessage;
 
 	/**
 	 * Permet d'afficher le formulaire de création d'un type de Proposition
@@ -53,7 +53,7 @@ public class TypePropositionController {
 			typePropositionToCreate = typePropositionService.createTypeDocument(typePropositionDTO);
 			model.addAttribute((TypeProposition) typePropositionToCreate);
 		} catch (HttpClientErrorException e) {
-			String errorMessage = typePropositionExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}

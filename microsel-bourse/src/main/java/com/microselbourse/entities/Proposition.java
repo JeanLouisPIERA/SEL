@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id", scope = Proposition.class)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id", scope = Proposition.class)
 @Entity
 @Table(name = "propositions")
 public class Proposition implements Serializable {
@@ -265,14 +265,7 @@ public class Proposition implements Serializable {
 		this.reponses = reponses;
 	}
 
-	/*
-	 * @Override public String toString() { return "Proposition [id=" + id +
-	 * ", emetteurId=" + emetteurId + ", enumTradeType=" + enumTradeType +
-	 * ", titre=" + titre + ", description=" + description + ", image=" + image +
-	 * ", ville=" + ville + ", codePostal=" + codePostal + ", valeur=" + valeur +
-	 * ", dateFin=" + dateFin + ", dateEcheance=" + dateEcheance + ", statut=" +
-	 * statut + ", categorie=" + categorie + ", dateDebut=" + dateDebut +
-	 * ", reponses=" + reponses + "]"; }
-	 */
+	
 
+	
 }

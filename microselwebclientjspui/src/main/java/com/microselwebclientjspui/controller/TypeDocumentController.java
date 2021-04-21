@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.microselwebclientjspui.dto.TypeDocumentDTO;
-import com.microselwebclientjspui.errors.TypeDocumentExceptionMessage;
+import com.microselwebclientjspui.errors.ConvertToExceptionMessage;
 import com.microselwebclientjspui.objets.TypeDocument;
 import com.microselwebclientjspui.service.ITypeDocumentService;
 
@@ -29,7 +29,7 @@ public class TypeDocumentController {
 	private ITypeDocumentService typeDocumentService;
 
 	@Autowired
-	private TypeDocumentExceptionMessage typeDocumentExceptionMessage;
+	private ConvertToExceptionMessage convertToExceptionMessage;
 
 	/**
 	 * Permet d'afficher le formulaire de création d'un type de document
@@ -58,7 +58,7 @@ public class TypeDocumentController {
 			typeDocumentToCreate = typeDocumentService.createTypeDocument(typeDocumentDTO);
 			model.addAttribute((TypeDocument) typeDocumentToCreate);
 		} catch (HttpClientErrorException e) {
-			String errorMessage = typeDocumentExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}

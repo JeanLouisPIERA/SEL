@@ -3,7 +3,7 @@ package com.microselwebclientjspui.objets;
 import java.time.LocalDate;
 
 public class Echange {
-
+	
 	private Long id;
 	private LocalDate dateEnregistrement;
 	private String emetteurId;
@@ -25,7 +25,8 @@ public class Echange {
 	private EnumEchangeAvis noteEmetteur;
 	private EnumEchangeAvis noteRecepteur;
 	private Transaction transaction;
-
+	
+	
 	public Echange() {
 		super();
 	}

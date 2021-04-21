@@ -3,6 +3,8 @@ package com.microselwebclientjspui.criteria;
 public class EchangeCriteria {
 
 	private Long id;
+	private String emetteurId;
+	private String recepteurId;
 	private String emetteurUsername;
 	private String recepteurUsername;
 	private String titre;
@@ -18,6 +20,22 @@ public class EchangeCriteria {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getEmetteurId() {
+		return emetteurId;
+	}
+
+	public void setEmetteurId(String emetteurId) {
+		this.emetteurId = emetteurId;
+	}
+
+	public String getRecepteurId() {
+		return recepteurId;
+	}
+
+	public void setRecepteurId(String recepteurId) {
+		this.recepteurId = recepteurId;
 	}
 
 	public String getEmetteurUsername() {

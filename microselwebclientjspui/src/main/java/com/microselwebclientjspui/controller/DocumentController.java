@@ -20,7 +20,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.microselwebclientjspui.criteria.DocumentCriteria;
 import com.microselwebclientjspui.dto.DocumentDTO;
-import com.microselwebclientjspui.errors.DocumentExceptionMessage;
+import com.microselwebclientjspui.errors.ConvertToExceptionMessage;
 import com.microselwebclientjspui.objets.Document;
 import com.microselwebclientjspui.objets.EnumStatutDocument;
 import com.microselwebclientjspui.objets.TypeDocument;
@@ -37,7 +37,7 @@ public class DocumentController {
 	private ITypeDocumentService typeDocumentService;
 
 	@Autowired
-	private DocumentExceptionMessage documentExceptionMessage;
+	private ConvertToExceptionMessage convertToExceptionMessage;
 
 //CREATE PROPOSITION *****************************************************************************************************
 
@@ -73,7 +73,7 @@ public class DocumentController {
 			documentToCreate = documentService.createDocument(documentDTO);
 			model.addAttribute((Document) documentToCreate);
 		} catch (HttpClientErrorException e) {
-			String errorMessage = documentExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}
@@ -119,7 +119,7 @@ public class DocumentController {
 			model.addAttribute("document", readDocument);
 
 		} catch (HttpClientErrorException e) {
-			String errorMessage = documentExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}

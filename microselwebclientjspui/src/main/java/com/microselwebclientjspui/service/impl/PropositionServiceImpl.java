@@ -17,7 +17,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.microselwebclientjspui.criteria.PropositionCriteria;
 import com.microselwebclientjspui.dto.PropositionDTO;
-import com.microselwebclientjspui.errors.NotAuthorizedException;
 import com.microselwebclientjspui.objets.Proposition;
 import com.microselwebclientjspui.service.IPropositionService;
 import com.microselwebclientjspui.service.IUserService;
@@ -50,14 +49,43 @@ public class PropositionServiceImpl implements IPropositionService {
 	private String uRLPropositionAll;
 
 	@Override
-	public Page<Proposition> searchByCriteria(PropositionCriteria propositionCriteria, Pageable pageable)
-			throws NotAuthorizedException {
+	public Page<Proposition> searchByCriteria(PropositionCriteria propositionCriteria, Pageable pageable) {
 
 		HttpHeaders headers = new HttpHeaders();
 
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLPropositionAll)
+				.queryParam("codeEnumTradeType", propositionCriteria.getEnumTradeType())
+				.queryParam("titre", propositionCriteria.getTitre()).queryParam("ville", propositionCriteria.getVille())
+				.queryParam("codePostal", propositionCriteria.getCodePostal())
+				.queryParam("nomCategorie", propositionCriteria.getEnumCategorie())
+				.queryParam("statut", propositionCriteria.getEnumStatutProposition())
+				.queryParam("page", pageable.getPageNumber()).queryParam("size", pageable.getPageSize())
+				.queryParam("emetteurUsername", propositionCriteria.getEmetteurUsername());
+
+		ResponseEntity<RestResponsePage<Proposition>> propositions = restTemplate.exchange(
+				builder.build().toUriString(), HttpMethod.GET, entity,
+				new ParameterizedTypeReference<RestResponsePage<Proposition>>() {
+				});
+
+		Page<Proposition> pageProposition = propositions.getBody();
+
+		return pageProposition;
+	}
+	
+	@Override
+	public Page<Proposition> searchByCriteriaByAdherent(PropositionCriteria propositionCriteria, Pageable pageable) {
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		
+		String userId = userService.identifyPrincipalId();
+			
+		propositionCriteria.setEmetteurId(userId);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLPropositionAll)
+				.queryParam("emetteurId", propositionCriteria.getEmetteurId())
 				.queryParam("codeEnumTradeType", propositionCriteria.getEnumTradeType())
 				.queryParam("titre", propositionCriteria.getTitre()).queryParam("ville", propositionCriteria.getVille())
 				.queryParam("codePostal", propositionCriteria.getCodePostal())
@@ -123,5 +151,7 @@ public class PropositionServiceImpl implements IPropositionService {
 		// FIXME Auto-generated method stub
 
 	}
+
+	
 
 }

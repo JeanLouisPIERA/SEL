@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 public class PropositionCriteria {
 
+	private String emetteurId;
+
 	private String emetteurUsername;
 
 	private String codeEnumTradeType;
@@ -20,6 +22,14 @@ public class PropositionCriteria {
 
 	public PropositionCriteria() {
 		super();
+	}
+
+	public String getEmetteurId() {
+		return emetteurId;
+	}
+
+	public void setEmetteurId(String emetteurId) {
+		this.emetteurId = emetteurId;
 	}
 
 	public String getEmetteurUsername() {

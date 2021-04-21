@@ -19,12 +19,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.microselwebclientjspui.dto.EvaluationDTO;
 import com.microselwebclientjspui.objets.Evaluation;
 import com.microselwebclientjspui.service.IEvaluationService;
+import com.microselwebclientjspui.service.IUserService;
 
 @Service
 public class EvaluationServiceImpl implements IEvaluationService {
 
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private IUserService userService;
 
 	@Value("${application.uRLEvaluation}")
 	private String uRLEvaluation;
@@ -40,6 +44,10 @@ public class EvaluationServiceImpl implements IEvaluationService {
 
 	@Override
 	public Evaluation createEvaluation(Long echangeId, EvaluationDTO evaluationDTO) {
+		
+		String userId = userService.identifyPrincipalId();
+		
+		evaluationDTO.setAdherentId(userId);
 
 		String url = uRLEvaluationUser + "/echange/" + echangeId;
 

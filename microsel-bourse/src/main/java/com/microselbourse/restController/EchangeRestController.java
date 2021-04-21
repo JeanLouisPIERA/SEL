@@ -57,7 +57,7 @@ public class EchangeRestController {
 	public ResponseEntity<Page<Echange>> searchAllEchangesByCriteria(
 			@PathParam("echangeCriteria") EchangeCriteria echangeCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "6") int size) {
+			@RequestParam(name = "size", defaultValue = "10") int size) {
 		Page<Echange> echanges = echangeService.searchAllEchangesByCriteria(echangeCriteria,
 				PageRequest.of(page, size));
 		return new ResponseEntity<Page<Echange>>(echanges, HttpStatus.OK);

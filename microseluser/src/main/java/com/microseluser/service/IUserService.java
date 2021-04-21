@@ -2,6 +2,10 @@ package com.microseluser.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.microseluser.criteria.UserCriteria;
 import com.microseluser.entities.User;
 import com.microseluser.exceptions.EntityNotFoundException;
 
@@ -20,5 +24,9 @@ public interface IUserService {
 	 * utilisateurs Seul un membre du bureau peut consulter cette liste
 	 */
 	List<User> showAllUsers();
+	
+	
+	Page<User> searchAllUsersByCriteria(UserCriteria userCriteria,
+			Pageable pageable);
 
 }

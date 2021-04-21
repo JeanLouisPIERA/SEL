@@ -51,6 +51,7 @@ public class User implements Serializable {
 	@Column(name = "last_name", length = 255)
 	String lastName;
 
+	@JsonIgnore
 	@Column(name = "realm_id", length = 255)
 	String realmId;
 
@@ -69,6 +70,7 @@ public class User implements Serializable {
 	@Column(name = "not_before")
 	int notBefore;
 
+	@JsonIgnore
 	@ManyToMany(cascade = { CascadeType.ALL })
 	@JoinTable(name = "user_role_mapping", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "role_id") })

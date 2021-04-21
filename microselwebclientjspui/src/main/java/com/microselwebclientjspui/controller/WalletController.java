@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.microselwebclientjspui.criteria.WalletCriteria;
-import com.microselwebclientjspui.errors.WalletExceptionMessage;
+import com.microselwebclientjspui.errors.ConvertToExceptionMessage;
 import com.microselwebclientjspui.objets.Transaction;
 import com.microselwebclientjspui.objets.Wallet;
 import com.microselwebclientjspui.service.ITransactionService;
@@ -29,7 +29,7 @@ public class WalletController {
 	private ITransactionService transactionService;
 
 	@Autowired
-	private WalletExceptionMessage walletExceptionMessage;
+	private ConvertToExceptionMessage convertToExceptionMessage;
 
 	/**
 	 * Permet d'afficher une sélection les portefeuilles sous forme de page
@@ -77,12 +77,43 @@ public class WalletController {
 			model.addAttribute("size", transactions.getSize());
 
 		} catch (HttpClientErrorException e) {
-			String errorMessage = walletExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}
 
 		return "wallets/walletView";
+	}
+
+	/**
+	 * Permet de lire les transactions du portefeuille d'un adhérent
+	 * 
+	 * @throws DeniedAccessException
+	 */
+	@GetMapping("/wallets/adherent")
+	public String readWalletByAdherent(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "6") int size)  {
+
+		try {
+			Wallet consultedWallet = walletService.consultWalletByAdherent();
+			model.addAttribute("consultedWallet", consultedWallet);
+			
+			Page<Transaction> transactions = transactionService.findAllByWalletIdByAdherent(consultedWallet.getId(),
+					PageRequest.of(page, size));
+
+			model.addAttribute("transactions", transactions.getContent());
+			model.addAttribute("page", Integer.valueOf(page));
+			model.addAttribute("number", transactions.getNumber());
+			model.addAttribute("totalPages", transactions.getTotalPages());
+			model.addAttribute("totalElements", transactions.getTotalElements());
+			model.addAttribute("size", transactions.getSize());
+		} catch (HttpClientErrorException e) {
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
+			model.addAttribute("error", errorMessage);
+			return "/error";
+		}
+
+		return "wallets/walletViewAdherent";
 	}
 
 }

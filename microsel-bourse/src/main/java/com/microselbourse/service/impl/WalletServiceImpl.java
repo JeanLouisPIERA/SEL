@@ -69,7 +69,7 @@ public class WalletServiceImpl implements IWalletService {
 		walletCreated.setTitulaireUsername(titulaire.getUsername());
 		walletCreated.setSoldeWallet(0);
 
-		return walletCreated;
+		return walletRepository.save(walletCreated);
 	}
 
 	@Override
@@ -108,19 +108,6 @@ public class WalletServiceImpl implements IWalletService {
 		/*
 		 * Wallet walletEmetteur; Wallet walletRecepteur;
 		 */
-
-		System.out.println("Test Wallet walletEmetteurEchange = " + walletEmetteurEchange.get().getId());
-		System.out.println("Test Wallet walletRecepteurEchange = " + walletRecepteurEchange.get().getId());
-		System.out.println(
-				"Test Wallet walletEmetteurEchange Solde Before = " + walletEmetteurEchange.get().getSoldeWallet());
-		System.out.println(
-				"Test Wallet walletRecepteurEchange Solde Before = " + walletRecepteurEchange.get().getSoldeWallet());
-		System.out.println("Test Wallet walletCounterpart Solde Before = " + walletCounterpart.get().getSoldeWallet());
-
-		System.out.println("Test Boolean walletEmetteurEchange = "
-				+ transactionToRegistrate.get().getWallets().contains(walletEmetteurEchange.get()));
-		System.out.println("Test Boolean walletRecepteurEchange = "
-				+ transactionToRegistrate.get().getWallets().contains(walletRecepteurEchange.get()));
 
 		// HYPOTHESE 1 le walletEmetteurEchange n'appartient pas à la transaction =
 		// EMETTEUR REFUS ***************************************
@@ -397,21 +384,14 @@ public class WalletServiceImpl implements IWalletService {
 				}
 			}
 		}
-		System.out.println(
-				" #Test Wallet walletEmetteurEchange Solde After = " + walletEmetteurEchange.get().getSoldeWallet());
-		System.out.println(
-				" #Test Wallet walletRecepteurEchange Solde After= " + walletRecepteurEchange.get().getSoldeWallet());
-		System.out.println(" #Test Wallet walletCounterpart Solde After= " + walletCounterpart.get().getSoldeWallet());
 
-		System.out.println("Test Wallet walletEmetteur = " + walletEmetteurEchange.get().getId());
-		System.out.println("Test Wallet walletRecepteur = " + walletRecepteurEchange.get().getId());
 	}
 
 	@Override
-	public Wallet readByUserId(String id) throws EntityNotFoundException {
+	public Wallet readByUserId(String userId) throws EntityNotFoundException {
 
-		Optional<Wallet> walletToRead = walletRepository.readByTitulaireId(id);
-		if (walletToRead.isEmpty())
+		Optional<Wallet> walletToRead = walletRepository.findByTitulaireId(userId);
+		if (!walletToRead.isPresent())
 			throw new EntityNotFoundException("Il n'existe pas de wallet pour cet adhérent");
 
 		return walletToRead.get();

@@ -1,8 +1,10 @@
 package com.microselwebclientjspui.service;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.microselwebclientjspui.criteria.UserCriteria;
 import com.microselwebclientjspui.objets.User;
 
 public interface IUserService {
@@ -11,8 +13,9 @@ public interface IUserService {
 	
 	String identifyPrincipalUsername();
 	
-	User consulterCompteAdherent(String id);
-	
-	Page<User> consulterListeDesAdherents(Pageable pageable);
+	User consulterCompteAdherent();
 
+	Page<User> searchByCriteria(UserCriteria userCriteria, Pageable pageable);
+
+	
 }

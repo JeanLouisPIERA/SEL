@@ -24,20 +24,11 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		super.configure(http);
-		http.authorizeRequests().antMatchers("/accueil", "/propositions", "/echanges").permitAll()
-				/*
-				 * .antMatchers("/propositions/reponses/**","/echanges/evaluations/**",
-				 * "/propositions/newProposition",
-				 * "/propositions/update/**","/propositions/close/**", "/reponses/**",
-				 * "/reponses/newReponse/**",
-				 * "/echanges/confirmation/**","/echanges/annulation/**",
-				 * "/echanges/emetteurValidation/**","/echanges/recepteurValidation/**",
-				 * "/echanges/emetteurRefus/**","/echanges/recepteurRefus/**",
-				 * "/evaluations/**", "/transactions/**", "/wallets/**", "/referentiels/**",
-				 * "/users/**", "/login").authenticated() ;
-				 */
-				.antMatchers("/propositions/**", "/reponses/**", "/echanges/**", "/evaluations/**", "/transactions/**",
-						"/wallets/**", "/referentiels/**", "/documents/**", "/users/**", "/login")
+		http.authorizeRequests()
+				.antMatchers("/accueil", "/propositions", "/echanges").permitAll()
+				.antMatchers("/propositions/**", "/propositions/adherent/**", "/reponses/**", "/echanges/**",
+						"/echanges/adherent/**", "/evaluations/**", "/transactions/**", "/wallets/**",
+						"/referentiels/**", "/documents/**", "/accounts/**", "/accueilAdmin", "/login")
 				.authenticated();
 
 	}

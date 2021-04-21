@@ -1,6 +1,5 @@
 package com.microselbourse.configurations;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -47,9 +46,9 @@ public class SpringFoxConfig {
 
          return new ApiInfoBuilder()
 
-                 .title("BOURSE D'ECHANGES DU SEL")
+                 .title("ADHERENTS DE LA BOURSE D'ECHANGES DU SEL")
 
-                 .description("Microservice de gestion de la bourse d'échanges d'un Système d'Echanges Local associatif de type SEL")
+                 .description("Microservice de gestion des utilisateurs de la bourse d'échanges d'un Système d'Echanges Local associatif de type SEL")
 
                  .version("0.0.1")
 

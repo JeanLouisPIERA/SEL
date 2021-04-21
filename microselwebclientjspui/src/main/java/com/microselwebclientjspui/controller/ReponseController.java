@@ -14,7 +14,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microselwebclientjspui.dto.ReponseDTO;
-import com.microselwebclientjspui.errors.PropositionExceptionMessage;
+import com.microselwebclientjspui.errors.ConvertToExceptionMessage;
 import com.microselwebclientjspui.objets.EnumCategorie;
 import com.microselwebclientjspui.objets.EnumTradeType;
 import com.microselwebclientjspui.objets.Proposition;
@@ -32,7 +32,7 @@ public class ReponseController {
 	@Autowired
 	private ObjectMapper mapper;
 	@Autowired
-	private PropositionExceptionMessage propositionExceptionMessage;
+	private ConvertToExceptionMessage convertToExceptionMessage; 
 
 //CREATE PROPOSITION *****************************************************************************************************
 
@@ -71,7 +71,7 @@ public class ReponseController {
 			Reponse reponseToCreate = reponseService.createReponse(id, reponseDTO);
 			model.addAttribute("reponse", reponseToCreate);
 		} catch (HttpClientErrorException e) {
-			String errorMessage = propositionExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}

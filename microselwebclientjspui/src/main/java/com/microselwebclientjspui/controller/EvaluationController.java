@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.microselwebclientjspui.dto.EvaluationDTO;
-import com.microselwebclientjspui.errors.EvaluationExceptionMessage;
+import com.microselwebclientjspui.errors.ConvertToExceptionMessage;
 import com.microselwebclientjspui.objets.EnumNoteEchange;
 import com.microselwebclientjspui.objets.Evaluation;
 import com.microselwebclientjspui.service.IEchangeService;
@@ -26,7 +26,7 @@ public class EvaluationController {
 	private IEchangeService echangeService;
 
 	@Autowired
-	private EvaluationExceptionMessage evaluationExceptionMessage;
+	private ConvertToExceptionMessage convertToExceptionMessage;
 
 	@Autowired
 	private IEvaluationService evaluationService;
@@ -39,14 +39,7 @@ public class EvaluationController {
 
 		model.addAttribute("echangeId", echangeId);
 
-		// EvaluationDTO evaluationDTO = new EvaluationDTO();
 		model.addAttribute("evaluationDTO", new EvaluationDTO());
-
-		/*
-		 * Echange echangeToEvaluate = echangeService.searchById(echangeId);
-		 * List<Evaluation> evaluations = echangeToEvaluate.get
-		 * model.addAttribute("echange", echangeToEvaluate);
-		 */
 
 		model.addAttribute("enumNoteEchange", EnumSet.allOf(EnumNoteEchange.class));
 
@@ -60,23 +53,17 @@ public class EvaluationController {
 	public String createEvaluation(Model model, @PathVariable Long echangeId,
 			@ModelAttribute("evaluationDTO") EvaluationDTO evaluationDTO, BindingResult result) {
 
-		/*
-		 * if(result.hasErrors()) { return "evaluations/evaluationCreation"; }
-		 */
-
-		/* Object evaluationToCreate = new Object(); */
-
-		Evaluation evaluationToCreate = evaluationService.createEvaluation(echangeId, evaluationDTO);
-		model.addAttribute("evaluation", evaluationToCreate);
+		if (result.hasErrors()) {
+			return "evaluations/evaluationCreation";
+		}
 
 		try {
-			System.out.println("adherent_Id" + evaluationDTO.getEnumNoteEchange().toString());
-			/*
-			 * Evaluation evaluationToCreate = evaluationService.createEvaluation(echangeId,
-			 * evaluationDTO); model.addAttribute("evaluation", evaluationToCreate);
-			 */
+
+			Evaluation evaluationToCreate = evaluationService.createEvaluation(echangeId, evaluationDTO);
+			model.addAttribute("evaluation", evaluationToCreate);
+
 		} catch (HttpClientErrorException e) {
-			String errorMessage = evaluationExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}

@@ -55,7 +55,6 @@ public class EchangeServiceImpl implements IEchangeService {
 	public Page<Echange> searchByCriteria(EchangeCriteria echangeCriteria, Pageable pageable) {
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -65,6 +64,71 @@ public class EchangeServiceImpl implements IEchangeService {
 				.queryParam("emetteurUsername", echangeCriteria.getEmetteurUsername())
 				.queryParam("recepteurUsername", echangeCriteria.getRecepteurUsername())
 				.queryParam("page", pageable.getPageNumber()).queryParam("size", pageable.getPageSize());
+
+		ResponseEntity<RestResponsePage<Echange>> echanges = restTemplate.exchange(builder.build().toUriString(),
+				HttpMethod.GET, entity, new ParameterizedTypeReference<RestResponsePage<Echange>>() {
+				});
+
+		Page<Echange> pageEchange = echanges.getBody();
+
+		return pageEchange;
+	}
+	
+	@Override
+	public Page<Echange> searchByCriteriaByAdherentRecepteur(EchangeCriteria echangeCriteria, Pageable pageable) {
+		HttpHeaders headers = new HttpHeaders();
+
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		String userId = userService.identifyPrincipalId();
+		echangeCriteria.setRecepteurId(userId);
+		
+		String userUsername = userService.identifyPrincipalUsername();
+		echangeCriteria.setRecepteurUsername(userUsername);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLEchangeAll)
+				.queryParam("id", echangeCriteria.getId())
+				.queryParam("emetteurId", echangeCriteria.getEmetteurId())
+				.queryParam("recepteurId", echangeCriteria.getRecepteurId())
+				.queryParam("titre", echangeCriteria.getTitre())
+				.queryParam("statutEchange", echangeCriteria.getStatutEchange())
+				.queryParam("emetteurUsername", echangeCriteria.getEmetteurUsername())
+				.queryParam("recepteurUsername", echangeCriteria.getRecepteurUsername())
+				.queryParam("page", pageable.getPageNumber())
+				.queryParam("size", pageable.getPageSize());
+
+		ResponseEntity<RestResponsePage<Echange>> echanges = restTemplate.exchange(builder.build().toUriString(),
+				HttpMethod.GET, entity, new ParameterizedTypeReference<RestResponsePage<Echange>>() {
+				});
+
+		Page<Echange> pageEchange = echanges.getBody();
+
+		return pageEchange;
+	}
+	
+	@Override
+	public Page<Echange> searchByCriteriaByAdherentEmetteur(EchangeCriteria echangeCriteria, Pageable pageable) {
+		
+		HttpHeaders headers = new HttpHeaders();
+
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		String userId = userService.identifyPrincipalId();
+		echangeCriteria.setEmetteurId(userId);
+		
+		String userUsername = userService.identifyPrincipalUsername();
+		echangeCriteria.setEmetteurUsername(userUsername);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLEchangeAll)
+				.queryParam("id", echangeCriteria.getId())
+				.queryParam("emetteurId", echangeCriteria.getEmetteurId())
+				.queryParam("recepteurId", echangeCriteria.getRecepteurId())
+				.queryParam("titre", echangeCriteria.getTitre())
+				.queryParam("statutEchange", echangeCriteria.getStatutEchange())
+				.queryParam("emetteurUsername", echangeCriteria.getEmetteurUsername())
+				.queryParam("recepteurUsername", echangeCriteria.getRecepteurUsername())
+				.queryParam("page", pageable.getPageNumber())
+				.queryParam("size", pageable.getPageSize());
 
 		ResponseEntity<RestResponsePage<Echange>> echanges = restTemplate.exchange(builder.build().toUriString(),
 				HttpMethod.GET, entity, new ParameterizedTypeReference<RestResponsePage<Echange>>() {
@@ -207,4 +271,8 @@ public class EchangeServiceImpl implements IEchangeService {
 		return response.getBody();
 		
 	}
+
+	
+
+	
 }

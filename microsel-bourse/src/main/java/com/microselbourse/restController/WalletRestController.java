@@ -54,9 +54,9 @@ public class WalletRestController {
 			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
 			@ApiResponse(code = 413, message = "Le portefeuille que vous voulez consulter n'existe pas"), })
 
-	@GetMapping("/user/wallets/user/{id}")
-	public ResponseEntity<Wallet> readWalletByUserId(@PathVariable @Valid String id) throws EntityNotFoundException {
-		return new ResponseEntity<Wallet>(walletService.readByUserId(id), HttpStatus.OK);
+	@GetMapping("/user/wallets/adherent")
+	public ResponseEntity<Wallet> readWalletByUserId(@PathParam("userId") String userId) throws EntityNotFoundException {
+		return new ResponseEntity<Wallet>(walletService.readByUserId(userId), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Consultation d'un portefeuille par son N° identifiant", response = Wallet.class)
@@ -64,9 +64,11 @@ public class WalletRestController {
 			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
 			@ApiResponse(code = 413, message = "Le portefeuille que vous voulez consulter n'existe pas"), })
 
-	@GetMapping("/bureau/wallets/{id}")
+	@GetMapping("/user/wallets/{id}")
 	public ResponseEntity<Wallet> readWalletById(@PathVariable @Valid Long id) throws EntityNotFoundException {
 		return new ResponseEntity<Wallet>(walletService.readById(id), HttpStatus.OK);
 	}
+	
+	
 
 }

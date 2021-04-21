@@ -22,28 +22,35 @@ public class Role implements Serializable {
 	@Id
 	@Column(name = "id", length = 36)
 	String id;
-
+	
+	@JsonIgnore
 	@Column(name = "client_realm_constraint", length = 36)
 	String clientRealmConstraint;
 
+	@JsonIgnore
 	@Column(name = "client_role", length = 1)
 	Boolean clientRole;
 
+	@JsonIgnore
 	@Column(name = "description", length = 255)
 	String description;
 
 	@Column(name = "name", length = 255)
 	String name;
 
+	@JsonIgnore
 	@Column(name = "realm_id", length = 255)
 	String realmId;
 
+	@JsonIgnore
 	@Column(name = "client", length = 36)
 	String client;
 
+	@JsonIgnore
 	@Column(name = "realm", length = 36)
 	String realm;
 
+	@JsonIgnore
 	@ManyToMany(mappedBy = "roles")
 	private List<User> users = new ArrayList<User>();
 

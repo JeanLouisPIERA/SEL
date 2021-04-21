@@ -10,7 +10,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableConfigurationProperties
 @EnableDiscoveryClient
 @EnableFeignClients("com.microseluser")
-
 public class MicroseluserApplication {
 
 	public static void main(String[] args) {

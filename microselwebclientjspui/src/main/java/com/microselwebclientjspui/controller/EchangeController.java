@@ -16,7 +16,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microselwebclientjspui.criteria.EchangeCriteria;
-import com.microselwebclientjspui.errors.EchangeExceptionMessage;
+import com.microselwebclientjspui.errors.ConvertToExceptionMessage;
 import com.microselwebclientjspui.objets.Echange;
 import com.microselwebclientjspui.objets.EnumStatutEchange;
 import com.microselwebclientjspui.objets.Evaluation;
@@ -32,7 +32,7 @@ public class EchangeController {
 	@Autowired
 	private ObjectMapper mapper;
 	@Autowired
-	private EchangeExceptionMessage echangeExceptionMessage;
+	private ConvertToExceptionMessage convertToExceptionMessage;
 	@Autowired
 	private IEvaluationService evaluationService;
 	@Autowired
@@ -47,7 +47,7 @@ public class EchangeController {
 	@GetMapping(value = "/echanges")
 	public String searchByCriteria(Model model, @PathParam(value = "echangeCriteria") EchangeCriteria echangeCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "6") int size) {
+			@RequestParam(name = "size", defaultValue = "10") int size) {
 
 		model.addAttribute("echangeCriteria", new EchangeCriteria());
 		model.addAttribute("enumStatutEchangeList", EnumStatutEchange.getListEnumStatutEchange());
@@ -64,6 +64,55 @@ public class EchangeController {
 		return "echanges/echangesPage";
 
 	}
+	
+	/**
+	 * Permet d'afficher à un adhérent d'afficher une sélection de ses échanges où il est récepteur sous forme de page
+	 */
+	@GetMapping(value = "/echanges/recepteur")
+	public String searchByCriteriaByAdherentRecepteur(Model model, @PathParam(value = "echangeCriteria") EchangeCriteria echangeCriteria,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "10") int size) {
+
+		model.addAttribute("echangeCriteria", new EchangeCriteria());
+		model.addAttribute("enumStatutEchangeList", EnumStatutEchange.getListEnumStatutEchange());
+
+		Page<Echange> echanges = echangeService.searchByCriteriaByAdherentRecepteur(echangeCriteria, PageRequest.of(page, size));
+
+		model.addAttribute("echanges", echanges.getContent());
+		model.addAttribute("page", Integer.valueOf(page));
+		model.addAttribute("number", echanges.getNumber());
+		model.addAttribute("totalPages", echanges.getTotalPages());
+		model.addAttribute("totalElements", echanges.getTotalElements());
+		model.addAttribute("size", echanges.getSize());
+
+		return "echanges/echangesPageAdherentRecepteur";
+
+	}
+	
+	/**
+	 * Permet d'afficher à un adhérent d'afficher une sélection de ses échanges où il est émetteur sous forme de page
+	 */
+	@GetMapping(value = "/echanges/emetteur")
+	public String searchByCriteriaByAdherentEmetteur(Model model, @PathParam(value = "echangeCriteria") EchangeCriteria echangeCriteria,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "10") int size) {
+
+		model.addAttribute("echangeCriteria", new EchangeCriteria());
+		model.addAttribute("enumStatutEchangeList", EnumStatutEchange.getListEnumStatutEchange());
+
+		Page<Echange> echanges = echangeService.searchByCriteriaByAdherentEmetteur(echangeCriteria, PageRequest.of(page, size));
+
+		model.addAttribute("echanges", echanges.getContent());
+		model.addAttribute("page", Integer.valueOf(page));
+		model.addAttribute("number", echanges.getNumber());
+		model.addAttribute("totalPages", echanges.getTotalPages());
+		model.addAttribute("totalElements", echanges.getTotalElements());
+		model.addAttribute("size", echanges.getSize());
+
+		return "echanges/echangesPageAdherentEmetteur";
+
+	}
+
 
 	/**
 	 * Permet de lire les évaluations d'un échange
@@ -80,7 +129,13 @@ public class EchangeController {
 			model.addAttribute("evaluations", evaluations);
 
 		} catch (HttpClientErrorException e) {
-			String errorMessage = echangeExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
+			/*
+			 * String errorMessage =
+			 * echangeExceptionMessage.convertCodeStatusToExceptionMessage(e.
+			 * getRawStatusCode()); model.addAttribute("error", errorMessage); return
+			 * "/error";
+			 */
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}
@@ -98,9 +153,16 @@ public class EchangeController {
 			Echange echangeAConfirmer = echangeService.confirmerEchange(id);
 			model.addAttribute("echange", echangeAConfirmer);
 		} catch (HttpClientErrorException e) {
-			String errorMessage = echangeExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
+			/*
+			 * String errorMessage =
+			 * echangeExceptionMessage.convertCodeStatusToExceptionMessage(e.
+			 * getRawStatusCode()); model.addAttribute("error", errorMessage); return
+			 * "/error";
+			 */
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
+			
 		}
 
 		return "echanges/echangeConfirmation";
@@ -115,7 +177,7 @@ public class EchangeController {
 			Echange echangeAAnnuler = echangeService.annulerEchange(id);
 			model.addAttribute("echange", echangeAAnnuler);
 		} catch (HttpClientErrorException e) {
-			String errorMessage = echangeExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}
@@ -131,7 +193,7 @@ public class EchangeController {
 			Echange echangeAValider = echangeService.emetteurValiderEchange(id);
 			model.addAttribute("echange", echangeAValider);
 		} catch (HttpClientErrorException e) {
-			String errorMessage = echangeExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}
@@ -147,7 +209,7 @@ public class EchangeController {
 			Echange echangeAValider = echangeService.recepteurValiderEchange(id);
 			model.addAttribute("echange", echangeAValider);
 		} catch (HttpClientErrorException e) {
-			String errorMessage = echangeExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}
@@ -163,7 +225,7 @@ public class EchangeController {
 			Echange echangeARefuser = echangeService.emetteurRefuserEchange(id);
 			model.addAttribute("echange", echangeARefuser);
 		} catch (HttpClientErrorException e) {
-			String errorMessage = echangeExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}
@@ -179,7 +241,7 @@ public class EchangeController {
 			Echange echangeARefuser = echangeService.recepteurRefuserEchange(id);
 			model.addAttribute("echange", echangeARefuser);
 		} catch (HttpClientErrorException e) {
-			String errorMessage = echangeExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}
@@ -195,7 +257,7 @@ public class EchangeController {
 			Echange echangeAValider = echangeService.validerEchange(id);
 			model.addAttribute("echange", echangeAValider);
 		} catch (HttpClientErrorException e) {
-			String errorMessage = echangeExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}
@@ -211,7 +273,7 @@ public class EchangeController {
 			Echange echangeARefuser = echangeService.refuserEchange(id);
 			model.addAttribute("echange", echangeARefuser);
 		} catch (HttpClientErrorException e) {
-			String errorMessage = echangeExceptionMessage.convertCodeStatusToExceptionMessage(e.getRawStatusCode());
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}

@@ -12,5 +12,7 @@ import com.microselbourse.entities.Wallet;
 public interface IWalletRepository extends JpaRepository<Wallet, Long>, JpaSpecificationExecutor<Wallet> {
 
 	Optional<Wallet> readByTitulaireId(String titulaireId);
+	
+	Optional<Wallet> findByTitulaireId(String titulaireId);
 
 }

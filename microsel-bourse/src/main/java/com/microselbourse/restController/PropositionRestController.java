@@ -74,13 +74,10 @@ public class PropositionRestController {
 
 		Page<Proposition> propositions = propositionService.searchAllPropositionsByCriteria(propositionCriteria,
 				PageRequest.of(page, size));
-		List<Proposition> propositionsList = propositions.getContent();
-		for (Proposition proposition : propositionsList) {
-			System.out.println("titre" + proposition.getTitre());
-		}
 		return new ResponseEntity<Page<Proposition>>(propositions, HttpStatus.OK);
 	}
-
+	
+	
 	@ApiOperation(value = "Consultation d'une proposition par un adhérent", response = Proposition.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "La proposition recherchée a été trouvée"),
 			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),

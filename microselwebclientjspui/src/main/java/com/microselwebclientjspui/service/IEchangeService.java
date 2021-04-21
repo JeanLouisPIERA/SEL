@@ -1,6 +1,7 @@
 package com.microselwebclientjspui.service;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.microselwebclientjspui.criteria.EchangeCriteria;
@@ -27,5 +28,9 @@ public interface IEchangeService {
 	Echange validerEchange(Long id);
 
 	Echange refuserEchange(Long id);
+
+	Page<Echange> searchByCriteriaByAdherentEmetteur(EchangeCriteria echangeCriteria, Pageable pageable);
+	
+	Page<Echange> searchByCriteriaByAdherentRecepteur(EchangeCriteria echangeCriteria, Pageable pageable);
 
 }

@@ -8,5 +8,7 @@ import com.microselwebclientjspui.objets.Transaction;
 public interface ITransactionService {
 
 	Page<Transaction> findAllByWalletId(Long walletId, Pageable pageable);
+	
+	Page<Transaction> findAllByWalletIdByAdherent(Long walletId, Pageable pageable);
 
 }

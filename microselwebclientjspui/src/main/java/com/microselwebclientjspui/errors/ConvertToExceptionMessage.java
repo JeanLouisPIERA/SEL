@@ -4,21 +4,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
 @Component
-public class PropositionExceptionMessage {
-	
-	public String convertCodeStatusToExceptionMessage(Integer StatusCode) {
-		String message ="";
-		
-		if (StatusCode ==423) {
-			message =  "PROLONGATION IMPOSSIBLE = Le statut de cette proposition n'est pas correct";
-			}
-		
-		return message;
-	
-	}
+public class ConvertToExceptionMessage {
 	
 	public String convertHttpClientErrorExceptionToExceptionMessage (HttpClientErrorException e) {
-	
+		
 		String message = e.getResponseBodyAsString();
 		int start, end;
 		start =  message.lastIndexOf(":", message.lastIndexOf(",")-1) + 2;

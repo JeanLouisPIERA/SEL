@@ -15,11 +15,15 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id", scope = Reponse.class)
 @Entity
 @Table(name = "reponses")
 public class Reponse {
@@ -117,7 +121,8 @@ public class Reponse {
 	 * *****************************************************************************
 	 * ***********************************************
 	 */
-
+	
+	
 	@ManyToOne
 	@JoinColumn(name = "proposition_id")
 	private Proposition proposition;
@@ -243,13 +248,7 @@ public class Reponse {
 		this.echange = echange;
 	}
 
-	/*
-	 * @Override public String toString() { return "Reponse [id=" + id +
-	 * ", recepteurId=" + recepteurId + ", enumTradeType=" + enumTradeType +
-	 * ", titre=" + titre + ", description=" + description + ", image=" + image +
-	 * ", ville=" + ville + ", codePostal=" + codePostal + ", valeur=" + valeur +
-	 * ", dateEcheance=" + dateEcheance + ", dateReponse=" + dateReponse +
-	 * ", proposition=" + proposition + ", echange=" + echange + "]"; }
-	 */
+	
+	
 
 }

@@ -57,6 +57,8 @@ public class PropositionServiceImpl implements IPropositionService {
 	private IWalletService walletService;
 	@Autowired
 	private IBlocageRepository blocageRepository;
+	@Autowired
+	private RabbitMQSender rabbitMQSender;
 
 	@Override
 	public Proposition createProposition(PropositionDTO propositionDTO)
@@ -102,13 +104,13 @@ public class PropositionServiceImpl implements IPropositionService {
 
 		propositionToCreate.setCategorie(categorieFound.get());
 		propositionToCreate.setEmetteurId(propositionDTO.getEmetteurId());
-		// (emetteurProposition.getId());
 		propositionToCreate.setDateDebut(LocalDate.now());
 		propositionToCreate.setStatut(EnumStatutProposition.ENCOURS);
 
 		Optional<Wallet> walletEmetteur = walletRepository.readByTitulaireId(emetteurProposition.getId());
 		if (walletEmetteur.isEmpty()) {
-			Wallet emetteurWalletCreated = walletService.createWallet(emetteurProposition.getId());
+			//Wallet emetteurWalletCreated = walletService.createWallet(emetteurProposition.getId());
+			rabbitMQSender.sendMessageCreateWallet(emetteurProposition);
 			return propositionRepository.save(propositionToCreate);
 		}
 
@@ -123,6 +125,8 @@ public class PropositionServiceImpl implements IPropositionService {
 		Page<Proposition> propositions = propositionRepository.findAll(propositionSpecification, pageable);
 		return propositions;
 	}
+	
+	
 
 	@Override
 	public Proposition readProposition(Long id) throws EntityNotFoundException {
@@ -205,5 +209,7 @@ public class PropositionServiceImpl implements IPropositionService {
 		propositionToClose.get().setStatut(EnumStatutProposition.CLOTUREE);
 		return propositionRepository.save(propositionToClose.get());
 	}
+
+	
 
 }
