@@ -59,6 +59,7 @@ public class UserServiceImpl implements IUserService {
 				Pageable pageable) {
 			Specification<User> userSpecification = new UserSpecification(userCriteria);
 			Page<User> users = userRepository.findAll(userSpecification, pageable);
+			
 			return users;
 		}
 

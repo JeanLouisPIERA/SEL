@@ -12,7 +12,9 @@ public class UserCriteria {
 
 	String role;
 
-	String realm;
+	String description;
+	
+	String defaultRole;
 
 	public UserCriteria() {
 		super();
@@ -50,14 +52,12 @@ public class UserCriteria {
 		this.username = username;
 	}
 
-	
-
-	public String getRealm() {
-		return realm;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setRealm(String realm) {
-		this.realm = realm;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getRole() {
@@ -67,5 +67,15 @@ public class UserCriteria {
 	public void setRole(String role) {
 		this.role = role;
 	}
+
+	public String getDefaultRole() {
+		return defaultRole;
+	}
+
+	public void setDefaultRole(String defaultRole) {
+		this.defaultRole = defaultRole;
+	}
+	
+	
 
 }

@@ -26,7 +26,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 		super.configure(http);
 		http.authorizeRequests()
 				.antMatchers("/accueil", "/propositions", "/echanges").permitAll()
-				.antMatchers("/propositions/**", "/propositions/adherent/**", "/reponses/**", "/echanges/**",
+				.antMatchers("/propositions/**", "/propositions/adherent/**", "/propositions/close/**", "/reponses/**", "/echanges/**",
 						"/echanges/adherent/**", "/evaluations/**", "/transactions/**", "/wallets/**",
 						"/referentiels/**", "/documents/**", "/accounts/**", "/accueilAdmin", "/login")
 				.authenticated();

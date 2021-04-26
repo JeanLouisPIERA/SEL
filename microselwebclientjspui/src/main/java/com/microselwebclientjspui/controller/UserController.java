@@ -58,37 +58,6 @@ public class UserController {
 		return "accueilAdmin";
 	}
 
-	/*
-	 * @GetMapping("/registration") public String showRegistrationForm(Model model)
-	 * { model.addAttribute("user", new UserDTO()); return "registration"; }
-	 * 
-	 * @PostMapping("/registration") public String registerUserAccount(Model
-	 * model, @ModelAttribute("user") @Valid UserDTO userDTO, BindingResult result)
-	 * {
-	 * 
-	 * if (result.hasErrors()) { return "registration"; }
-	 * 
-	 * try { ResponseEntity<User> reponseAdherentCreated =
-	 * userService.enregistrerCompteAdherent(userDTO); } catch
-	 * (HttpClientErrorException e) {
-	 * 
-	 * String errorMessage = errorDecoder.decode(null, null);
-	 * reservationExceptionMessage.convertCodeStatusToExceptionMessage(e.
-	 * getRawStatusCode());
-	 * 
-	 * model.addAttribute("error", errorMessage); return "/error";
-	 * 
-	 * }
-	 * 
-	 * return "redirect:/registration?success"; }
-	 */
-
-	/*
-	 * @GetMapping("/users/accueilAdherent") public String indexAdherent() {
-	 * 
-	 * return "users/accueilAdherent"; }
-	 */
-
 	@GetMapping("/accounts/account")
 	public String selIndex(Model model) {
 		
@@ -101,18 +70,20 @@ public class UserController {
 
 		return "users/userView";
 	}
+	
+	@GetMapping("/accounts/{id}")
+	public String searchById(Model model, @PathVariable String id) {
+		
+		User adherent = userService.searchById(id);
+		
+		List<Role> roles = roleService.getRolesByUserId(id);
 
-	/*
-	 * @GetMapping("/accounts") public String displayAllUsers(Model model) {
-	 * 
-	 * List<User> adherents = userService.listeDesAdherents();
-	 * 
-	 * Page pageAdherents = new PageImpl(adherents);
-	 * 
-	 * model.addAttribute("adherents", adherents);
-	 * 
-	 * return "users/adherents"; }
-	 */
+		model.addAttribute("adherent", adherent);
+		model.addAttribute("roles", roles);
+
+		return "users/userPageView";
+	}
+
 
 	/**
 	 * Permet d'afficher une sélection les portefeuilles sous forme de page

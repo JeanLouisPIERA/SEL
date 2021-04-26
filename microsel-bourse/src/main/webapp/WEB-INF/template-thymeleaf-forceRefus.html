@@ -1,0 +1,50 @@
+<!-- DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml"-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Template du email de suppression</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href='http://fonts.googleapis.com/css?family=Roboto'
+	rel='stylesheet' type='text/css' />
+<!-- use the font -->
+<style>
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: 20px;
+}
+</style>
+</head>
+<body>
+	<p>
+		Objet: Suppression de votre échange N° <span th:text="${echangeId}"></span> enregistré le
+		<span
+			th:text="${#temporals.format(dateEcheance, 'dd-MMMM-yyyy', new java.util.Locale('fr', 'FR'))}"></span>
+	</p>
+	<p th:text="${'Bonjour ' + nomUser}"></p>
+	<p>
+		Vous n'avez pas formulé d'avis sur le dénouement de votre échange sous rubrique avant la date d'échéance comme le stipule le règlement du SEL.
+		
+		Votre contrepartie a pour sa part refusé cet échange qui est donc refusé. 
+		
+		Aucune transaction ne sera donc enregistrée.
+		
+		Nous vous informons que vous ne pouvez plus intervenir sur cet échange, ni formuler d'avis.
+		
+		Vous n'avez momentanément plus accès à la Bourse d'échanges et nous vous demandons de vous rapprocher de notre administrateur pour rétablir 
+		votre accès.
+		</b>
+	</p>
+	<p>
+			
+	</p>
+	
+	<p>
+		Nous restons bien cordialement à votre disposition.<br />
+	</p>
+	<p>L'équipe SEL</p>
+
+
+</body>
+</html>

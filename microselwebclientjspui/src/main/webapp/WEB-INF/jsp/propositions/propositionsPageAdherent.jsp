@@ -23,19 +23,6 @@
 
 		<div class="container col-md-8 col-md-offset-1">
 
-			<div class="wrapper">
-
-				<div>
-					<a type="button" class="btn btn-primary btn-md"
-						href="/propositions/newProposition">Publier une nouvelle
-						proposition</a> <br> <br>
-				</div>
-			</div>
-		</div>
-
-
-		<div class="container col-md-8 col-md-offset-1">
-
 			<div class="wrapper"></div>
 		</div>
 
@@ -53,7 +40,8 @@
 						<div class="panel-body">
 
 							<form:form class="form-inline d-flex bd-highlight"
-								action="/propositions/adherent" method="GET" modelAttribute="proposition">
+								action="/propositions/adherent" method="GET"
+								modelAttribute="proposition">
 
 								<fieldset class="form-row">
 
@@ -128,10 +116,7 @@
 										</select>
 									</fieldset>
 
-									<fieldset class="form-group">
-										<label>Pseudo de l'adhérent :</label> <input type="text"
-											name="emetteurUsername" value="${propositionCriteria.emetteurUsername}" />
-									</fieldset>
+									
 
 									<%-- <form:select path="selectEnumStatutProposition">
 				    <form:option value="0" label="Choisissez la situation de la proposition" />
@@ -155,7 +140,7 @@
 						<div class="panel panel-primary">
 							<div class="panel-heading">
 								<h3>
-									<center>Propositions</center>
+									<center> Vos Propositions</center>
 								</h3>
 							</div>
 							<div class="panel-body">
@@ -195,11 +180,13 @@
 												</td>
 
 
+												<td><a type="button" class="btn btn-warning"
+													href="/propositions/${proposition.id}">MaJ</a></td>
+
 												<c:if test="${proposition.statut.getCode()=='ENCOURS'}">
-													<td><a type="button" class="btn btn-success"
-														href="/reponses/newReponse/${proposition.id}">Répondre</a>
-													</td>
-												</c:if>
+												<td><a type="button" class="btn btn-danger"
+													href="/propositions/close/${proposition.id}">Clôturer</a></td>
+												</c:if>	
 
 
 											</tr>

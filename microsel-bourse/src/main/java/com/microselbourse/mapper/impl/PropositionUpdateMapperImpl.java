@@ -1,19 +1,23 @@
 package com.microselbourse.mapper.impl;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.microselbourse.dto.PropositionDTO;
+import com.microselbourse.dto.PropositionUpdateDTO;
+import com.microselbourse.entities.EnumCategorie;
 import com.microselbourse.entities.EnumTradeType;
 import com.microselbourse.entities.Proposition;
 import com.microselbourse.mapper.IPropositionMapper;
+import com.microselbourse.mapper.IPropositionUpdateMapper;
 
 
 
 @Service
-public class PropositionMapperImpl implements IPropositionMapper{
+public class PropositionUpdateMapperImpl implements IPropositionUpdateMapper{
 	
 	@Value("${application.dateTimezone}")
 	private Integer dateTimezone;
@@ -22,44 +26,50 @@ public class PropositionMapperImpl implements IPropositionMapper{
 	//DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
 	
 	@Override
-	public PropositionDTO propositionTopropositionDTO(Proposition entity) {
+	public PropositionUpdateDTO propositionTopropositionUpdateDTO(Proposition entity) {
 		
 		if ( entity == null ) {
             return null;
         }
 
-        PropositionDTO propositionDTO = new PropositionDTO();
+        PropositionUpdateDTO propositionUpdateDTO = new PropositionUpdateDTO();
         
-        propositionDTO.setEmetteurId(entity.getEmetteurId());
-        propositionDTO.setEmetteurUsername(entity.getEmetteurUsername());
-        propositionDTO.setCodePostal( entity.getCodePostal() );
-        propositionDTO.setDescription( entity.getDescription() );
-        propositionDTO.setEnumTradeTypeCode( entity.getEnumTradeType().getCode() );
-        propositionDTO.setImage( entity.getImage() );
-        propositionDTO.setTitre(entity.getTitre());
-        propositionDTO.setValeur(entity.getValeur());
-        propositionDTO.setVille(entity.getVille());
+		/*
+		 * propositionUpdateDTO.setEmetteurId(entity.getEmetteurId());
+		 * propositionUpdateDTO.setEmetteurUsername(entity.getEmetteurUsername());
+		 * propositionUpdateDTO.setEnumTradeTypeCode(
+		 * entity.getEnumTradeType().getCode() );
+		 */
+        propositionUpdateDTO.setCodePostal( entity.getCodePostal() );
+        propositionUpdateDTO.setDescription( entity.getDescription() );
+        propositionUpdateDTO.setImage( entity.getImage() );
+        propositionUpdateDTO.setTitre(entity.getTitre());
+        propositionUpdateDTO.setValeur(entity.getValeur());
+        propositionUpdateDTO.setVille(entity.getVille());
         //propositionDTO.setDateFin(entity.getDateFin().format(formatter));
         //propositionDTO.setDateEcheance(entity.getDateEcheance().format(formatter));
 
-        return propositionDTO;
+        return propositionUpdateDTO;
 		
 	}
 
 
 	@Override
-	public Proposition propositionDTOToProposition(PropositionDTO dto) {
+	public Proposition propositionUpdateDTOToProposition(PropositionUpdateDTO dto) {
 		 if ( dto == null ) {
 	            return null;
 	        }
 
 	        Proposition proposition = new Proposition();
 	        
-	        proposition.setEmetteurId(dto.getEmetteurId());
-	        proposition.setEmetteurUsername(dto.getEmetteurUsername());
+			/*
+			 * proposition.setEmetteurId(dto.getEmetteurId());
+			 * proposition.setEmetteurUsername(dto.getEmetteurUsername());
+			 * proposition.setEnumTradeType(EnumTradeType.getEnumTradeTypeByCode(dto.
+			 * getEnumTradeTypeCode()).get());
+			 */
 	        proposition.setCodePostal( dto.getCodePostal() );
 	        proposition.setDescription( dto.getDescription() );
-	        proposition.setEnumTradeType(EnumTradeType.getEnumTradeTypeByCode(dto.getEnumTradeTypeCode()).get());
 	        proposition.setImage( dto.getImage() );
 	        proposition.setTitre(dto.getTitre());
 	        proposition.setValeur(dto.getValeur());

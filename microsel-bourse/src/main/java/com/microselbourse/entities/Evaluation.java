@@ -1,5 +1,6 @@
 package com.microselbourse.entities;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -19,7 +20,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 @Entity
 @Table(name = "evaluations")
-public class Evaluation {
+public class Evaluation implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

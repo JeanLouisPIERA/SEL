@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.microselbourse.criteria.PropositionCriteria;
 import com.microselbourse.dto.PropositionDTO;
+import com.microselbourse.dto.PropositionUpdateDTO;
 import com.microselbourse.entities.Proposition;
 import com.microselbourse.exceptions.DeniedAccessException;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
@@ -94,11 +95,10 @@ public class PropositionRestController {
 			@ApiResponse(code = 409, message = "Mise à jour impossible : une autre proposition existe déjà avec ces attributs"),
 			@ApiResponse(code = 413, message = "Cette proposition n'existe pas"), })
 
-	@PutMapping(value = "/user/propositions/update/{id}")
-	public ResponseEntity<Proposition> updateProposition(@PathVariable @Valid Long id,
-			@Valid @RequestBody PropositionDTO propositionDTO)
+	@PutMapping(value = "/user/propositions/proposition/{propositionId}/adherent/{emetteurId}")
+	public ResponseEntity<Proposition> updateProposition(@PathVariable @Valid Long propositionId, @PathVariable String emetteurId, @Valid @RequestBody PropositionUpdateDTO propositionUpdateDTO)
 			throws EntityNotFoundException, DeniedAccessException, EntityAlreadyExistsException {
-		return new ResponseEntity<Proposition>(propositionService.updateProposition(id, propositionDTO), HttpStatus.OK);
+		return new ResponseEntity<Proposition>(propositionService.updateProposition(propositionId, emetteurId, propositionUpdateDTO), HttpStatus.OK);
 
 	}
 
@@ -109,10 +109,10 @@ public class PropositionRestController {
 			@ApiResponse(code = 423, message = "Clôture impossible"),
 			@ApiResponse(code = 413, message = "Cette proposition n'existe pas"), })
 
-	@PutMapping(value = "/user/propositions/close/{id}")
-	public ResponseEntity<Proposition> closeProposition(@PathVariable @Valid Long id)
+	@PutMapping(value = "/user/propositions/proposition/close/{id}/adherent/{emetteurId}")
+	public ResponseEntity<Proposition> closeProposition(@PathVariable @Valid Long id, @PathVariable String emetteurId)
 			throws EntityNotFoundException, DeniedAccessException, EntityAlreadyExistsException {
-		return new ResponseEntity<Proposition>(propositionService.closeProposition(id), HttpStatus.OK);
+		return new ResponseEntity<Proposition>(propositionService.closeProposition(id, emetteurId), HttpStatus.OK);
 	}
 
 }

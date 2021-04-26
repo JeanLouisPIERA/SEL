@@ -28,7 +28,7 @@
  <div class="panel panel-primary ">
  
   <div class="panel-heading">
-   <h5>Fiche d'information de la proposition N° ${readProposition.id} avec le N° Adhérent N° ${readProposition.emetteurId}</h5>
+   <h5>Fiche d'information de la proposition N° ${proposition.id} avec le N° Adhérent ${proposition.emetteurUsername}</h5>
   </div>
   
   <div class="panel-body">
@@ -174,7 +174,7 @@
 								          && not empty reponse.echange.statutEchange.getCode()}"> 
 								          <td>
 								          	<a type="button"  class="btn btn-primary" 
-								        	href="/echanges/evaluations/${reponse.echange.getId()}">Consulter Echange</a>
+								        	href="/echanges/evaluations/${reponse.echange.getId()}">Consulter</a>
 								          </td>
 								          </c:if>
 								          

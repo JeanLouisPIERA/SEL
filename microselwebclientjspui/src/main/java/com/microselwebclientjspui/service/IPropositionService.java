@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.microselwebclientjspui.criteria.PropositionCriteria;
 import com.microselwebclientjspui.dto.PropositionDTO;
+import com.microselwebclientjspui.dto.PropositionUpdateDTO;
 import com.microselwebclientjspui.objets.Proposition;
 
 public interface IPropositionService {
@@ -13,14 +14,15 @@ public interface IPropositionService {
 
 	public Proposition searchById(long id);
 
-	public Proposition updateProposition(Proposition proposition);
+	public Proposition updateProposition(Long propositionId, PropositionUpdateDTO propositionUpdateDTO);
 
-	public void closeProposition(Long id);
+	public Proposition closeProposition(Long id);
 
 	public Page<Proposition> searchByCriteria(PropositionCriteria propositionCriteria, Pageable pageable);
-			
 
-	public Page<Proposition> searchByCriteriaByAdherent(PropositionCriteria propositionCriteria, 
+	public Page<Proposition> searchByCriteriaByAdherent(PropositionCriteria propositionCriteria, Pageable pageable);
+
+	public Page<Proposition> searchByCriteriaByAdherentId(String adherentId, PropositionCriteria propositionCriteria,
 			Pageable pageable);
 
 }

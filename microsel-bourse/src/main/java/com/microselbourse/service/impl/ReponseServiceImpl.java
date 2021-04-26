@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -75,6 +76,10 @@ public class ReponseServiceImpl implements IReponseService {
 
 	@Autowired
 	RabbitMQSender rabbitMQSender;
+	
+	@Value("${application.dateTimezone}")
+	private Integer dateTimezone;
+
 
 	@Override
 	public Reponse createReponse(Long propositionId, ReponseDTO reponseDTO) throws EntityNotFoundException,
@@ -101,7 +106,7 @@ public class ReponseServiceImpl implements IReponseService {
 		Reponse reponseToCreate = reponseMapper.reponseDTOToReponse(reponseDTO);
 
 		reponseToCreate.setDateEcheance(propositionToRespond.get().getDateEcheance());
-		reponseToCreate.setDateReponse(LocalDate.now());
+		reponseToCreate.setDateReponse(LocalDate.now().plusDays(dateTimezone));
 		reponseToCreate.setProposition(propositionToRespond.get());
 
 		if (propositionToRespond.get().getEnumTradeType().equals(EnumTradeType.OFFRE)) {
@@ -109,6 +114,7 @@ public class ReponseServiceImpl implements IReponseService {
 			Reponse reponseCreated = reponseRepository.save(reponseToCreate);
 
 			Echange echange = echangeService.createEchange(reponseCreated.getId());
+			
 
 			List<Reponse> reponses = propositionToRespond.get().getReponses();
 			reponses.add(reponseCreated);
@@ -128,19 +134,23 @@ public class ReponseServiceImpl implements IReponseService {
 			messageToRecepteur.setDestinataire(recepteurProposition);
 			messageToRecepteur.setSubject("Creation d'un nouvel échange");
 			messageToRecepteur.setMicroselBourseMailTemplate("01_RecepteurReponse_EchangeCreation");
-			rabbitMQSender.sendMessageMailReponse(messageToRecepteur);
+			rabbitMQSender.sendMessageMailReponse(messageToRecepteur);//--------------------------------------------------------->RMQ
 
 			MessageMailReponse messageToEmetteur = new MessageMailReponse();
 			messageToEmetteur.setReponse(reponseToCreate);
 			messageToEmetteur.setDestinataire(emetteurProposition);
 			messageToEmetteur.setSubject("Reponse a votre Proposition");
 			messageToEmetteur.setMicroselBourseMailTemplate("02_EmetteurProposition_EchangeCreation");
-			rabbitMQSender.sendMessageMailReponse(messageToEmetteur);
+			rabbitMQSender.sendMessageMailReponse(messageToEmetteur);//---------------------------------------------------------->RMQ
 
 			Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId(recepteurProposition.getId());
 			if (walletRecepteur.isEmpty()) {
-				Wallet recepteurWalletCreated = walletService.createWallet(recepteurProposition.getId());
-				walletRepository.save(recepteurWalletCreated);
+				/*
+				 * Wallet recepteurWalletCreated =
+				 * walletService.createWallet(recepteurProposition.getId());
+				 * walletRepository.save(recepteurWalletCreated);
+				 */
+				rabbitMQSender.sendMessageCreateWallet(recepteurProposition);//-------------------------------------------------->RMQ
 				return reponseCreated;
 			}
 			return reponseCreated;
@@ -170,24 +180,27 @@ public class ReponseServiceImpl implements IReponseService {
 		messageToRecepteur.setDestinataire(recepteurProposition);
 		messageToRecepteur.setSubject("Creation d'un nouvel échange");
 		messageToRecepteur.setMicroselBourseMailTemplate("01_RecepteurReponse_EchangeCreation");
-		rabbitMQSender.sendMessageMailReponse(messageToRecepteur);
+		rabbitMQSender.sendMessageMailReponse(messageToRecepteur);//--------------------------------------------------------------------->RMQ
 
 		MessageMailReponse messageToEmetteur = new MessageMailReponse();
 		messageToEmetteur.setReponse(reponseToCreate);
 		messageToEmetteur.setDestinataire(emetteurProposition);
 		messageToEmetteur.setSubject("Reponse a votre Proposition");
-		messageToEmetteur.setMicroselBourseMailTemplate("02_EmetteurProposition_EchangeCreation");
+		messageToEmetteur.setMicroselBourseMailTemplate("02_EmetteurProposition_EchangeCreation");//------------------------------------->RMQ
 		rabbitMQSender.sendMessageMailReponse(messageToEmetteur);
 
 		Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId(recepteurProposition.getId());
 		if (walletRecepteur.isEmpty()) {
-			Wallet recepteurWalletCreated = walletService.createWallet(recepteurProposition.getId());
-			walletRepository.save(recepteurWalletCreated);
-			return reponseCreated;
+			/*
+			 * Wallet recepteurWalletCreated =
+			 * walletService.createWallet(recepteurProposition.getId());
+			 * walletRepository.save(recepteurWalletCreated);
+			 */
+			rabbitMQSender.sendMessageCreateWallet(recepteurProposition);//-------------------------------------------------------> RMQ
+			return reponseRepository.save(reponseCreated);
 		}
 
-		return reponseCreated;
-
+		return reponseRepository.save(reponseCreated);
 	}
 
 	@Override

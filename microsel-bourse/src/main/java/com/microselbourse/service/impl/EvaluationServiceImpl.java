@@ -17,6 +17,8 @@ import com.microselbourse.dao.IEvaluationRepository;
 import com.microselbourse.dto.EvaluationDTO;
 import com.microselbourse.entities.Echange;
 import com.microselbourse.entities.Evaluation;
+import com.microselbourse.entities.MessageMailEchange;
+import com.microselbourse.entities.MessageMailEchangeEvaluation;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.mapper.IEvaluationMapper;
@@ -42,6 +44,9 @@ public class EvaluationServiceImpl implements IEvaluationService {
 
 	@Autowired
 	private IMailSenderService mailSender;
+	
+	@Autowired
+	private RabbitMQSender rabbitMQSender;
 
 	@Override
 	public Evaluation createEvaluation(Long echangeId, @Valid EvaluationDTO evaluationDTO)
@@ -55,15 +60,6 @@ public class EvaluationServiceImpl implements IEvaluationService {
 				&& !echangeToEvaluate.get().getRecepteurId().equals(evaluationDTO.getAdherentId()))
 			throw new EntityNotFoundException(" Seul un adhérent participant à l'échange peut évaluer l'échange");
 
-		/*
-		 * UserBean adherent =
-		 * adherentsProxy.consulterCompteAdherent(evaluationDTO.getAdherentId());
-		 * if(adherent.getId()!= evaluationDTO.getAdherentId()) throw new
-		 * EntityNotFoundException(
-		 * " L'auteur de l'évaluation n'est pas identifié comme adhérent de l'association"
-		 * );
-		 */
-
 		Optional<Evaluation> evaluationBySameAdherent = evaluationRepository
 				.findByEchangeAndAdherentId(echangeToEvaluate.get(), evaluationDTO.getAdherentId());
 		if (evaluationBySameAdherent.isPresent())
@@ -74,25 +70,48 @@ public class EvaluationServiceImpl implements IEvaluationService {
 
 		evaluationToCreate.setEchange(echangeToEvaluate.get());
 		evaluationToCreate.setDateEvaluation(LocalDate.now());
-
-		System.out.println(evaluationDTO.getAdherentId() == echangeToEvaluate.get().getEmetteurId());
-		System.out.println(evaluationDTO.getAdherentId());
-		System.out.println(echangeToEvaluate.get().getEmetteurId());
+		
+		Evaluation evaluationCreated = evaluationRepository.save(evaluationToCreate);
+		
 
 		if (evaluationDTO.getAdherentId() == echangeToEvaluate.get().getEmetteurId()) {
-			evaluationToCreate.setAdherentUsername(echangeToEvaluate.get().getEmetteurUsername());
+			//evaluationToCreate.setAdherentUsername(echangeToEvaluate.get().getEmetteurUsername());
 			UserBean recepteur = usersProxy.consulterCompteAdherent(echangeToEvaluate.get().getRecepteurId());
-			Evaluation evaluationCreated = evaluationRepository.save(evaluationToCreate);
-			mailSender.sendMailEchangeEvaluation(evaluationCreated, recepteur, "Evaluation de l'echange",
-					"10A_EmetteurProposition_EchangeEvaluation");
+			//Evaluation evaluationCreated = evaluationRepository.save(evaluationToCreate);
+			
+			/*
+			 * mailSender.sendMailEchangeEvaluation(evaluationCreated, recepteur,
+			 * "Evaluation de l'echange", "10A_EmetteurProposition_EchangeEvaluation");
+			 */
+			
+			MessageMailEchangeEvaluation messageEvaluationToRecepteur = new MessageMailEchangeEvaluation();
+			messageEvaluationToRecepteur.setEvaluation(evaluationCreated);
+			messageEvaluationToRecepteur.setDestinataire(recepteur);
+			messageEvaluationToRecepteur.setSubject("Evaluation de l'echange");
+			messageEvaluationToRecepteur.setMicroselBourseMailTemplate("10A_EmetteurProposition_EchangeEvaluation");
+			rabbitMQSender.sendMessageMailEchangeEvaluation(messageEvaluationToRecepteur);
+			
 			return evaluationCreated;
+			
 		} else {
-			evaluationToCreate.setAdherentUsername(echangeToEvaluate.get().getRecepteurUsername());
+			//evaluationToCreate.setAdherentUsername(echangeToEvaluate.get().getRecepteurUsername());
 			UserBean emetteur = usersProxy.consulterCompteAdherent(echangeToEvaluate.get().getEmetteurId());
-			Evaluation evaluationCreated = evaluationRepository.save(evaluationToCreate);
-			mailSender.sendMailEchangeEvaluation(evaluationCreated, emetteur, "Evaluation de l'echange",
-					"10B_RecepteurReponse_EchangeEvaluation");
+			//Evaluation evaluationCreated = evaluationRepository.save(evaluationToCreate);
+			
+			/*
+			 * mailSender.sendMailEchangeEvaluation(evaluationCreated, emetteur,
+			 * "Evaluation de l'echange", "10B_RecepteurReponse_EchangeEvaluation");
+			 */
+			
+			MessageMailEchangeEvaluation messageEvaluationToEmetteur = new MessageMailEchangeEvaluation();
+			messageEvaluationToEmetteur.setEvaluation(evaluationCreated);
+			messageEvaluationToEmetteur.setDestinataire(emetteur);
+			messageEvaluationToEmetteur.setSubject("Evaluation de l'echange");
+			messageEvaluationToEmetteur.setMicroselBourseMailTemplate("10B_RecepteurReponse_EchangeEvaluation");
+			rabbitMQSender.sendMessageMailEchangeEvaluation(messageEvaluationToEmetteur);
+			
 			return evaluationCreated;
+			
 		}
 
 	}

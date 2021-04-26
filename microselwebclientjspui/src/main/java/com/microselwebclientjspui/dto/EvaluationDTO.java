@@ -6,6 +6,8 @@ public class EvaluationDTO {
 
 	private String adherentId;
 
+	private String adherentUsername;
+
 	private String commentaire;
 
 	private EnumNoteEchange enumNoteEchange;
@@ -20,6 +22,14 @@ public class EvaluationDTO {
 
 	public void setAdherentId(String adherentId) {
 		this.adherentId = adherentId;
+	}
+
+	public String getAdherentUsername() {
+		return adherentUsername;
+	}
+
+	public void setAdherentUsername(String adherentUsername) {
+		this.adherentUsername = adherentUsername;
 	}
 
 	public String getCommentaire() {

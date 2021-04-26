@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.microselbourse.criteria.PropositionCriteria;
 import com.microselbourse.dto.PropositionDTO;
+import com.microselbourse.dto.PropositionUpdateDTO;
 import com.microselbourse.entities.Proposition;
 import com.microselbourse.exceptions.DeniedAccessException;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
@@ -20,10 +21,10 @@ public interface IPropositionService {
 
 	Proposition readProposition(Long id) throws EntityNotFoundException;
 
-	Proposition updateProposition(Long id, PropositionDTO propositionDTO)
+	Proposition updateProposition(Long id, String emetteurId, PropositionUpdateDTO propositionUpdateDTO)
 			throws EntityNotFoundException, DeniedAccessException, EntityAlreadyExistsException;
 
-	Proposition closeProposition(Long id) throws EntityNotFoundException, DeniedAccessException;
+	Proposition closeProposition(Long id, String emetteurId) throws EntityNotFoundException, DeniedAccessException;
 
 	
 

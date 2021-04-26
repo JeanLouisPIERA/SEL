@@ -22,6 +22,7 @@ public class EvaluationMapperImpl implements IEvaluationMapper{
         EvaluationDTO evaluationDTO = new EvaluationDTO();
      
         evaluationDTO.setAdherentId(entity.getAdherentId());
+        evaluationDTO.setAdherentUsername(entity.getAdherentUsername());
         evaluationDTO.setCommentaire(entity.getCommentaire());
         evaluationDTO.setEnumNoteEchange(entity.getEnumNoteEchange());
         
@@ -38,6 +39,7 @@ public class EvaluationMapperImpl implements IEvaluationMapper{
 	        Evaluation evaluation = new Evaluation();
 	       
 	        evaluation.setAdherentId(dto.getAdherentId());
+	        evaluation.setAdherentUsername(dto.getAdherentUsername());
 	        evaluation.setCommentaire(dto.getCommentaire());
 	        evaluation.setEnumNoteEchange(dto.getEnumNoteEchange());
 	        

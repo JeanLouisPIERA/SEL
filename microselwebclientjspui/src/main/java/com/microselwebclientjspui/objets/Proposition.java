@@ -154,4 +154,8 @@ public class Proposition {
 		this.dateDebut = dateDebut;
 	}
 
+	
+	
+	
+
 }

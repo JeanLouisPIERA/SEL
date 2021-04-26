@@ -1,7 +1,6 @@
 package com.microselbourse.restController;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
@@ -23,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.microselbourse.criteria.EchangeCriteria;
-import com.microselbourse.criteria.PropositionCriteria;
-import com.microselbourse.dto.PropositionDTO;
 import com.microselbourse.entities.Echange;
 import com.microselbourse.entities.Proposition;
 import com.microselbourse.entities.Reponse;
@@ -32,7 +29,6 @@ import com.microselbourse.exceptions.DeniedAccessException;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.service.IEchangeService;
-import com.microselbourse.service.IPropositionService;
 import com.microselbourse.service.IReponseService;
 
 import io.swagger.annotations.ApiOperation;
@@ -212,29 +208,6 @@ public class EchangeRestController {
 			EntityAlreadyExistsException {
 		return new ResponseEntity<Echange>(echangeService.refuserEchange(id, intervenantId), HttpStatus.OK);
 	}
-
-	@ApiOperation(value = "Passage au statut SUPPRIME des echanges dont le statut est toujours CONFIRME à l'échéance et sans aucun avis émetteur ou récepteur ", response = Echange.class)
-	@ApiResponses(value = { @ApiResponse(code = 201, message = "Les échanges ont été supprimés") })
-	@GetMapping(value = "/user/echanges/toStatutSupprime", produces = "application/json")
-	public ResponseEntity<List<Echange>> selectEchangesASupprimer() {
-		List<Echange> echangesASupprimerListe = echangeService.searchAndUpdateEchangesASupprimer();
-		return new ResponseEntity<List<Echange>>(echangesASupprimerListe, HttpStatus.OK);
-	}
-
-	@ApiOperation(value = "Passage au statut FORCEVALID d'un echange dont le statut est toujours CONFIRME à l'échéance, avec un seul avis VALIDE ", response = Echange.class)
-	@ApiResponses(value = { @ApiResponse(code = 201, message = "Les échanges ont été cloturés en force") })
-	@GetMapping(value = "/user/echanges/toStatutForceValid", produces = "application/json")
-	public ResponseEntity<List<Echange>> selectEchangesAForceValider() {
-		List<Echange> echangesAForceValiderListe = echangeService.searchAndUpdateEchangesAForceValider();
-		return new ResponseEntity<List<Echange>>(echangesAForceValiderListe, HttpStatus.OK);
-	}
-
-	@ApiOperation(value = "Passage au statut FORCEREFUS d'un echange dont le statut est toujours CONFIRME à l'échéance, avec un seul avis REFUSE ", response = Echange.class)
-	@ApiResponses(value = { @ApiResponse(code = 201, message = "Les échanges ont été mis en litige en force") })
-	@GetMapping(value = "/user/echanges/toStatutForceRefus", produces = "application/json")
-	public ResponseEntity<List<Echange>> selectEchangesAForceRefuser() {
-		List<Echange> echangesAForceRefuserListe = echangeService.searchAndUpdateEchangesAForceRefuser();
-		return new ResponseEntity<List<Echange>>(echangesAForceRefuserListe, HttpStatus.OK);
-	}
+	
 
 }

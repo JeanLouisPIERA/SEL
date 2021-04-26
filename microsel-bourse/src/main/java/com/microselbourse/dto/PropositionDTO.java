@@ -62,13 +62,17 @@ public class PropositionDTO {
 	private Integer valeur;
 
 	@ApiModelProperty(notes = "Date de fin de la publication")
+	//@Future (message = "Merci de saisir une date de fin de publication de votre proposition postérieure à la date du jour")
 	@NotNull(message = "Merci de saisir la date de fin de la publication de votre proposition")
 	private String dateFin;
 
 	@ApiModelProperty(notes = "Date d'échéance pour la réalisation de l'échange que vous proposez")
+	//@Future (message = "Merci de saisir la date d'échance pour la réalisation de l'échange que vous proposez postérieure à la date du jour")
 	@NotNull(message = "Merci de saisir la date d'échance pour la réalisation de l'échange que vous proposez")
 	private String dateEcheance;
-
+	
+	
+	
 	public PropositionDTO() {
 		super();
 	}

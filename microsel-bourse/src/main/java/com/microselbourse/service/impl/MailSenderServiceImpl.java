@@ -49,7 +49,7 @@ public class MailSenderServiceImpl implements IMailSenderService {
 		this.populateModel("dateReponse", reponse.getDateReponse());
 		this.populateModel("description", reponse.getDescription());
 		this.populateModel("enum_trade_type_reponse", reponse.getEnumTradeType().toString());
-		this.populateModel("reponse_id", reponse.getId());
+		this.populateModel("reponse_id", reponse.getId().toString());
 		this.populateModel("image", reponse.getImage());
 		this.populateModel("recepteurId", reponse.getRecepteurId());
 		this.populateModel("titre_reponse", reponse.getTitre());

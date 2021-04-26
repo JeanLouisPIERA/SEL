@@ -16,13 +16,17 @@ import com.microselbourse.entities.EnumStatutEchange;
 @Repository
 public interface IEchangeRepository extends JpaRepository<Echange, Long>, JpaSpecificationExecutor<Echange> {
 
-	@Query("select echange from Echange echange where (echange.dateEcheance < ?1)" + "AND (echange.statutEchange = ?2)"
-			+ "AND (echange.avisEmetteur = ?3" + "AND (echange.avisRecepteur = ?4))")
-	Optional<List<Echange>> findByDateEcheanceBeforeThisDateAndStatutEchangeConfirmeAnd2AvisEchange(LocalDate now,
+	@Query("select echange from Echange echange where (echange.dateEcheance BETWEEN ?1 AND ?2)"+"AND (echange.statutEchange = ?3)" + "AND (echange.avisEmetteur = ?4)" + "AND (echange.avisRecepteur = ?5)")
+	Optional<List<Echange>> findByDateEcheanceBetween2DatesAndStatutEchangeConfirmeAnd2AvisEchange(LocalDate dateNow1,LocalDate dateNow2,
 			EnumStatutEchange confirme, EnumEchangeAvis avisEmetteur, EnumEchangeAvis avisRecepteur);
 
 	@Query("select echange from Echange echange where (echange.id = ?1)"
 			+ "AND (echange.emetteurId = ?2) or (echange.recepteurId = ?2)")
 	Optional<Echange> findByIdAndAdherentId(Long id, String adherentId);
+
+	Optional<List<Echange>> findByAvisEmetteur(EnumEchangeAvis sans);
+
+	
+	
 
 }

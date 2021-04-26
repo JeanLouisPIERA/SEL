@@ -10,6 +10,8 @@ public interface IRoleService {
 	
 	List<Role> getRolesByUserId();
 
+	List<Role> getRolesByUserId(String id);
+
 	
 
 }

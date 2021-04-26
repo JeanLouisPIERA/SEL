@@ -95,8 +95,26 @@ public class UserRestController {
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le compte recherché a été trouvé"),
 			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
 			@ApiResponse(code = 413, message = "Ce compte n'existe pas"), })
-	@GetMapping("/user/accounts/{id}")
-	public ResponseEntity<User> securisedDisplayAccount(@PathVariable @Valid String id) throws EntityNotFoundException {
+	@GetMapping("/user/accounts/account")
+	public ResponseEntity<User> securisedDisplayAccount(@RequestParam @Valid String adherentMyId) throws EntityNotFoundException {
+		User userFound = userService.readAccount(adherentMyId);
+		return new ResponseEntity<User>(userFound, HttpStatus.OK);
+
+	}
+	
+	/**
+	 * Ce endpoint permet à un admin d'accéder au détail d'un compte adherent 
+	 * 
+	 * @param id
+	 * @return
+	 * @throws EntityNotFoundException
+	 */
+	@ApiOperation(value = "Affichage des données d'un compte adhérent par une Admin)", response = User.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le compte recherché a été trouvé"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "Ce compte n'existe pas"), })
+	@GetMapping("/admin/accounts/{id}")
+	public ResponseEntity<User> securisedDisplayAccountToAdmin(@PathVariable @Valid String id) throws EntityNotFoundException {
 		User userFound = userService.readAccount(id);
 		return new ResponseEntity<User>(userFound, HttpStatus.OK);
 

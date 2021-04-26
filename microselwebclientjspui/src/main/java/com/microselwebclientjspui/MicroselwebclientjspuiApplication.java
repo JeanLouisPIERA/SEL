@@ -9,7 +9,7 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;*/
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.microselwebclientjspui"})
 @EnableFeignClients("com.microselwebclientjspui")
 public class MicroselwebclientjspuiApplication {
 

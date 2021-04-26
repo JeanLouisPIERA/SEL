@@ -29,13 +29,13 @@ public class RoleServiceImpl implements IRoleService {
 
 	@Autowired
 	private RestTemplate restTemplate;
-	
+
 	@Autowired
 	private IUserService userService;
 
 	@Value("${application.uRLRoleAdmin}")
 	private String uRLRoleAdmin;
-	
+
 	@Value("${application.uRLRoleUser}")
 	private String uRLRoleUser;
 
@@ -56,22 +56,41 @@ public class RoleServiceImpl implements IRoleService {
 
 	@Override
 	public List<Role> getRolesByUserId() {
-		
+
 		String userId = userService.identifyPrincipalId();
-		
+
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
+
 		String url = uRLRoleUser + "/" + userId;
- 
+
 		ResponseEntity<List<Role>> rolesReponse = restTemplate.exchange(url, HttpMethod.GET, entity,
 				new ParameterizedTypeReference<List<Role>>() {
 				});
 		List<Role> roles = rolesReponse.getBody();
 
 		return roles;
-		
+
+	}
+
+	@Override
+	public List<Role> getRolesByUserId(String id) {
+
+
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		String url = uRLRoleUser + "/" + id;
+
+		ResponseEntity<List<Role>> rolesReponse = restTemplate.exchange(url, HttpMethod.GET, entity,
+				new ParameterizedTypeReference<List<Role>>() {
+				});
+		List<Role> roles = rolesReponse.getBody();
+
+		return roles;
+
 	}
 
 }

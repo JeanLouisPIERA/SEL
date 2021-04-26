@@ -10,6 +10,7 @@ import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -64,6 +65,16 @@ public class EchangeServiceImpl implements IEchangeService {
 
 	@Autowired
 	RabbitMQSender rabbitMQSender;
+	
+	@Value("${application.dateTimezone}")
+	private Integer dateTimezone;
+	
+	@Value("${application.delaiMin}")
+	private Integer delaiMin;
+	
+	@Value("${application.delaiMax}")
+	private Integer delaiMax;
+
 
 	@Override
 	public Echange createEchange(long id) throws EntityAlreadyExistsException, EntityNotFoundException {
@@ -79,8 +90,9 @@ public class EchangeServiceImpl implements IEchangeService {
 		Echange echangeToCreate = new Echange();
 
 		echangeToCreate.setId(reponse.get().getId());
-		echangeToCreate.setDateEnregistrement(LocalDate.now());
-		echangeToCreate.setDateEcheance(reponse.get().getDateEcheance());
+		echangeToCreate.setDateEnregistrement(LocalDate.now().plusDays(dateTimezone));
+		System.out.println("dateEnregistrement" + LocalDate.now());
+		echangeToCreate.setDateEcheance(reponse.get().getDateEcheance().plusDays(dateTimezone));
 		echangeToCreate.setStatutEchange(EnumStatutEchange.ENREGISTRE);
 		echangeToCreate.setTitre(reponse.get().getTitre());
 
@@ -219,7 +231,7 @@ public class EchangeServiceImpl implements IEchangeService {
 		messageToRecepteurH3.setDestinataire(recepteur);
 		messageToRecepteurH3.setSubject("Refus de valider l'echange par l'emetteur");
 		messageToRecepteurH3.setMicroselBourseMailTemplate("07_EmetteurProposition_EchangeRefus");
-		rabbitMQSender.sendMessageMailEchange(messageToRecepteurH3);
+		rabbitMQSender.sendMessageMailEchange(messageToRecepteurH3);//---------------------------------------------------------->RMQ
 		
 		// On vérifie si le récepteur a déjà donné un avis et si OUI lequel pour faire
 		// évoluer le statut de l'échange
@@ -227,7 +239,7 @@ public class EchangeServiceImpl implements IEchangeService {
 		// HYPOTHESE 3A : REFUS EMETTEUR / RECEPTEUR DEJA VALIDE
 		if (echangeToRefuse.getAvisRecepteur().equals(EnumEchangeAvis.VALIDE)) {
 			echangeToRefuse.setStatutEchange(EnumStatutEchange.LITIGE);
-			echangeToRefuse.setDateFin(LocalDate.now());
+			echangeToRefuse.setDateFin(LocalDate.now().plusDays(dateTimezone));
 			// mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Cloture
 			// de l'echange", "05B_EmetteurProposition_EchangeValidation_Litige");
 			// mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Cloture
@@ -238,23 +250,25 @@ public class EchangeServiceImpl implements IEchangeService {
 			messageToRecepteur.setDestinataire(recepteur);
 			messageToRecepteur.setSubject("Echange en litige");
 			messageToRecepteur.setMicroselBourseMailTemplate("05B_EmetteurProposition_EchangeValidation_Litige");
-			rabbitMQSender.sendMessageMailEchange(messageToRecepteur);
+			rabbitMQSender.sendMessageMailEchange(messageToRecepteur);//------------------------------------------------------------->RmQ
 
 			MessageMailEchange messageToEmetteur = new MessageMailEchange();
 			messageToEmetteur.setEchange(echangeToRefuse);
 			messageToEmetteur.setDestinataire(emetteur);
 			messageToEmetteur.setSubject("Echange en litige");
 			messageToEmetteur.setMicroselBourseMailTemplate("05B_RecepteurReponse_EchangeValidation_Litige");
-			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
-
+			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);//--------------------------------------------------------------->RMQ
+					
 			Transaction transactionCreated = transactionService.createTransaction(id);
 			echangeToRefuse.setTransaction(transactionCreated);
+	
 			return echangeRepository.save(echangeToRefuse);
+			
 		} else if (echangeToRefuse.getAvisRecepteur().equals(EnumEchangeAvis.REFUSE)) {
 
 			// HYPOTHESE 3B : REFUS EMETTEUR / RECEPTEUR DEJA REFUSE
 			echangeToRefuse.setStatutEchange(EnumStatutEchange.LITIGE);
-			echangeToRefuse.setDateFin(LocalDate.now());
+			echangeToRefuse.setDateFin(LocalDate.now().plusDays(dateTimezone));
 			/*
 			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur,
 			 * "Echange en litige", "05B_EmetteurProposition_EchangeValidation_Litige");
@@ -347,7 +361,7 @@ public class EchangeServiceImpl implements IEchangeService {
 		// HYPOTHESE 4A : REFUS RECEPTEUR / EMETTEUR DEJA VALIDE
 		if (echangeToRefuse.getAvisEmetteur().equals(EnumEchangeAvis.VALIDE)) {
 			echangeToRefuse.setStatutEchange(EnumStatutEchange.LITIGE);
-			echangeToRefuse.setDateFin(LocalDate.now());
+			echangeToRefuse.setDateFin(LocalDate.now().plusDays(dateTimezone));
 			/*
 			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur,
 			 * "Cloture de l'echange", "05B_EmetteurProposition_EchangeValidation_Litige");
@@ -524,7 +538,7 @@ public class EchangeServiceImpl implements IEchangeService {
 		// HYPOTHESE 1A : VALIDATION EMETTEUR / RECEPTEUR DEJA VALIDE
 		if (echangeToValidate.getAvisRecepteur().equals(EnumEchangeAvis.VALIDE)) {
 			echangeToValidate.setStatutEchange(EnumStatutEchange.CLOTURE);
-			echangeToValidate.setDateFin(LocalDate.now());
+			echangeToValidate.setDateFin(LocalDate.now().plusDays(dateTimezone));
 			
 			/*
 			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur,
@@ -554,7 +568,7 @@ public class EchangeServiceImpl implements IEchangeService {
 
 			// HYPOTHESE 1B : VALIDATION EMETTEUR / RECEPTEUR DEJA REFUSE
 			echangeToValidate.setStatutEchange(EnumStatutEchange.LITIGE);
-			echangeToValidate.setDateFin(LocalDate.now());
+			echangeToValidate.setDateFin(LocalDate.now().plusDays(dateTimezone));
 			
 			/*
 			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur,
@@ -650,7 +664,7 @@ public class EchangeServiceImpl implements IEchangeService {
 		// HYPOTHESE 1A : VALIDATION RECEPTEUR / EMETTEUR DEJA VALIDE
 		if (echangeToValidate.getAvisEmetteur().equals(EnumEchangeAvis.VALIDE)) {
 			echangeToValidate.setStatutEchange(EnumStatutEchange.CLOTURE);
-			echangeToValidate.setDateFin(LocalDate.now());
+			echangeToValidate.setDateFin(LocalDate.now().plusDays(dateTimezone));
 			
 			/*
 			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur,
@@ -681,7 +695,7 @@ public class EchangeServiceImpl implements IEchangeService {
 
 			// HYPOTHESE 1B : VALIDATION RECEPTEUR / RECEPTEUR DEJA REFUSE
 			echangeToValidate.setStatutEchange(EnumStatutEchange.LITIGE);
-			echangeToValidate.setDateFin(LocalDate.now());
+			echangeToValidate.setDateFin(LocalDate.now().plusDays(dateTimezone));
 			
 			/*
 			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur,
@@ -749,7 +763,7 @@ public class EchangeServiceImpl implements IEchangeService {
 					"L'échange ne peut pas être annulé par l'émetteur : il existe un blocage encours concernant l'émmeteur de la proposition.");
 
 		echangeToAnnuler.setStatutEchange(EnumStatutEchange.ANNULE);
-		echangeToAnnuler.setDateAnnulation(LocalDate.now());
+		echangeToAnnuler.setDateAnnulation(LocalDate.now().plusDays(dateTimezone));
 		
 		// mailSender.sendMailEchangeConfirmation(echangeToAnnuler, recepteur,
 		// "Annulation de l'echange", "04_RecepteurReponse_EchangeAnnulation");
@@ -785,7 +799,7 @@ public class EchangeServiceImpl implements IEchangeService {
 					"L'échange ne peut pas être confirmé par l'émetteur : il existe un blocage encours concernant l'émmeteur de la proposition.");
 
 		echangeToConfirm.setStatutEchange(EnumStatutEchange.CONFIRME);
-		echangeToConfirm.setDateConfirmation(LocalDate.now());
+		echangeToConfirm.setDateConfirmation(LocalDate.now().plusDays(dateTimezone));
 		
 		// mailSender.sendMailEchangeConfirmation(echangeToConfirm, recepteur,
 		// "Confirmation de l'echange", "03_RecepteurReponse_EchangeConfirmation");
@@ -800,33 +814,58 @@ public class EchangeServiceImpl implements IEchangeService {
 		return echangeRepository.save(echangeToConfirm);
 
 	}
-
+	
+	/**
+	 * Si la réalisation de l’échange n’est pas établie par au moins 1 avis (c’est-à-dire que le statut de l’échange est toujours en CONFIRME 
+	 * et que l’avis des 2 adhérents n’est pas renseigné), le système : 
+	 * • Passe le statut de l’échange en SUPPRIME 
+	 * • Passe le statut de l’avis des 2 adhérents en ANOMALIE mais ne bloque pas leur accès à la bourse d’échange 
+	 * • Aucun enregistrement de la transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur 
+	 * Pour éviter cette situation à cause d’un « oubli», le système envoie un mail de rappel 48 heures avant la date d’échéance.
+	 * @return
+	 */
 	@Override
 	public List<Echange> searchAndUpdateEchangesASupprimer() {
 		List<Echange> echangesASupprimerList = new ArrayList<Echange>();
+		
+		LocalDate dateNow = LocalDate.now();
 
-		Optional<List<Echange>> echangesDateEcheanceBeforeNowAndStatutConfirmeAnd2AvisEchangeSans = echangeRepository
-				.findByDateEcheanceBeforeThisDateAndStatutEchangeConfirmeAnd2AvisEchange(LocalDate.now(),
+		Optional<List<Echange>> echangesDateEcheanceBetween2DatesAndStatutConfirmeAnd2AvisEchangeSans = echangeRepository.findByDateEcheanceBetween2DatesAndStatutEchangeConfirmeAnd2AvisEchange(dateNow.minusDays(delaiMin), dateNow.plusDays(delaiMax), 
 						EnumStatutEchange.CONFIRME, EnumEchangeAvis.SANS, EnumEchangeAvis.SANS);
+		
 
-		if (echangesDateEcheanceBeforeNowAndStatutConfirmeAnd2AvisEchangeSans.isPresent()) {
-			for (Echange echangeASupprimer : echangesDateEcheanceBeforeNowAndStatutConfirmeAnd2AvisEchangeSans.get()) {
+		if (echangesDateEcheanceBetween2DatesAndStatutConfirmeAnd2AvisEchangeSans.isPresent()) {
+			for (Echange echangeASupprimer : echangesDateEcheanceBetween2DatesAndStatutConfirmeAnd2AvisEchangeSans.get()) {
+				if(echangeASupprimer.getDateEcheance().isBefore(LocalDate.now())) {
 				echangeASupprimer.setStatutEchange(EnumStatutEchange.SUPPRIME);
 				echangeASupprimer.setAvisEmetteur(EnumEchangeAvis.ANOMALIE);
 				echangeASupprimer.setAvisRecepteur(EnumEchangeAvis.ANOMALIE);
 				echangesASupprimerList.add(echangeASupprimer);
 				echangeRepository.save(echangeASupprimer);
+				}
 			}
 		}
 		return echangesASupprimerList;
 	}
 
+	/**
+	  * Si seul le récepteur ou seul l’émetteur a renseigné un avis VALIDE sur l’échange, le système : 
+	 * • Considère que l’échange est réputé « validé » et  passe son statut en FORCEVALID 
+	 * • Enregistre la transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur qui a validé l’échange. 
+	 * La contrepartie est le compte interne COUNTERPART 
+	 * • Bloque l’accès à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (= silencieux) et lui envoie un mail 
+	 * Lorsque le système bloque l’accès d’un adhérent à son espace personnel, il passe toutes les PROPOSITIONS et toutes
+	 * les REPONSES de cet adhérent dans la bourse d’échanges en statut BLOQUE
+	 * @return
+	 */
 	@Override
-	public List<Echange> searchAndUpdateEchangesAForceValider() {
+	public List<Echange> searchAndUpdateEchangesAForceValiderRecepteur() {
 		List<Echange> echangesAForceValiderList = new ArrayList<Echange>();
+		
+		LocalDate dateNow = LocalDate.now();
 
 		Optional<List<Echange>> echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisEmetteurValide = echangeRepository
-				.findByDateEcheanceBeforeThisDateAndStatutEchangeConfirmeAnd2AvisEchange(LocalDate.now(),
+				.findByDateEcheanceBetween2DatesAndStatutEchangeConfirmeAnd2AvisEchange(dateNow.minusDays(delaiMin), dateNow.plusDays(delaiMax),
 						EnumStatutEchange.CONFIRME, EnumEchangeAvis.VALIDE, EnumEchangeAvis.SANS);
 
 		if (echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisEmetteurValide.isPresent()) {
@@ -838,13 +877,31 @@ public class EchangeServiceImpl implements IEchangeService {
 				echangeRepository.save(echangeAForceValider);
 			}
 		}
+		return echangesAForceValiderList;
+		}
+	
+	/**
+	  * Si seul le récepteur ou seul l’émetteur a renseigné un avis VALIDE sur l’échange, le système : 
+	 * • Considère que l’échange est réputé « validé » et  passe son statut en FORCEVALID 
+	 * • Enregistre la transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur qui a validé l’échange. 
+	 * La contrepartie est le compte interne COUNTERPART 
+	 * • Bloque l’accès à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (= silencieux) et lui envoie un mail 
+	 * Lorsque le système bloque l’accès d’un adhérent à son espace personnel, il passe toutes les PROPOSITIONS et toutes
+	 * les REPONSES de cet adhérent dans la bourse d’échanges en statut BLOQUE
+	 * @return
+	 */
+	@Override
+	public List<Echange> searchAndUpdateEchangesAForceValiderEmetteur() {
+		List<Echange> echangesAForceValiderList = new ArrayList<Echange>();
+		
+		LocalDate dateNow = LocalDate.now();
 
 		Optional<List<Echange>> echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisRecepteurValide = echangeRepository
-				.findByDateEcheanceBeforeThisDateAndStatutEchangeConfirmeAnd2AvisEchange(LocalDate.now(),
+				.findByDateEcheanceBetween2DatesAndStatutEchangeConfirmeAnd2AvisEchange(dateNow.minusDays(delaiMin), dateNow.plusDays(delaiMax),
 						EnumStatutEchange.CONFIRME, EnumEchangeAvis.SANS, EnumEchangeAvis.VALIDE);
 
 		if (echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisRecepteurValide.isPresent()) {
-			for (Echange echangeAForceValider : echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisEmetteurValide
+			for (Echange echangeAForceValider : echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisRecepteurValide
 					.get()) {
 				echangeAForceValider.setStatutEchange(EnumStatutEchange.FORCEVALID);
 				echangeAForceValider.setAvisEmetteur(EnumEchangeAvis.ANOMALIE);
@@ -856,12 +913,21 @@ public class EchangeServiceImpl implements IEchangeService {
 		return echangesAForceValiderList;
 	}
 
+	/**
+	 * Si seul le récepteur ou seul l’émetteur a renseigné un avis REFUSE sur l’échange, le système : 
+	 * • Considère que l’échange est réputé « refusé » et passe son statut en FORCEREFUS 
+	 * • N’enregistre aucune transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur qui a refusé l’échange. 
+	 * • Bloque l’accès à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (= silencieux) et lui envoie un mail
+	 * @return
+	 */
 	@Override
-	public List<Echange> searchAndUpdateEchangesAForceRefuser() {
+	public List<Echange> searchAndUpdateEchangesAForceRefuserRecepteur() {
 		List<Echange> echangesAForceRefuserList = new ArrayList<Echange>();
+		
+		LocalDate dateNow = LocalDate.now();
 
 		Optional<List<Echange>> echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisEmetteurRefuse = echangeRepository
-				.findByDateEcheanceBeforeThisDateAndStatutEchangeConfirmeAnd2AvisEchange(LocalDate.now(),
+				.findByDateEcheanceBetween2DatesAndStatutEchangeConfirmeAnd2AvisEchange(dateNow.minusDays(delaiMin), dateNow.plusDays(delaiMax), 
 						EnumStatutEchange.CONFIRME, EnumEchangeAvis.REFUSE, EnumEchangeAvis.SANS);
 
 		if (echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisEmetteurRefuse.isPresent()) {
@@ -873,13 +939,30 @@ public class EchangeServiceImpl implements IEchangeService {
 				echangeRepository.save(echangeAForceRefuser);
 			}
 		}
+		
+		return echangesAForceRefuserList;
+		}
+	
+	
+	/**
+	 * Si seul le récepteur ou seul l’émetteur a renseigné un avis REFUSE sur l’échange, le système : 
+	 * • Considère que l’échange est réputé « refusé » et passe son statut en FORCEREFUS 
+	 * • N’enregistre aucune transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur qui a refusé l’échange. 
+	 * • Bloque l’accès à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (= silencieux) et lui envoie un mail
+	 * @return
+	 */
+	@Override
+	public List<Echange> searchAndUpdateEchangesAForceRefuserEmetteur() {
+		List<Echange> echangesAForceRefuserList = new ArrayList<Echange>();
+		
+		LocalDate dateNow = LocalDate.now();
 
 		Optional<List<Echange>> echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisRecepteurRefuse = echangeRepository
-				.findByDateEcheanceBeforeThisDateAndStatutEchangeConfirmeAnd2AvisEchange(LocalDate.now(),
+				.findByDateEcheanceBetween2DatesAndStatutEchangeConfirmeAnd2AvisEchange(dateNow.minusDays(delaiMin), dateNow.plusDays(delaiMax),
 						EnumStatutEchange.CONFIRME, EnumEchangeAvis.SANS, EnumEchangeAvis.REFUSE);
 
 		if (echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisRecepteurRefuse.isPresent()) {
-			for (Echange echangeAForceRefuser : echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisEmetteurRefuse
+			for (Echange echangeAForceRefuser : echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisRecepteurRefuse
 					.get()) {
 				echangeAForceRefuser.setStatutEchange(EnumStatutEchange.FORCEREFUS);
 				echangeAForceRefuser.setAvisEmetteur(EnumEchangeAvis.ANOMALIE);
@@ -890,5 +973,7 @@ public class EchangeServiceImpl implements IEchangeService {
 
 		return echangesAForceRefuserList;
 	}
+
+	
 
 }

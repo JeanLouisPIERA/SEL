@@ -54,7 +54,7 @@ databaseChangeLog:
       - sqlFile:
           dbms: mysql
           encoding: utf8
-          path: scripts/05_insert_categories_propositions_reponses_echanges.sql
+          path: scripts/05_insert_categories.sql
           relativeToChangelogFile: true
           splitStatements: true
           stripComments: true
@@ -164,7 +164,7 @@ databaseChangeLog:
       - sqlFile:
           dbms: mysql
           encoding: utf8
-          path: scripts/15_insert_wallets.sql
+          path: scripts/15_alter_table_wallets.sql
           relativeToChangelogFile: true
           splitStatements: true
           stripComments: true    
@@ -197,7 +197,7 @@ databaseChangeLog:
       - sqlFile:
           dbms: mysql
           encoding: utf8
-          path: scripts/18_alter_table_wallets.sql
+          path: scripts/18_insert_wallets.sql
           relativeToChangelogFile: true
           splitStatements: true
           stripComments: true   

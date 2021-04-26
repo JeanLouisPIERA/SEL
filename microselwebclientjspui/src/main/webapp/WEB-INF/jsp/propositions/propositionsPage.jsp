@@ -193,6 +193,16 @@
 												<td><a type="button" class="btn btn-primary"
 													href="/propositions/reponses/${proposition.id}">Détails</a>
 												</td>
+												
+												<sec:authorize access="isAuthenticated()"> 
+												<td><a type="button" class="btn btn-warning"
+													href="/propositions/${proposition.id}">MaJ</a>
+												</td>
+												
+												<td><a type="button" class="btn btn-danger"
+													href="/propositions/close/${proposition.id}">Clôturer</a>
+												</td>
+												</sec:authorize>
 
 
 												<c:if test="${proposition.statut.getCode()=='ENCOURS'}">

@@ -25,7 +25,7 @@
 <div class="container-fluid">
 
 <div class="row d-flex justify-content-center">
-<div class="container col-md-4 col-md-offset-1">
+<div class="container col-md-5 col-md-offset-1">
  <div class="panel panel-primary ">
  
   <div class="panel-heading">
@@ -47,13 +47,56 @@
             <td>Statut :</td>
             <td>${readEchange.statutEchange}</td>
         </tr>
+         <tr>
+            <td>Date d'archivage:</td>
+            <td>${readEchange.dateFin}</td>
+        </tr>
+        
        
+	    </tbody>
+	</table>
+  
+</div>
+</div>
+ </div>
+ 
+ <div class="container col-md-5 col-md-offset-0">
+ <div class="panel panel-primary ">
+ 
+  <div class="panel-heading">
+   <h5>Autres infos :</h5>
+  </div>
+  
+  <div class="panel-body">
+   <table class="table table-striped table-condensed table-bordered">
+    <tbody>
+    	 <tr>
+            <td>Adhérent Proposition:</td>
+            <td>${readEchange.emetteurUsername}</td>
+        </tr>
+        
+         <tr>
+            <td>Adhérent Répondant :</td>
+            <td>${readEchange.recepteurUsername}</td>
+        </tr>
+        
+        <tr>
+            <td>Date de confirmation:</td>
+            <td>${readEchange.dateConfirmation}</td>
+        </tr>
+        
+        <tr>
+            <td>Date d'annulation:</td>
+            <td>${readEchange.dateAnnulation}</td>
+        </tr>
+               
 	    </tbody>
 	</table>
   
 </div>
  </div>
  </div>
+  
 
    
  <div class="container-fluid">

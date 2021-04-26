@@ -240,223 +240,197 @@ public class PropositionServiceImplTest {
 		Assert.assertTrue(propositionTest.equals(proposition));
 	}
 
-	// TESTS UPDATE
-	// ***********************************************************************************************************
-
-	@Test
-	public void testUpdateProposition_whenEntityNotFoundException_withUnknownPropositionToUpdate() {
-
-		try {
-			propositionTest = propositionService.updateProposition((long) 0, propositionDTO);
-		} catch (Exception e) {
-			assertThat(e).isInstanceOf(EntityNotFoundException.class)
-					.hasMessage("L'Offre ou la Demande que vous souhaitez modifier n'existe pas.");
-		}
-
-	}
-
-	@Test
-	public void testUpdateProposition_whenDeniedAccessException_withAnotherUserProposition() {
-
-		user.setId((String) "A");
-		propositionDTO.setEmetteurId((String) "A");
-		proposition.setEmetteurId((String) "000.000.000");
-
-		try {
-			propositionTest = propositionService.updateProposition((long) 1, propositionDTO);
-		} catch (Exception e) {
-			assertThat(e).isInstanceOf(DeniedAccessException.class)
-					.hasMessage("Vous ne pouvez pas modifier la proposition d'un autre adhérent");
-		}
-	}
-
-	@Test
-	public void testUpdateProposition_whenDeniedAccessException_withStatutEchue() {
-
-		user.setId((String) "A");
-		propositionDTO.setEmetteurId((String) "A");
-		proposition.setEmetteurId((String) "A");
-		proposition.setDateFin(LocalDate.of(2020, 12, 31));
-
-		try {
-			propositionTest = propositionService.updateProposition((long) 1, propositionDTO);
-		} catch (Exception e) {
-			assertThat(e).isInstanceOf(DeniedAccessException.class).hasMessage(
-					"Vous ne pouvez pas modifier une OFFRE ou une DEMANDE dont la date de fin de publication est échue");
-		}
-	}
-
-	@Test
-	public void testUpdateProposition_whenDeniedAccessException_withStatutCloturee() {
-
-		user.setId((String) "A");
-		propositionDTO.setEmetteurId((String) "A");
-		proposition.setEmetteurId((String) "A");
-		proposition.setDateFin(LocalDate.of(2200, 12, 31));
-		proposition.setStatut(EnumStatutProposition.CLOTUREE);
-
-		try {
-			propositionTest = propositionService.updateProposition((long) 1, propositionDTO);
-		} catch (Exception e) {
-			assertThat(e).isInstanceOf(DeniedAccessException.class)
-					.hasMessage("Vous ne pouvez pas modifier une OFFRE ou une DEMANDE déjà clôturée");
-		}
-	}
-
-	@Test
-	public void testUpdateProposition_whenEntityNotFoundException_withUnknownCategorie() {
-
-		user.setId((String) "A");
-		propositionDTO.setEmetteurId((String) "A");
-		proposition.setEmetteurId((String) "A");
-		proposition.setDateFin(LocalDate.of(2200, 12, 31));
-		proposition.setStatut(EnumStatutProposition.ENCOURS);
-		propositionDTO.setCategorieName(EnumCategorie.INCONNUE.getCode());
-
-		try {
-			propositionTest = propositionService.updateProposition((long) 1, propositionDTO);
-		} catch (Exception e) {
-			assertThat(e).isInstanceOf(EntityNotFoundException.class)
-					.hasMessage("Votre modification est impossible : cette catégorie n'existe pas");
-		}
-	}
-
-	@Test
-	public void testUpdateProposition_whenEntityNotFoundException_withWrongTradeType() {
-
-		user.setId((String) "A");
-		propositionDTO.setEmetteurId((String) "A");
-		proposition.setEmetteurId((String) "A");
-		proposition.setDateFin(LocalDate.of(2200, 12, 31));
-		proposition.setStatut(EnumStatutProposition.ENCOURS);
-		propositionDTO.setCategorieName(EnumCategorie.BRICOLAGE.getCode());
-		propositionDTO.setEnumTradeTypeCode("Erreur");
-
-		try {
-			propositionTest = propositionService.updateProposition((long) 1, propositionDTO);
-		} catch (Exception e) {
-			assertThat(e).isInstanceOf(EntityNotFoundException.class).hasMessage(
-					"Votre proposition ne peut être qu'une OFFRE ou une DEMANDE : merci de renseigner une des 2 valeurs");
-		}
-	}
-
-	@Test
-	public void testUpdateProposition_whenEntityAlreadyExistsException_withSameUserAndSameTitle() {
-
-		user.setId((String) "A");
-		propositionDTO.setEmetteurId((String) "A");
-		proposition.setEmetteurId((String) "A");
-		proposition.setDateFin(LocalDate.of(2200, 12, 31));
-		proposition.setStatut(EnumStatutProposition.ENCOURS);
-		propositionDTO.setCategorieName(EnumCategorie.BRICOLAGE.getCode());
-		propositionDTO.setEnumTradeTypeCode("OFFRE");
-		propositionDTO.setTitre("Wrong");
-		proposition.setTitre("Wrong");
-
-		try {
-			propositionTest = propositionService.updateProposition((long) 1, propositionDTO);
-		} catch (Exception e) {
-			assertThat(e).isInstanceOf(EntityAlreadyExistsException.class)
-					.hasMessage("Vous avez déjà une OFFRE ou une DEMANDE encours de publication avec le même titre");
-		}
-
-		propositionDTO.setTitre("Correct");
-
-		try {
-			propositionTest = propositionService.updateProposition((long) 1, propositionDTO);
-		} catch (Exception e) {
-			assertThat(e).isInstanceOf(EntityAlreadyExistsException.class)
-					.hasMessage("Vous avez déjà une OFFRE ou une DEMANDE encours de publication avec le même titre");
-		}
-
-		propositionDTO.setTitre("Wrong");
-		proposition.setTitre("Correct");
-
-		try {
-			propositionTest = propositionService.updateProposition((long) 1, propositionDTO);
-		} catch (Exception e) {
-			assertThat(e).isInstanceOf(EntityAlreadyExistsException.class)
-					.hasMessage("Vous avez déjà une OFFRE ou une DEMANDE encours de publication avec le même titre");
-		}
-
-	}
-
-	@Test
-	public void testUpdateProposition_withoutException() throws Exception {
-
-		user.setId((String) "A");
-		propositionDTO.setEmetteurId((String) "A");
-		proposition.setEmetteurId((String) "A");
-		proposition.setDateFin(LocalDate.of(2200, 12, 31));
-		proposition.setStatut(EnumStatutProposition.ENCOURS);
-		propositionDTO.setCategorieName(EnumCategorie.BRICOLAGE.getCode());
-		propositionDTO.setEnumTradeTypeCode("OFFRE");
-		propositionDTO.setTitre("Correct");
-		proposition.setTitre("Wrong");
-
-		propositionTest = propositionService.updateProposition((long) 1, propositionDTO);
-		verify(propositionRepository, times(1)).save(any(Proposition.class));
-		Assert.assertTrue(propositionTest.equals(proposition));
-
-	}
-
-	// TESTS CLOSE
-	// *******************************************************************************************************
-
-	@Test
-	public void testCloseProposition_whenEntityNotFoundException_withUnknownPropositionToUpdate() {
-
-		try {
-			propositionTest = propositionService.closeProposition((long) 0);
-		} catch (Exception e) {
-			assertThat(e).isInstanceOf(EntityNotFoundException.class)
-					.hasMessage("L'Offre ou la Demande que vous souhaitez clôturer n'existe pas.");
-		}
-
-	}
-
-	@Test
-	public void testCloseProposition_whenDeniedAccessException_withStatutEchue() {
-
-		user.setId((String) "A");
-		proposition.setEmetteurId((String) "A");
-		proposition.setDateFin(LocalDate.of(2020, 12, 31));
-
-		try {
-			propositionTest = propositionService.closeProposition((long) 1);
-		} catch (Exception e) {
-			assertThat(e).isInstanceOf(DeniedAccessException.class).hasMessage(
-					"Vous ne pouvez pas clôturer une OFFRE ou une DEMANDE dont la date de fin de publication est échue");
-		}
-	}
-
-	@Test
-	public void testCloseProposition_whenDeniedAccessException_withStatutCloturee() {
-
-		user.setId((String) "A");
-		proposition.setEmetteurId((String) "A");
-		proposition.setDateFin(LocalDate.of(2200, 12, 31));
-		proposition.setStatut(EnumStatutProposition.CLOTUREE);
-
-		try {
-			propositionTest = propositionService.closeProposition((long) 1);
-		} catch (Exception e) {
-			assertThat(e).isInstanceOf(DeniedAccessException.class)
-					.hasMessage("Vous ne pouvez pas clôturer une OFFRE ou une DEMANDE déjà clôturée");
-		}
-	}
-
-	@Test
-	public void testCloseProposition_withoutException() throws Exception {
-
-		user.setId((String) "A");
-		proposition.setEmetteurId((String) "A");
-		proposition.setDateFin(LocalDate.of(2200, 12, 31));
-		proposition.setStatut(EnumStatutProposition.ENCOURS);
-
-		propositionTest = propositionService.closeProposition((long) 1);
-		verify(propositionRepository, times(1)).save(any(Proposition.class));
-		Assert.assertTrue(propositionTest.equals(proposition));
-
-	}
+	/*
+	 * // TESTS UPDATE //
+	 * *****************************************************************************
+	 * ******************************
+	 * 
+	 * @Test public void
+	 * testUpdateProposition_whenEntityNotFoundException_withUnknownPropositionToUpdate
+	 * () {
+	 * 
+	 * try { propositionTest = propositionService.updateProposition((long) 0,
+	 * propositionDTO); } catch (Exception e) {
+	 * assertThat(e).isInstanceOf(EntityNotFoundException.class)
+	 * .hasMessage("L'Offre ou la Demande que vous souhaitez modifier n'existe pas."
+	 * ); }
+	 * 
+	 * }
+	 * 
+	 * @Test public void
+	 * testUpdateProposition_whenDeniedAccessException_withAnotherUserProposition()
+	 * {
+	 * 
+	 * user.setId((String) "A"); propositionDTO.setEmetteurId((String) "A");
+	 * proposition.setEmetteurId((String) "000.000.000");
+	 * 
+	 * try { propositionTest = propositionService.updateProposition((long) 1,
+	 * propositionDTO); } catch (Exception e) {
+	 * assertThat(e).isInstanceOf(DeniedAccessException.class)
+	 * .hasMessage("Vous ne pouvez pas modifier la proposition d'un autre adhérent"
+	 * ); } }
+	 * 
+	 * @Test public void
+	 * testUpdateProposition_whenDeniedAccessException_withStatutEchue() {
+	 * 
+	 * user.setId((String) "A"); propositionDTO.setEmetteurId((String) "A");
+	 * proposition.setEmetteurId((String) "A");
+	 * proposition.setDateFin(LocalDate.of(2020, 12, 31));
+	 * 
+	 * try { propositionTest = propositionService.updateProposition((long) 1,
+	 * propositionDTO); } catch (Exception e) {
+	 * assertThat(e).isInstanceOf(DeniedAccessException.class).hasMessage(
+	 * "Vous ne pouvez pas modifier une OFFRE ou une DEMANDE dont la date de fin de publication est échue"
+	 * ); } }
+	 * 
+	 * @Test public void
+	 * testUpdateProposition_whenDeniedAccessException_withStatutCloturee() {
+	 * 
+	 * user.setId((String) "A"); propositionDTO.setEmetteurId((String) "A");
+	 * proposition.setEmetteurId((String) "A");
+	 * proposition.setDateFin(LocalDate.of(2200, 12, 31));
+	 * proposition.setStatut(EnumStatutProposition.CLOTUREE);
+	 * 
+	 * try { propositionTest = propositionService.updateProposition((long) 1,
+	 * propositionDTO); } catch (Exception e) {
+	 * assertThat(e).isInstanceOf(DeniedAccessException.class)
+	 * .hasMessage("Vous ne pouvez pas modifier une OFFRE ou une DEMANDE déjà clôturée"
+	 * ); } }
+	 * 
+	 * @Test public void
+	 * testUpdateProposition_whenEntityNotFoundException_withUnknownCategorie() {
+	 * 
+	 * user.setId((String) "A"); propositionDTO.setEmetteurId((String) "A");
+	 * proposition.setEmetteurId((String) "A");
+	 * proposition.setDateFin(LocalDate.of(2200, 12, 31));
+	 * proposition.setStatut(EnumStatutProposition.ENCOURS);
+	 * propositionDTO.setCategorieName(EnumCategorie.INCONNUE.getCode());
+	 * 
+	 * try { propositionTest = propositionService.updateProposition((long) 1,
+	 * propositionDTO); } catch (Exception e) {
+	 * assertThat(e).isInstanceOf(EntityNotFoundException.class)
+	 * .hasMessage("Votre modification est impossible : cette catégorie n'existe pas"
+	 * ); } }
+	 * 
+	 * @Test public void
+	 * testUpdateProposition_whenEntityNotFoundException_withWrongTradeType() {
+	 * 
+	 * user.setId((String) "A"); propositionDTO.setEmetteurId((String) "A");
+	 * proposition.setEmetteurId((String) "A");
+	 * proposition.setDateFin(LocalDate.of(2200, 12, 31));
+	 * proposition.setStatut(EnumStatutProposition.ENCOURS);
+	 * propositionDTO.setCategorieName(EnumCategorie.BRICOLAGE.getCode());
+	 * propositionDTO.setEnumTradeTypeCode("Erreur");
+	 * 
+	 * try { propositionTest = propositionService.updateProposition((long) 1,
+	 * propositionDTO); } catch (Exception e) {
+	 * assertThat(e).isInstanceOf(EntityNotFoundException.class).hasMessage(
+	 * "Votre proposition ne peut être qu'une OFFRE ou une DEMANDE : merci de renseigner une des 2 valeurs"
+	 * ); } }
+	 * 
+	 * @Test public void
+	 * testUpdateProposition_whenEntityAlreadyExistsException_withSameUserAndSameTitle
+	 * () {
+	 * 
+	 * user.setId((String) "A"); propositionDTO.setEmetteurId((String) "A");
+	 * proposition.setEmetteurId((String) "A");
+	 * proposition.setDateFin(LocalDate.of(2200, 12, 31));
+	 * proposition.setStatut(EnumStatutProposition.ENCOURS);
+	 * propositionDTO.setCategorieName(EnumCategorie.BRICOLAGE.getCode());
+	 * propositionDTO.setEnumTradeTypeCode("OFFRE");
+	 * propositionDTO.setTitre("Wrong"); proposition.setTitre("Wrong");
+	 * 
+	 * try { propositionTest = propositionService.updateProposition((long) 1,
+	 * propositionDTO); } catch (Exception e) {
+	 * assertThat(e).isInstanceOf(EntityAlreadyExistsException.class)
+	 * .hasMessage("Vous avez déjà une OFFRE ou une DEMANDE encours de publication avec le même titre"
+	 * ); }
+	 * 
+	 * propositionDTO.setTitre("Correct");
+	 * 
+	 * try { propositionTest = propositionService.updateProposition((long) 1,
+	 * propositionDTO); } catch (Exception e) {
+	 * assertThat(e).isInstanceOf(EntityAlreadyExistsException.class)
+	 * .hasMessage("Vous avez déjà une OFFRE ou une DEMANDE encours de publication avec le même titre"
+	 * ); }
+	 * 
+	 * propositionDTO.setTitre("Wrong"); proposition.setTitre("Correct");
+	 * 
+	 * try { propositionTest = propositionService.updateProposition((long) 1,
+	 * propositionDTO); } catch (Exception e) {
+	 * assertThat(e).isInstanceOf(EntityAlreadyExistsException.class)
+	 * .hasMessage("Vous avez déjà une OFFRE ou une DEMANDE encours de publication avec le même titre"
+	 * ); }
+	 * 
+	 * }
+	 * 
+	 * @Test public void testUpdateProposition_withoutException() throws Exception {
+	 * 
+	 * user.setId((String) "A"); propositionDTO.setEmetteurId((String) "A");
+	 * proposition.setEmetteurId((String) "A");
+	 * proposition.setDateFin(LocalDate.of(2200, 12, 31));
+	 * proposition.setStatut(EnumStatutProposition.ENCOURS);
+	 * propositionDTO.setCategorieName(EnumCategorie.BRICOLAGE.getCode());
+	 * propositionDTO.setEnumTradeTypeCode("OFFRE");
+	 * propositionDTO.setTitre("Correct"); proposition.setTitre("Wrong");
+	 * 
+	 * propositionTest = propositionService.updateProposition((long) 1,
+	 * propositionDTO); verify(propositionRepository,
+	 * times(1)).save(any(Proposition.class));
+	 * Assert.assertTrue(propositionTest.equals(proposition));
+	 * 
+	 * }
+	 * 
+	 * // TESTS CLOSE //
+	 * *****************************************************************************
+	 * **************************
+	 * 
+	 * @Test public void
+	 * testCloseProposition_whenEntityNotFoundException_withUnknownPropositionToUpdate
+	 * () {
+	 * 
+	 * try { propositionTest = propositionService.closeProposition((long) 0); }
+	 * catch (Exception e) {
+	 * assertThat(e).isInstanceOf(EntityNotFoundException.class)
+	 * .hasMessage("L'Offre ou la Demande que vous souhaitez clôturer n'existe pas."
+	 * ); }
+	 * 
+	 * }
+	 * 
+	 * @Test public void
+	 * testCloseProposition_whenDeniedAccessException_withStatutEchue() {
+	 * 
+	 * user.setId((String) "A"); proposition.setEmetteurId((String) "A");
+	 * proposition.setDateFin(LocalDate.of(2020, 12, 31));
+	 * 
+	 * try { propositionTest = propositionService.closeProposition((long) 1); }
+	 * catch (Exception e) {
+	 * assertThat(e).isInstanceOf(DeniedAccessException.class).hasMessage(
+	 * "Vous ne pouvez pas clôturer une OFFRE ou une DEMANDE dont la date de fin de publication est échue"
+	 * ); } }
+	 * 
+	 * @Test public void
+	 * testCloseProposition_whenDeniedAccessException_withStatutCloturee() {
+	 * 
+	 * user.setId((String) "A"); proposition.setEmetteurId((String) "A");
+	 * proposition.setDateFin(LocalDate.of(2200, 12, 31));
+	 * proposition.setStatut(EnumStatutProposition.CLOTUREE);
+	 * 
+	 * try { propositionTest = propositionService.closeProposition((long) 1); }
+	 * catch (Exception e) { assertThat(e).isInstanceOf(DeniedAccessException.class)
+	 * .hasMessage("Vous ne pouvez pas clôturer une OFFRE ou une DEMANDE déjà clôturée"
+	 * ); } }
+	 * 
+	 * @Test public void testCloseProposition_withoutException() throws Exception {
+	 * 
+	 * user.setId((String) "A"); proposition.setEmetteurId((String) "A");
+	 * proposition.setDateFin(LocalDate.of(2200, 12, 31));
+	 * proposition.setStatut(EnumStatutProposition.ENCOURS);
+	 * 
+	 * propositionTest = propositionService.closeProposition((long) 1);
+	 * verify(propositionRepository, times(1)).save(any(Proposition.class));
+	 * Assert.assertTrue(propositionTest.equals(proposition));
+	 * 
+	 * }
+	 */
 }

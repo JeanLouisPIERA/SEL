@@ -17,5 +17,7 @@ public interface IUserService {
 
 	Page<User> searchByCriteria(UserCriteria userCriteria, Pageable pageable);
 
+	User searchById(String id);
+
 	
 }

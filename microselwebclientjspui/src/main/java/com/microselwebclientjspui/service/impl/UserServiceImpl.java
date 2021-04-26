@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.microselwebclientjspui.criteria.UserCriteria;
+import com.microselwebclientjspui.objets.Proposition;
 import com.microselwebclientjspui.objets.User;
 import com.microselwebclientjspui.objets.Wallet;
 import com.microselwebclientjspui.service.IUserService;
@@ -44,8 +45,11 @@ public class UserServiceImpl implements IUserService {
 	@Value("${application.uRLUserAdmin}")
 	private String uRLUserAdmin;
 	
-	@Value("${application.microselRealm}")
-	private String microselRealm;
+	@Value("${application.microselDescription}")
+	private String microselDescription;
+	
+	@Value("${application.microselDefaultRole}")
+	private String microselDefaultRole;
 
 	private IDToken getIDToken() {
 
@@ -58,13 +62,6 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public String identifyPrincipalId() {
 
-		/*
-		 * KeycloakAuthenticationToken principal = (KeycloakAuthenticationToken)
-		 * request.getUserPrincipal(); String userId =
-		 * principal.getAccount().getKeycloakSecurityContext().getIdToken().getSubject()
-		 * ; return userId;
-		 */
-
 		String userId = this.getIDToken().getSubject();
 		return userId;
 
@@ -72,13 +69,6 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public String identifyPrincipalUsername() {
-
-		/*
-		 * KeycloakAuthenticationToken principal = (KeycloakAuthenticationToken)
-		 * request.getUserPrincipal(); String userUsername =
-		 * principal.getAccount().getKeycloakSecurityContext().getToken().
-		 * getPreferredUsername(); return userUsername;
-		 */
 
 		String userUsername = this.getIDToken().getPreferredUsername();
 		return userUsername;
@@ -90,13 +80,20 @@ public class UserServiceImpl implements IUserService {
 
 		String userId = this.getIDToken().getSubject();
 
-		String url = uRLUserUser + "/" + userId;
+		String url = uRLUserUser + "/account" ;
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("adherentMyId", userId);
 
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		ResponseEntity<User> user = restTemplate.exchange(url, HttpMethod.GET, entity, User.class);
+		//ResponseEntity<User> user = restTemplate.exchange(url, HttpMethod.GET, entity, User.class);
+		
+		ResponseEntity<User> user = restTemplate.exchange(builder.build().toUriString(),
+				HttpMethod.GET, entity, new ParameterizedTypeReference<User>() {
+				});
 
 		return user.getBody();
 
@@ -109,14 +106,14 @@ public class UserServiceImpl implements IUserService {
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		userCriteria.setRealm("microsel-realm");
+		userCriteria.setDescription(microselDescription);
 		
-		  
-		 
-
+		userCriteria.setDefaultRole(microselDefaultRole);
+		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLUserAdmin)
 				.queryParam("email", userCriteria.getEmail())
-				.queryParam("realm", userCriteria.getRealm())
+				.queryParam("description", userCriteria.getDescription())
+				.queryParam("defaultRole", userCriteria.getDefaultRole())
 				.queryParam("firstName", userCriteria.getFirstName())
 				.queryParam("lastName", userCriteria.getLastName())
 				.queryParam("role", userCriteria.getRole())
@@ -131,6 +128,19 @@ public class UserServiceImpl implements IUserService {
 
 		return pageUser;
 		
+	}
+
+	@Override
+	public User searchById(String id) {
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+
+		String url = uRLUserAdmin + "/" + id;
+
+		ResponseEntity<User> response = restTemplate.exchange(url, HttpMethod.GET, entity, User.class);
+
+		return response.getBody();
 	}
 
 }

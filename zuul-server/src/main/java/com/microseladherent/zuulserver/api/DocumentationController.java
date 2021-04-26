@@ -19,8 +19,8 @@ public class DocumentationController implements SwaggerResourcesProvider {
 	public List<SwaggerResource> get() {
 		List<SwaggerResource> resources = new ArrayList<>();
 		resources.add(swaggerResource("Microselbourse", "/microselbourse/v2/api-docs", "2.0"));
-		resources.add(swaggerResource("Microseladherent", "/microsel-adherent/v2/api-docs", "2.0"));
 		resources.add(swaggerResource("Microselreferentiels", "/microselreferentiels/v2/api-docs", "2.0"));
+		resources.add(swaggerResource("Microseluser", "/microseluser/v2/api-docs", "2.0"));
 		return resources;
 	}
 

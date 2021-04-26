@@ -12,15 +12,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.microselwebclientjspui.criteria.PropositionCriteria;
 import com.microselwebclientjspui.dto.PropositionDTO;
+import com.microselwebclientjspui.dto.PropositionUpdateDTO;
 import com.microselwebclientjspui.objets.Proposition;
 import com.microselwebclientjspui.service.IPropositionService;
 import com.microselwebclientjspui.service.IUserService;
 
+@Transactional
 @Service
 public class PropositionServiceImpl implements IPropositionService {
 
@@ -73,17 +76,17 @@ public class PropositionServiceImpl implements IPropositionService {
 
 		return pageProposition;
 	}
-	
+
 	@Override
 	public Page<Proposition> searchByCriteriaByAdherent(PropositionCriteria propositionCriteria, Pageable pageable) {
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<String> entity = new HttpEntity<>(headers);
-		
+
 		String userId = userService.identifyPrincipalId();
-			
+
 		propositionCriteria.setEmetteurId(userId);
-		
+
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLPropositionAll)
 				.queryParam("emetteurId", propositionCriteria.getEmetteurId())
 				.queryParam("codeEnumTradeType", propositionCriteria.getEnumTradeType())
@@ -105,6 +108,37 @@ public class PropositionServiceImpl implements IPropositionService {
 	}
 
 	@Override
+	public Page<Proposition> searchByCriteriaByAdherentId(String adherentId, PropositionCriteria propositionCriteria,
+			Pageable pageable) {
+
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+
+		propositionCriteria.setEmetteurId(adherentId);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLPropositionAll)
+				.queryParam("emetteurId", propositionCriteria.getEmetteurId())
+				.queryParam("codeEnumTradeType", propositionCriteria.getEnumTradeType())
+				.queryParam("titre", propositionCriteria.getTitre()).queryParam("ville", propositionCriteria.getVille())
+				.queryParam("codePostal", propositionCriteria.getCodePostal())
+				.queryParam("nomCategorie", propositionCriteria.getEnumCategorie())
+				.queryParam("statut", propositionCriteria.getEnumStatutProposition())
+				.queryParam("page", pageable.getPageNumber()).queryParam("size", pageable.getPageSize())
+				.queryParam("emetteurUsername", propositionCriteria.getEmetteurUsername());
+
+		ResponseEntity<RestResponsePage<Proposition>> propositions = restTemplate.exchange(
+				builder.build().toUriString(), HttpMethod.GET, entity,
+				new ParameterizedTypeReference<RestResponsePage<Proposition>>() {
+				});
+
+		Page<Proposition> pageProposition = propositions.getBody();
+
+		return pageProposition;
+
+	}
+
+	@Override
 	public Proposition createProposition(PropositionDTO propositionDTO) {
 
 		String emetteurId = userService.identifyPrincipalId();
@@ -112,7 +146,6 @@ public class PropositionServiceImpl implements IPropositionService {
 
 		String emetteurUsername = userService.identifyPrincipalUsername();
 		propositionDTO.setEmetteurUsername(emetteurUsername);
-
 
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
@@ -128,7 +161,7 @@ public class PropositionServiceImpl implements IPropositionService {
 
 	@Override
 	public Proposition searchById(long id) {
-		
+
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -141,17 +174,39 @@ public class PropositionServiceImpl implements IPropositionService {
 	}
 
 	@Override
-	public Proposition updateProposition(Proposition proposition) {
-		// FIXME Auto-generated method stub
-		return null;
+	public Proposition updateProposition(Long propositionId, PropositionUpdateDTO propositionUpdateDTO) {
+
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+		String emetteurId = userService.identifyPrincipalId();
+
+		HttpEntity<PropositionUpdateDTO> requestEntity = new HttpEntity<>(propositionUpdateDTO, headers);
+
+		String url = uRLPropositionUser + "/proposition/" + propositionId + "/adherent/" + emetteurId;
+
+		ResponseEntity<Proposition> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity,
+				Proposition.class);
+
+		return response.getBody();
 	}
 
 	@Override
-	public void closeProposition(Long id) {
-		// FIXME Auto-generated method stub
+	public Proposition closeProposition(Long id) {
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+		String emetteurId = userService.identifyPrincipalId();
+
+		HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+
+		String url = uRLPropositionUser + "/proposition/close/" + id + "/adherent/" + emetteurId;
+		
+		ResponseEntity<Proposition> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity,
+				Proposition.class);
+
+		return response.getBody();
+
+		
 
 	}
-
-	
 
 }

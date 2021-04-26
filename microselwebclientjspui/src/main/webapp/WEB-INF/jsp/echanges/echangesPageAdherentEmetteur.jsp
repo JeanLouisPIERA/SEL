@@ -85,7 +85,7 @@
 			<div class="wrapper">
 				 <div class="panel panel-primary">
 				  <div class="panel-heading">
-				   <h3><center>Echanges </center></h3>
+				   <h3><center>Echanges sur les propositions de  ${pageContext.request.userPrincipal.name}</center></h3>
 				  </div>
   					<div class="panel-body">
 					   <table class="table table-striped table-condensed table-bordered" style="text-align:center">

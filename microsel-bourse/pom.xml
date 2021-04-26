@@ -300,17 +300,17 @@
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>0.28.0</version>
 
-				<configuration>
-					<!-- <dockerHost>http://127.0.0.1:2375</dockerHost> -->
+				<!-- <configuration>
+					<dockerHost>http://127.0.0.1:2375</dockerHost>
 					<dockerHost>unix:///var/run/docker.sock</dockerHost>
 					
 
 					<verbose>true</verbose>
 
-					<!-- Needed if pushing to DockerHub: preferred to store these in local 
-						environment (see the course) -->
-					<!-- <authConfig> <username>YOUR-USERNAME</username> <password>YOUR-PASSWORD</password> 
-						</authConfig> -->
+					Needed if pushing to DockerHub: preferred to store these in local 
+						environment (see the course)
+					<authConfig> <username>YOUR-USERNAME</username> <password>YOUR-PASSWORD</password> 
+						</authConfig>
 
 					<images>
 						<image>
@@ -318,7 +318,7 @@
 							<build>
 								<dockerFileDir>${project.basedir}/src/main/</dockerFileDir>
 
-								<!--copies Jar to the maven directory (uses Assembly system) -->
+								copies Jar to the maven directory (uses Assembly system)
 								<assembly>
 									<descriptorRef>artifact</descriptorRef>
 								</assembly>
@@ -336,7 +336,7 @@
 							<goal>build</goal>
 						</goals>
 					</execution>
-				</executions>
+				</executions> -->
 			</plugin>
 		    
 		    

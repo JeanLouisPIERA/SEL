@@ -1,4 +1,4 @@
-package com.microselwebclientjspui.dto;
+package com.microselbourse.dto;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotEmpty;
@@ -7,19 +7,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Range;
 
-public class PropositionDTO {
-
-	@NotNull(message = "Merci d'indiquer l'identifiant de l'adhérent à l'origine de l'OFFRE ou de la DEMANDE")
-	private String emetteurId;
-
-	@NotNull(message = "Merci d'indiquer le username de l'adhérent à l'origine de l'OFFRE ou de la DEMANDE")
-	private String emetteurUsername;
-
-	@NotEmpty(message = "Merci d'indiquer si votre proposition est une OFFRE ou une DEMANDE")
-	private String enumTradeTypeCode;
-
-	@NotNull(message = "Merci d'indiquer dans quelle catégorie vous publiez votre proposition")
-	private String categorieName;
+public class PropositionUpdateDTO {
 
 	@NotEmpty(message = "Merci de saisir le titre de votre proposition")
 	@Size(min = 5, max = 100, message = "La taille de votre titre doit être comprise entre 5 et 100 caractères")
@@ -54,41 +42,11 @@ public class PropositionDTO {
 	@NotNull(message = "Merci de saisir la date d'échance pour la réalisation de l'échange que vous proposez")
 	private String dateEcheance;
 
-	public PropositionDTO() {
+	public PropositionUpdateDTO() {
 		super();
 	}
 
-	public String getEmetteurId() {
-		return emetteurId;
-	}
-
-	public void setEmetteurId(String emetteurId) {
-		this.emetteurId = emetteurId;
-	}
-
-	public String getEmetteurUsername() {
-		return emetteurUsername;
-	}
-
-	public void setEmetteurUsername(String emetteurUsername) {
-		this.emetteurUsername = emetteurUsername;
-	}
-
-	public String getEnumTradeTypeCode() {
-		return enumTradeTypeCode;
-	}
-
-	public void setEnumTradeTypeCode(String enumTradeTypeCode) {
-		this.enumTradeTypeCode = enumTradeTypeCode;
-	}
-
-	public String getCategorieName() {
-		return categorieName;
-	}
-
-	public void setCategorieName(String categorieName) {
-		this.categorieName = categorieName;
-	}
+	
 
 	public String getTitre() {
 		return titre;
@@ -154,12 +112,15 @@ public class PropositionDTO {
 		this.dateEcheance = dateEcheance;
 	}
 
+
+
 	@Override
 	public String toString() {
-		return "PropositionDTO [emetteurId=" + emetteurId + ", emetteurUsername=" + emetteurUsername
-				+ ", enumTradeTypeCode=" + enumTradeTypeCode + ", categorieName=" + categorieName + ", titre=" + titre
-				+ ", description=" + description + ", image=" + image + ", ville=" + ville + ", codePostal="
-				+ codePostal + ", valeur=" + valeur + ", dateFin=" + dateFin + ", dateEcheance=" + dateEcheance + "]";
+		return "PropositionUpdateDTO [titre=" + titre + ", description=" + description + ", image=" + image + ", ville="
+				+ ville + ", codePostal=" + codePostal + ", valeur=" + valeur + ", dateFin=" + dateFin
+				+ ", dateEcheance=" + dateEcheance + "]";
 	}
+
+	
 
 }

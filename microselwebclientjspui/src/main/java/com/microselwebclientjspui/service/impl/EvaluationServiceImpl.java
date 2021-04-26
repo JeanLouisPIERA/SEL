@@ -46,8 +46,10 @@ public class EvaluationServiceImpl implements IEvaluationService {
 	public Evaluation createEvaluation(Long echangeId, EvaluationDTO evaluationDTO) {
 		
 		String userId = userService.identifyPrincipalId();
+		String userUsername = userService.identifyPrincipalUsername();
 		
 		evaluationDTO.setAdherentId(userId);
+		evaluationDTO.setAdherentUsername(userUsername);
 
 		String url = uRLEvaluationUser + "/echange/" + echangeId;
 

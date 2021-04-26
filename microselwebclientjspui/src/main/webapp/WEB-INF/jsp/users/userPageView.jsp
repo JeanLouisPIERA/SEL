@@ -28,7 +28,7 @@
 						<div class="panel panel-primary">
 							<div class="panel-heading">
 								<h3>
-									<center>Espace Personnel</center>
+									<center>Détail du compte adhérent de l'adhérent ${adherent.username}</center>
 								</h3>
 							</div>
 						</div>
@@ -36,7 +36,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 
 		<div class="container-fluid">
 			<div class="row d-flex justify-content-center">
@@ -44,7 +44,7 @@
 					<div class="panel panel-primary ">
 
 						<div class="panel-heading">
-							<h5>Votre Espace Personnel - Informations de votre compte</h5>
+							<h5>Informations du compte</h5>
 						</div>
 
 						<div class="panel-body">
@@ -83,7 +83,7 @@
 					<div class="panel panel-primary ">
 
 						<div class="panel-heading">
-							<h5>Vos habilitations :</h5>
+							<h5> Habilitations de l'adhérent:</h5>
 						</div>
 
 						<div class="panel-body">
@@ -91,7 +91,7 @@
 								style="text-align: center">
 								<thead>
 									<tr>
-										<th style="text-align: center">Liste de vos habiliations</th>
+										<th style="text-align: center">Liste des habiliations</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -123,12 +123,10 @@
 				<div class="panel panel-primary">
 					<div class="panel-heading">Menu</div>
 					<div class="panel-body">
-					
-						<a type="button" class="btn btn-primary" href="/propositions/newProposition">Proposer</a> Une nouvelle offre ou demande <br> </br>
-						<a type="button" class="btn btn-primary" href="/propositions/adherent">Consulter</a> Toutes vos propositions <br></br> 
-						<a type="button" class="btn btn-primary" href="/echanges/emetteur">Consulter</a> Tous les échanges où vous avez fait une proposition  
-						<a type="button" class="btn btn-primary"href="/echanges/recepteur">Consulter</a> Tous vos échanges où vous avez répondu à une proposition<br></br> 
-						<a type="button" class="btn btn-primary"href="/wallets/adherent">Consulter</a> Le solde et toutes les transaction de votre portefeuille
+						<a type="button" class="btn btn-primary" href="/propositions/adherent/${adherent.id}">Consulter</a> Toutes les propositions de ${adherent.username}<br></br> 
+						<a type="button" class="btn btn-primary" href="/echanges/emetteur">Consulter</a> Tous les échanges où ${adherent.username} a fait une proposition <br></br> 
+						<a type="button" class="btn btn-primary"href="/echanges/recepteur">Consulter</a> Tous les échanges où ${adherent.username} a répondu à une proposition<br></br> 
+						<a type="button" class="btn btn-primary"href="/wallets/adherent">Consulter</a> Le solde et toutes les transaction du portefeuille de ${adherent.username}
 
 					</div>
 				</div>

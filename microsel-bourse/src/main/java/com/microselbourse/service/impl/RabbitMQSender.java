@@ -1,13 +1,23 @@
 package com.microselbourse.service.impl;
 
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.microselbourse.beans.UserBean;
+import com.microselbourse.entities.Echange;
+import com.microselbourse.entities.Evaluation;
 import com.microselbourse.entities.MessageMailEchange;
+import com.microselbourse.entities.MessageMailEchangeEvaluation;
 import com.microselbourse.entities.MessageMailReponse;
+import com.microselbourse.entities.MessageMailScheduler;
+import com.microselbourse.entities.Reponse;
+import com.microselbourse.exceptions.EntityAlreadyExistsException;
+import com.microselbourse.exceptions.EntityNotFoundException;
+import com.microselbourse.service.IEchangeService;
 
 @Service
 public class RabbitMQSender {
@@ -15,6 +25,9 @@ public class RabbitMQSender {
 	@Autowired
 	private AmqpTemplate rabbitTemplate;
 	
+	@Autowired
+	private IEchangeService echangeService;
+
 	@Value("${microselbourse.rabbitmq.queue1}")
 	String queueName1;
 
@@ -23,24 +36,16 @@ public class RabbitMQSender {
 
 	@Value("${microselbourse.rabbitmq.queue3}")
 	String queueName3;
+	
+	@Value("${microselbourse.rabbitmq.queue4}")
+	String queueName4;
+	
+	@Value("${microselbourse.rabbitmq.queue5}")
+	String queueName5;
+
 
 	@Value("${microselbourse.rabbitmq.exchange}")
 	private String exchange;
-
-	/*
-	 * @Value("${microselbourse.rabbitmq.routingkey1}") private String routingkey1;
-	 * 
-	 * @Value("${microselbourse.rabbitmq.routingkey2}") private String routingkey2;
-	 * 
-	 * @Value("${microselbourse.rabbitmq.routingkey3}") private String routingkey3;
-	 */
-	/*
-	 * public void send(PropositionDTO propositionDTO) {
-	 * rabbitTemplate.convertAndSend(exchange, routingkey, propositionDTO);
-	 * System.out.println("Send msg = " + propositionDTO);
-	 * 
-	 * }
-	 */
 
 	public void sendMessageMailReponse(MessageMailReponse messageMailReponse) {
 		rabbitTemplate.convertAndSend(exchange, queueName1, messageMailReponse);
@@ -53,11 +58,24 @@ public class RabbitMQSender {
 		System.out.println("Send msg Echange = " + messageMailEchange);
 
 	}
-	
+
 	public void sendMessageCreateWallet(UserBean emetteur) {
 		rabbitTemplate.convertAndSend(exchange, queueName3, emetteur);
 		System.out.println("Send msg Create Wallet = " + emetteur);
 
 	}
+	
+	public void sendMessageMailEchangeEvaluation(MessageMailEchangeEvaluation messageMailEchangeEvaluation) {
+		rabbitTemplate.convertAndSend(exchange, queueName4, messageMailEchangeEvaluation);
+		System.out.println("Send msg Create Evaluation = " + messageMailEchangeEvaluation);
+	}
+
+	public void sendMessageMailScheduler(MessageMailScheduler messageMailScheduler) {
+		rabbitTemplate.convertAndSend(exchange, queueName5, messageMailScheduler);
+		System.out.println("Send msg Mail Scheduler = " + messageMailScheduler);
+		
+	}
+	
+	
 
 }

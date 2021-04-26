@@ -19,6 +19,7 @@ import com.microselbourse.dao.IPropositionRepository;
 import com.microselbourse.dao.IWalletRepository;
 import com.microselbourse.dao.specs.PropositionSpecification;
 import com.microselbourse.dto.PropositionDTO;
+import com.microselbourse.dto.PropositionUpdateDTO;
 import com.microselbourse.entities.Blocage;
 import com.microselbourse.entities.Categorie;
 import com.microselbourse.entities.EnumCategorie;
@@ -31,7 +32,7 @@ import com.microselbourse.exceptions.DeniedAccessException;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.mapper.IPropositionMapper;
-import com.microselbourse.proxies.IMicroselAdherentsProxy;
+import com.microselbourse.mapper.IPropositionUpdateMapper;
 import com.microselbourse.proxies.IMicroselUsersProxy;
 import com.microselbourse.service.IPropositionService;
 import com.microselbourse.service.IWalletService;
@@ -46,6 +47,8 @@ public class PropositionServiceImpl implements IPropositionService {
 	private ICategorieRepository categorieRepository;
 	@Autowired
 	private IPropositionMapper propositionMapper;
+	@Autowired
+	private IPropositionUpdateMapper propositionUpdateMapper;
 	@Autowired
 	private IMicroselUsersProxy microselUsersProxy;
 	/*
@@ -102,15 +105,22 @@ public class PropositionServiceImpl implements IPropositionService {
 
 		Proposition propositionToCreate = propositionMapper.propositionDTOToProposition(propositionDTO);
 
+		if (propositionToCreate.getDateEcheance().isBefore(LocalDate.now())
+				|| propositionToCreate.getDateFin().isBefore(LocalDate.now()))
+			throw new DeniedAccessException(
+					"La date d'échéance et la date de fin de publication doivent être postérieures à la date d'aujourd'hui");
+
 		propositionToCreate.setCategorie(categorieFound.get());
 		propositionToCreate.setEmetteurId(propositionDTO.getEmetteurId());
-		propositionToCreate.setDateDebut(LocalDate.now());
+		propositionToCreate.setDateDebut(LocalDate.now().plusDays(1));
 		propositionToCreate.setStatut(EnumStatutProposition.ENCOURS);
 
 		Optional<Wallet> walletEmetteur = walletRepository.readByTitulaireId(emetteurProposition.getId());
 		if (walletEmetteur.isEmpty()) {
-			//Wallet emetteurWalletCreated = walletService.createWallet(emetteurProposition.getId());
-			rabbitMQSender.sendMessageCreateWallet(emetteurProposition);
+			// Wallet emetteurWalletCreated =
+			// walletService.createWallet(emetteurProposition.getId());
+			rabbitMQSender.sendMessageCreateWallet(emetteurProposition);// ------------------------------------------------------->
+																		// RMQ
 			return propositionRepository.save(propositionToCreate);
 		}
 
@@ -125,8 +135,6 @@ public class PropositionServiceImpl implements IPropositionService {
 		Page<Proposition> propositions = propositionRepository.findAll(propositionSpecification, pageable);
 		return propositions;
 	}
-	
-	
 
 	@Override
 	public Proposition readProposition(Long id) throws EntityNotFoundException {
@@ -139,7 +147,7 @@ public class PropositionServiceImpl implements IPropositionService {
 	}
 
 	@Override
-	public Proposition updateProposition(Long id, PropositionDTO propositionDTO)
+	public Proposition updateProposition(Long id, String emetteurId, PropositionUpdateDTO propositionUpdateDTO)
 			throws EntityNotFoundException, DeniedAccessException, EntityAlreadyExistsException {
 
 		Proposition propositionUpdated;
@@ -147,7 +155,7 @@ public class PropositionServiceImpl implements IPropositionService {
 		Optional<Proposition> propositionToUpdate = propositionRepository.findById(id);
 		if (!propositionToUpdate.isPresent())
 			throw new EntityNotFoundException("L'Offre ou la Demande que vous souhaitez modifier n'existe pas.");
-		if (propositionToUpdate.get().getEmetteurId() != propositionDTO.getEmetteurId())
+		if (!propositionToUpdate.get().getEmetteurId().equals(emetteurId))
 			throw new DeniedAccessException("Vous ne pouvez pas modifier la proposition d'un autre adhérent");
 		if (propositionToUpdate.get().getDateFin().isBefore(LocalDate.now())) {
 			propositionToUpdate.get().setStatut(EnumStatutProposition.ECHUE);
@@ -157,59 +165,57 @@ public class PropositionServiceImpl implements IPropositionService {
 		if (propositionToUpdate.get().getStatut().equals(EnumStatutProposition.CLOTUREE))
 			throw new DeniedAccessException("Vous ne pouvez pas modifier une OFFRE ou une DEMANDE déjà clôturée");
 
-		Optional<Categorie> categorieToUpdate = categorieRepository
-				.findByName(EnumCategorie.fromValueCode(propositionDTO.getCategorieName()));
-		if (!categorieToUpdate.isPresent())
-			throw new EntityNotFoundException("Votre modification est impossible : cette catégorie n'existe pas");
-
-		Optional<EnumTradeType> enumTradeType = EnumTradeType
-				.getEnumTradeTypeByCode(propositionDTO.getEnumTradeTypeCode());
-		if (enumTradeType.isEmpty())
-			throw new EntityNotFoundException(
-					"Votre proposition ne peut être qu'une OFFRE ou une DEMANDE : merci de renseigner une des 2 valeurs");
-
-		if (!propositionToUpdate.get().getTitre().equals(propositionDTO.getTitre())) {
+		if (!propositionToUpdate.get().getTitre().equals(propositionUpdateDTO.getTitre())) {
 			Optional<Proposition> propositionWithSameTitre = propositionRepository
-					.findByEmetteurIdAndTitreAndEnumTradeTypeAndStatutEnCours(propositionDTO.getEmetteurId(),
-							propositionDTO.getTitre(), enumTradeType.get(), EnumStatutProposition.ENCOURS);
+					.findByEmetteurIdAndTitreAndEnumTradeTypeAndStatutEnCours(propositionToUpdate.get().getEmetteurId(),
+							propositionUpdateDTO.getTitre(), propositionToUpdate.get().getEnumTradeType(),
+							EnumStatutProposition.ENCOURS);
 			if (propositionWithSameTitre.isPresent())
 				throw new EntityAlreadyExistsException(
 						"Vous avez déjà une OFFRE ou une DEMANDE encours de publication avec le même titre");
-
-			propositionUpdated = propositionMapper.propositionDTOToProposition(propositionDTO);
+			propositionUpdated = propositionUpdateMapper.propositionUpdateDTOToProposition(propositionUpdateDTO);
 		} else {
-			propositionUpdated = propositionMapper.propositionDTOToProposition(propositionDTO);
+			propositionUpdated = propositionUpdateMapper.propositionUpdateDTOToProposition(propositionUpdateDTO);
 		}
 
-		propositionUpdated.setId(id);
-		propositionUpdated.setCategorie(categorieToUpdate.get());
-		propositionUpdated.setDateDebut(propositionToUpdate.get().getDateDebut());
+		propositionUpdated.setEmetteurId(propositionToUpdate.get().getEmetteurId());
+		propositionUpdated.setEmetteurUsername(propositionToUpdate.get().getEmetteurUsername());
+		propositionUpdated.setId(propositionToUpdate.get().getId());
 		propositionUpdated.setStatut(EnumStatutProposition.ENCOURS);
+		propositionUpdated.setCategorie(propositionToUpdate.get().getCategorie());
+		propositionUpdated.setEnumTradeType(propositionToUpdate.get().getEnumTradeType());
+
+		if (propositionUpdated.getDateEcheance().isBefore(LocalDate.now())
+				|| propositionUpdated.getDateFin().isBefore(LocalDate.now()))
+			throw new DeniedAccessException(
+					"La date d'échéance et la date de fin de publication doivent être postérieures à la date d'aujourd'hui");
 
 		return propositionRepository.save(propositionUpdated);
 	}
 
 	@Override
-	public Proposition closeProposition(Long id) throws EntityNotFoundException, DeniedAccessException {
+	public Proposition closeProposition(Long id, String emetteurId) throws EntityNotFoundException, DeniedAccessException {
 
 		Optional<Proposition> propositionToClose = propositionRepository.findById(id);
 		if (!propositionToClose.isPresent())
 			throw new EntityNotFoundException("L'Offre ou la Demande que vous souhaitez clôturer n'existe pas.");
+		
+		if (!propositionToClose.get().getEmetteurId().equals(emetteurId))
+			throw new DeniedAccessException("Vous ne pouvez pas clôturer la proposition d'un autre adhérent");
 
 		if (propositionToClose.get().getDateFin().isBefore(LocalDate.now())) {
 			propositionToClose.get().setStatut(EnumStatutProposition.ECHUE);
 			throw new DeniedAccessException(
 					"Vous ne pouvez pas clôturer une OFFRE ou une DEMANDE dont la date de fin de publication est échue");
 		}
-		;
 
 		if (propositionToClose.get().getStatut().equals(EnumStatutProposition.CLOTUREE))
 			throw new DeniedAccessException("Vous ne pouvez pas clôturer une OFFRE ou une DEMANDE déjà clôturée");
 
 		propositionToClose.get().setStatut(EnumStatutProposition.CLOTUREE);
+		propositionToClose.get().setDateFin(LocalDate.now());
+		
 		return propositionRepository.save(propositionToClose.get());
 	}
-
-	
 
 }

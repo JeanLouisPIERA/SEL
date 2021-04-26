@@ -16,4 +16,10 @@ public interface IMailService {
 	void sendHtmlMessage(String to, String name, String subject, String htmlBody)
 			throws MessagingException, UnsupportedEncodingException;
 
+	void sendMessageUsingThymeleafTemplateForceValid(String mailTo, String nomEmetteur, String subjectSuppress,
+			Map<String, Object> model) throws MessagingException, UnsupportedEncodingException;
+
+	void sendMessageUsingThymeleafTemplateForceRefus(String to, String name, String subject,
+			Map<String, Object> templateModel) throws MessagingException, UnsupportedEncodingException;
+
 }

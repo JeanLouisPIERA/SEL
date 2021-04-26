@@ -1,7 +1,8 @@
- package com.microselwebclientjspui.controller;
+package com.microselwebclientjspui.controller;
 
 import java.util.EnumSet;
 
+import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,9 +20,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microselwebclientjspui.criteria.PropositionCriteria;
 import com.microselwebclientjspui.dto.PropositionDTO;
+import com.microselwebclientjspui.dto.PropositionUpdateDTO;
 import com.microselwebclientjspui.errors.ConvertToExceptionMessage;
 import com.microselwebclientjspui.objets.EnumCategorie;
 import com.microselwebclientjspui.objets.EnumStatutProposition;
@@ -29,7 +31,6 @@ import com.microselwebclientjspui.objets.Proposition;
 import com.microselwebclientjspui.objets.Reponse;
 import com.microselwebclientjspui.service.IPropositionService;
 import com.microselwebclientjspui.service.IReponseService;
-import com.microselwebclientjspui.service.IUserService;
 
 @Controller
 public class PropositionController {
@@ -37,13 +38,9 @@ public class PropositionController {
 	@Autowired
 	private IPropositionService propositionService;
 	@Autowired
-	private ObjectMapper mapper;
-	@Autowired
 	private ConvertToExceptionMessage convertToExceptionMessage;
 	@Autowired
 	private IReponseService reponseService;
-	@Autowired
-	private IUserService userService;
 
 	// CREATE PROPOSITION
 	// *****************************************************************************************************
@@ -73,13 +70,12 @@ public class PropositionController {
 
 		try {
 			Proposition propositionToCreate = propositionService.createProposition(propositionDTO);
-			model.addAttribute((Proposition)propositionToCreate);
+			model.addAttribute("proposition", propositionToCreate);
 		} catch (HttpClientErrorException e) {
 			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}
-
 
 		return "propositions/propositionConfirmation";
 	}
@@ -96,7 +92,7 @@ public class PropositionController {
 	public String searchByCriteria(Model model,
 			@PathParam(value = "propositionCriteria") PropositionCriteria propositionCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "10") int size)  {
+			@RequestParam(name = "size", defaultValue = "10") int size) {
 
 		model.addAttribute("propositionCriteria", new PropositionCriteria());
 		model.addAttribute("enumTradeTypeList", EnumTradeType.getListEnumTradeType());
@@ -116,25 +112,26 @@ public class PropositionController {
 		return "propositions/propositionsPage";
 
 	}
-	
+
 	/**
-	 * Permet à un adhérent d'afficher une sélection de ses propositions sous forme de page
+	 * Permet à un adhérent d'afficher une sélection de ses propositions sous forme
+	 * de page
 	 * 
 	 * @throws NotAuthorizedException
-	 * @throws EntityNotFoundException 
+	 * @throws EntityNotFoundException
 	 */
 	@GetMapping(value = "/propositions/adherent")
 	public String searchByCriteriaByAdherent(Model model,
 			@PathParam(value = "propositionCriteria") PropositionCriteria propositionCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "10") int size)  {
+			@RequestParam(name = "size", defaultValue = "10") int size) {
 
 		model.addAttribute("propositionCriteria", new PropositionCriteria());
 		model.addAttribute("enumTradeTypeList", EnumTradeType.getListEnumTradeType());
 		model.addAttribute("enumStatutPropositionList", EnumStatutProposition.getListEnumStatutProposition());
 		model.addAttribute("enumCategorieList", EnumCategorie.getListEnumCategorie());
 
-		Page<Proposition> propositions = propositionService.searchByCriteriaByAdherent(propositionCriteria, 
+		Page<Proposition> propositions = propositionService.searchByCriteriaByAdherent(propositionCriteria,
 				PageRequest.of(page, size));
 
 		model.addAttribute("propositions", propositions.getContent());
@@ -147,7 +144,40 @@ public class PropositionController {
 		return "propositions/propositionsPageAdherent";
 
 	}
+	
+	/**
+	 * Permet à un administrateur d'afficher la sélection des propositions d'un adhérent sous forme
+	 * de page
+	 * 
+	 * @throws NotAuthorizedException
+	 * @throws EntityNotFoundException
+	 */
+	@GetMapping(value = "/propositions/adherent/{adherentId}")
+	public String searchByCriteriaByAdherentId(Model model,
+			@PathVariable("adherentId") String adherentId,
+			@PathParam(value = "propositionCriteria") PropositionCriteria propositionCriteria,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "10") int size) {
 
+		model.addAttribute("propositionCriteria", new PropositionCriteria());
+		model.addAttribute("enumTradeTypeList", EnumTradeType.getListEnumTradeType());
+		model.addAttribute("enumStatutPropositionList", EnumStatutProposition.getListEnumStatutProposition());
+		model.addAttribute("enumCategorieList", EnumCategorie.getListEnumCategorie());
+
+		Page<Proposition> propositions = propositionService.searchByCriteriaByAdherentId(adherentId, propositionCriteria,
+				PageRequest.of(page, size));
+
+		model.addAttribute("propositions", propositions.getContent());
+		model.addAttribute("page", Integer.valueOf(page));
+		model.addAttribute("number", propositions.getNumber());
+		model.addAttribute("totalPages", propositions.getTotalPages());
+		model.addAttribute("totalElements", propositions.getTotalElements());
+		model.addAttribute("size", propositions.getSize());
+
+		return "propositions/propositionsPageAdherent";
+
+	}
+	
 
 	/**
 	 * Permet de lire la fiche d'une proposition
@@ -183,38 +213,42 @@ public class PropositionController {
 	/**
 	 * Permet d'afficher le formulaire de modification d'une proposition
 	 */
-	@GetMapping(value = "/propositions/update/{id}")
-	public String ShowPropositionPageToUpdate(Model model, @PathVariable long id,
-			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "1") int size) {
+	@GetMapping("/propositions/{propositionId}")
+	public String ShowPropositionPageToUpdate(Model model, @PathVariable("propositionId") Long propositionId) {
 
-		model.addAttribute("propositionId", id);
+		model.addAttribute("enumTradeType", EnumSet.allOf(EnumTradeType.class));
+		model.addAttribute("enumCategorie", EnumSet.allOf(EnumCategorie.class));
+		
+		Proposition propositionToUpdate = propositionService.searchById(propositionId);
+		model.addAttribute("proposition", propositionToUpdate);
 
-		Proposition propositionToUpdate = propositionService.searchById(id);
+		PropositionUpdateDTO propositionUpdateDTO = new PropositionUpdateDTO();
+		model.addAttribute("propositionUpdateDTO", propositionUpdateDTO);
 
-		model.addAttribute("propositionToUpdate", propositionToUpdate);
-
-		return "propositions/propositionEdition";
+		return "propositions/propositionEdit";
 
 	}
 
 	/**
 	 * Permet de mettre à jour une proposition
 	 */
-	@PutMapping(value = "/propositions/update/{id}")
-
-	public String addPropositionToUpdate(Model model, Proposition proposition) {
-
+	@PostMapping("/propositions/{propositionId}")
+	public String addPropositionToUpdate(Model model, @PathVariable Long propositionId, @Valid @ModelAttribute("propositionUpdateDTO") PropositionUpdateDTO propositionUpdateDTO  , BindingResult result  ) {
+		
+		if (result.hasErrors()) {
+			return "propositions/propositionCreation";
+		}
+		
 		try {
-			Proposition propositionToUpdate = propositionService.updateProposition(proposition);
-			model.addAttribute((Proposition) propositionToUpdate);
+			Proposition propositionUpdated = propositionService.updateProposition(propositionId, propositionUpdateDTO);
+			model.addAttribute((Proposition) propositionUpdated);
 		} catch (HttpClientErrorException e) {
 			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}
 
-		return "propositions/propositionModification";
+		return "propositions/propositionUpdateConfirmation";
 	}
 
 	// CLOSE PROPOSITION
@@ -224,16 +258,17 @@ public class PropositionController {
 	 * permet de clôturer une proposition avant sa date de fin de publication
 	 */
 
-	@PutMapping(value = "/propositions/close/{id}")
+	@GetMapping(value = "/propositions/close/{id}")
 	public String delete(Model model, @PathVariable("id") Long id) {
 		try {
-			propositionService.closeProposition(id);
+			Proposition propositionClosed = propositionService.closeProposition(id);
+			model.addAttribute(propositionClosed);
 		} catch (HttpClientErrorException e) {
 			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
 		}
-		return "/propositions/propositionClose";
+		return "/propositions/propositionConfirmation";
 	}
 
 }
