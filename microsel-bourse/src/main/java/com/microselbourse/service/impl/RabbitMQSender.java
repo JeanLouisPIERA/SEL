@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.microselbourse.beans.UserBean;
 import com.microselbourse.entities.Echange;
 import com.microselbourse.entities.Evaluation;
+import com.microselbourse.entities.MessageMailDeblocage;
 import com.microselbourse.entities.MessageMailEchange;
 import com.microselbourse.entities.MessageMailEchangeEvaluation;
 import com.microselbourse.entities.MessageMailReponse;
@@ -42,6 +43,9 @@ public class RabbitMQSender {
 	
 	@Value("${microselbourse.rabbitmq.queue5}")
 	String queueName5;
+	
+	@Value("${microselbourse.rabbitmq.queue6}")
+	String queueName6;
 
 
 	@Value("${microselbourse.rabbitmq.exchange}")
@@ -73,6 +77,12 @@ public class RabbitMQSender {
 	public void sendMessageMailScheduler(MessageMailScheduler messageMailScheduler) {
 		rabbitTemplate.convertAndSend(exchange, queueName5, messageMailScheduler);
 		System.out.println("Send msg Mail Scheduler = " + messageMailScheduler);
+		
+	}
+
+	public void sendMessageMailDeblocage(MessageMailDeblocage messageMailDeblocage) {
+		rabbitTemplate.convertAndSend(exchange, queueName6, messageMailDeblocage);
+		System.out.println("Send msg Mail Deblocage = " + messageMailDeblocage);
 		
 	}
 	

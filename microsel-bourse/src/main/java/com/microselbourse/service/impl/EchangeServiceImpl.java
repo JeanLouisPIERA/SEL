@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.microselbourse.beans.UserBean;
 import com.microselbourse.criteria.EchangeCriteria;
@@ -34,12 +35,14 @@ import com.microselbourse.exceptions.DeniedAccessException;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.proxies.IMicroselUsersProxy;
+import com.microselbourse.service.IBlocageService;
 import com.microselbourse.service.IEchangeService;
 import com.microselbourse.service.IMailSenderService;
 import com.microselbourse.service.ITransactionService;
 import com.microselbourse.service.IWalletService;
 
 @Service
+@Transactional
 public class EchangeServiceImpl implements IEchangeService {
 
 	@Autowired
@@ -65,6 +68,9 @@ public class EchangeServiceImpl implements IEchangeService {
 
 	@Autowired
 	RabbitMQSender rabbitMQSender;
+	
+	@Autowired
+	private IBlocageService blocageService;
 	
 	@Value("${application.dateTimezone}")
 	private Integer dateTimezone;
@@ -150,6 +156,12 @@ public class EchangeServiceImpl implements IEchangeService {
 		if (!intervenantId.equals(echangeToRefuse.getEmetteurId())
 				&& !intervenantId.equals(echangeToRefuse.getRecepteurId()))
 			throw new DeniedAccessException("Seul un participant à l'échange peut le refuser");
+		
+		Optional<Blocage> blocageIntervenantId = blocageRepository
+				.findByAdherentIdAndStatutBlocage(intervenantId, EnumStatutBlocage.ENCOURS);
+		if (blocageIntervenantId.isPresent())
+			throw new DeniedAccessException(
+					"La réponse ne peut pas être créée : il existe un blocage encours concernant l'adherent récepteur.");
 
 		UserBean emetteur = usersProxy.consulterCompteAdherent(echangeToRefuse.getEmetteurId());
 		UserBean recepteur = usersProxy.consulterCompteAdherent(echangeToRefuse.getRecepteurId());
@@ -158,11 +170,14 @@ public class EchangeServiceImpl implements IEchangeService {
 
 		if (intervenantId.equals(echangeToRefuse.getEmetteurId())) {
 
-			Optional<Blocage> blocageEmetteurId = blocageRepository.findByAdherentIdAndStatutBlocage(emetteur.getId(),
-					EnumStatutBlocage.ENCOURS);
-			if (blocageEmetteurId.isPresent())
-				throw new DeniedAccessException(
-						"L'échange ne peut pas être refusé par l'émetteur : il existe un blocage encours concernant l'émetteur de la proposition.");
+			/*
+			 * Optional<Blocage> blocageEmetteurId =
+			 * blocageRepository.findByAdherentIdAndStatutBlocage(emetteur.getId(),
+			 * EnumStatutBlocage.ENCOURS); if (blocageEmetteurId.isPresent()) throw new
+			 * DeniedAccessException(
+			 * "L'échange ne peut pas être refusé par l'émetteur : il existe un blocage encours concernant l'émetteur de la proposition."
+			 * );
+			 */
 
 			if(echangeToRefuse.getAvisEmetteur().ordinal()!=2)
 				throw new DeniedAccessException(
@@ -174,11 +189,14 @@ public class EchangeServiceImpl implements IEchangeService {
 
 		if (intervenantId.equals(echangeToRefuse.getRecepteurId())) {
 
-			Optional<Blocage> blocageRecepteurId = blocageRepository.findByAdherentIdAndStatutBlocage(recepteur.getId(),
-					EnumStatutBlocage.ENCOURS);
-			if (blocageRecepteurId.isPresent())
-				throw new DeniedAccessException(
-						"L'échange ne peut pas être validé par le récepteur : il existe un blocage encours concernant le récepteur de la proposition.");
+			/*
+			 * Optional<Blocage> blocageRecepteurId =
+			 * blocageRepository.findByAdherentIdAndStatutBlocage(recepteur.getId(),
+			 * EnumStatutBlocage.ENCOURS); if (blocageRecepteurId.isPresent()) throw new
+			 * DeniedAccessException(
+			 * "L'échange ne peut pas être validé par le récepteur : il existe un blocage encours concernant le récepteur de la proposition."
+			 * );
+			 */
 
 			if(echangeToRefuse.getAvisRecepteur().ordinal()!=2)
 				throw new DeniedAccessException(
@@ -448,6 +466,12 @@ public class EchangeServiceImpl implements IEchangeService {
 		if (!intervenantId.equals(echangeToValidate.getEmetteurId())
 				&& !intervenantId.equals(echangeToValidate.getRecepteurId()))
 			throw new DeniedAccessException("Seul un participant à l'échange peut le valider");
+		
+		Optional<Blocage> blocageIntervenantId = blocageRepository
+				.findByAdherentIdAndStatutBlocage(intervenantId, EnumStatutBlocage.ENCOURS);
+		if (blocageIntervenantId.isPresent())
+			throw new DeniedAccessException(
+					"La réponse ne peut pas être créée : il existe un blocage encours concernant l'adherent récepteur.");
 
 		UserBean emetteur = usersProxy.consulterCompteAdherent(echangeToValidate.getEmetteurId());
 		UserBean recepteur = usersProxy.consulterCompteAdherent(echangeToValidate.getRecepteurId());
@@ -456,12 +480,14 @@ public class EchangeServiceImpl implements IEchangeService {
 
 		if (intervenantId.equals(echangeToValidate.getEmetteurId())) {
 
-			Optional<Blocage> blocageEmetteurId = blocageRepository.findByAdherentIdAndStatutBlocage(emetteur.getId(),
-					EnumStatutBlocage.ENCOURS);
-			if (blocageEmetteurId.isPresent())
-				throw new DeniedAccessException(
-						"L'échange ne peut pas être validé par l'émetteur : il existe un blocage encours concernant l'émetteur de la proposition.");
-
+			/*
+			 * Optional<Blocage> blocageEmetteurId =
+			 * blocageRepository.findByAdherentIdAndStatutBlocage(emetteur.getId(),
+			 * EnumStatutBlocage.ENCOURS); if (blocageEmetteurId.isPresent()) throw new
+			 * DeniedAccessException(
+			 * "L'échange ne peut pas être validé par l'émetteur : il existe un blocage encours concernant l'émetteur de la proposition."
+			 * );
+			 */
 			if(echangeToValidate.getAvisEmetteur().ordinal()!=2)
 				throw new DeniedAccessException(
 						"Votre validation ne peut pas être enregistrée = vous avez déjà validé cet échange");
@@ -472,12 +498,14 @@ public class EchangeServiceImpl implements IEchangeService {
 
 		if (intervenantId.equals(echangeToValidate.getRecepteurId())) {
 
-			Optional<Blocage> blocageRecepteurId = blocageRepository.findByAdherentIdAndStatutBlocage(recepteur.getId(),
-					EnumStatutBlocage.ENCOURS);
-			if (blocageRecepteurId.isPresent())
-				throw new DeniedAccessException(
-						"L'échange ne peut pas être validé par le récepteur : il existe un blocage encours concernant le récepteur de la proposition.");
-
+			/*
+			 * Optional<Blocage> blocageRecepteurId =
+			 * blocageRepository.findByAdherentIdAndStatutBlocage(recepteur.getId(),
+			 * EnumStatutBlocage.ENCOURS); if (blocageRecepteurId.isPresent()) throw new
+			 * DeniedAccessException(
+			 * "L'échange ne peut pas être validé par le récepteur : il existe un blocage encours concernant le récepteur de la proposition."
+			 * );
+			 */
 			if(echangeToValidate.getAvisRecepteur().ordinal()!=2)
 				throw new DeniedAccessException(
 						"Votre validation ne peut pas être enregistrée = vous avez déjà validé cet échange");
@@ -857,9 +885,11 @@ public class EchangeServiceImpl implements IEchangeService {
 	 * Lorsque le système bloque l’accès d’un adhérent à son espace personnel, il passe toutes les PROPOSITIONS et toutes
 	 * les REPONSES de cet adhérent dans la bourse d’échanges en statut BLOQUE
 	 * @return
+	 * @throws EntityAlreadyExistsException 
+	 * @throws EntityNotFoundException 
 	 */
 	@Override
-	public List<Echange> searchAndUpdateEchangesAForceValiderRecepteur() {
+	public List<Echange> searchAndUpdateEchangesAForceValiderRecepteur() throws EntityNotFoundException, EntityAlreadyExistsException {
 		List<Echange> echangesAForceValiderList = new ArrayList<Echange>();
 		
 		LocalDate dateNow = LocalDate.now();
@@ -873,8 +903,12 @@ public class EchangeServiceImpl implements IEchangeService {
 					.get()) {
 				echangeAForceValider.setStatutEchange(EnumStatutEchange.FORCEVALID);
 				echangeAForceValider.setAvisRecepteur(EnumEchangeAvis.ANOMALIE);
-				echangesAForceValiderList.add(echangeAForceValider);
-				echangeRepository.save(echangeAForceValider);
+				Blocage blocageCreated = blocageService.createBlocage(echangeAForceValider.getId(), echangeAForceValider.getRecepteurId(), echangeAForceValider.getRecepteurUsername());
+				Echange echangeSaved = echangeRepository.save(echangeAForceValider);
+				Transaction transactionCreated = transactionService.createTransaction(echangeSaved.getId());
+				echangeSaved.setTransaction(transactionCreated);
+				echangeRepository.save(echangeSaved);
+				echangesAForceValiderList.add(echangeSaved);
 			}
 		}
 		return echangesAForceValiderList;
@@ -889,9 +923,11 @@ public class EchangeServiceImpl implements IEchangeService {
 	 * Lorsque le système bloque l’accès d’un adhérent à son espace personnel, il passe toutes les PROPOSITIONS et toutes
 	 * les REPONSES de cet adhérent dans la bourse d’échanges en statut BLOQUE
 	 * @return
+	 * @throws EntityAlreadyExistsException 
+	 * @throws EntityNotFoundException 
 	 */
 	@Override
-	public List<Echange> searchAndUpdateEchangesAForceValiderEmetteur() {
+	public List<Echange> searchAndUpdateEchangesAForceValiderEmetteur() throws EntityNotFoundException, EntityAlreadyExistsException {
 		List<Echange> echangesAForceValiderList = new ArrayList<Echange>();
 		
 		LocalDate dateNow = LocalDate.now();
@@ -905,8 +941,12 @@ public class EchangeServiceImpl implements IEchangeService {
 					.get()) {
 				echangeAForceValider.setStatutEchange(EnumStatutEchange.FORCEVALID);
 				echangeAForceValider.setAvisEmetteur(EnumEchangeAvis.ANOMALIE);
-				echangesAForceValiderList.add(echangeAForceValider);
-				echangeRepository.save(echangeAForceValider);
+				Blocage blocageCreated = blocageService.createBlocage(echangeAForceValider.getId(), echangeAForceValider.getEmetteurId(), echangeAForceValider.getEmetteurUsername());
+				Echange echangeSaved =echangeRepository.save(echangeAForceValider);
+				Transaction transactionCreated = transactionService.createTransaction(echangeSaved.getId());
+				echangeSaved.setTransaction(transactionCreated);
+				echangeRepository.save(echangeSaved);
+				echangesAForceValiderList.add(echangeSaved);
 			}
 		}
 
@@ -919,9 +959,10 @@ public class EchangeServiceImpl implements IEchangeService {
 	 * • N’enregistre aucune transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur qui a refusé l’échange. 
 	 * • Bloque l’accès à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (= silencieux) et lui envoie un mail
 	 * @return
+	 * @throws EntityNotFoundException 
 	 */
 	@Override
-	public List<Echange> searchAndUpdateEchangesAForceRefuserRecepteur() {
+	public List<Echange> searchAndUpdateEchangesAForceRefuserRecepteur() throws EntityNotFoundException {
 		List<Echange> echangesAForceRefuserList = new ArrayList<Echange>();
 		
 		LocalDate dateNow = LocalDate.now();
@@ -935,8 +976,9 @@ public class EchangeServiceImpl implements IEchangeService {
 					.get()) {
 				echangeAForceRefuser.setStatutEchange(EnumStatutEchange.FORCEREFUS);
 				echangeAForceRefuser.setAvisRecepteur(EnumEchangeAvis.ANOMALIE);
-				echangesAForceRefuserList.add(echangeAForceRefuser);
+				Blocage blocageCreated = blocageService.createBlocage(echangeAForceRefuser.getId(), echangeAForceRefuser.getRecepteurId(), echangeAForceRefuser.getRecepteurUsername());
 				echangeRepository.save(echangeAForceRefuser);
+				echangesAForceRefuserList.add(echangeAForceRefuser);
 			}
 		}
 		
@@ -950,9 +992,10 @@ public class EchangeServiceImpl implements IEchangeService {
 	 * • N’enregistre aucune transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur qui a refusé l’échange. 
 	 * • Bloque l’accès à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (= silencieux) et lui envoie un mail
 	 * @return
+	 * @throws EntityNotFoundException 
 	 */
 	@Override
-	public List<Echange> searchAndUpdateEchangesAForceRefuserEmetteur() {
+	public List<Echange> searchAndUpdateEchangesAForceRefuserEmetteur() throws EntityNotFoundException {
 		List<Echange> echangesAForceRefuserList = new ArrayList<Echange>();
 		
 		LocalDate dateNow = LocalDate.now();
@@ -966,8 +1009,9 @@ public class EchangeServiceImpl implements IEchangeService {
 					.get()) {
 				echangeAForceRefuser.setStatutEchange(EnumStatutEchange.FORCEREFUS);
 				echangeAForceRefuser.setAvisEmetteur(EnumEchangeAvis.ANOMALIE);
-				echangesAForceRefuserList.add(echangeAForceRefuser);
+				Blocage blocageCreated = blocageService.createBlocage(echangeAForceRefuser.getId(), echangeAForceRefuser.getEmetteurId(), echangeAForceRefuser.getEmetteurUsername());
 				echangeRepository.save(echangeAForceRefuser);
+				echangesAForceRefuserList.add(echangeAForceRefuser);
 			}
 		}
 

@@ -21,8 +21,12 @@ public interface IEchangeRepository extends JpaRepository<Echange, Long>, JpaSpe
 			EnumStatutEchange confirme, EnumEchangeAvis avisEmetteur, EnumEchangeAvis avisRecepteur);
 
 	@Query("select echange from Echange echange where (echange.id = ?1)"
-			+ "AND (echange.emetteurId = ?2) or (echange.recepteurId = ?2)")
-	Optional<Echange> findByIdAndAdherentId(Long id, String adherentId);
+			+ "AND (echange.emetteurId = ?2)")
+	Optional<Echange> findByIdAndEmetteurId(Long id, String emetteurId);
+	
+	@Query("select echange from Echange echange where (echange.id = ?1)"
+			+ "AND (echange.recepteurId = ?2)")
+	Optional<Echange> findByIdAndRecepteurId(Long id, String recepteurId);
 
 	Optional<List<Echange>> findByAvisEmetteur(EnumEchangeAvis sans);
 

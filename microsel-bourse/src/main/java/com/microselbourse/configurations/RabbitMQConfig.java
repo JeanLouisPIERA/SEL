@@ -30,6 +30,9 @@ public class RabbitMQConfig {
 	
 	@Value("${microselbourse.rabbitmq.queue5}")
 	String queueName5;
+	
+	@Value("${microselbourse.rabbitmq.queue6}")
+	String queueName6;
 
 	@Value("${microselbourse.rabbitmq.exchange}")
 	String exchange;
@@ -112,6 +115,21 @@ public class RabbitMQConfig {
 	@Bean
 	Binding binding5(TopicExchange exchange) {
 		return BindingBuilder.bind(queue5()).to(exchange).with(queueName5);
+	}
+	
+	/**
+	 * Bean de Queue et Binding pour gérer l'envoi des mails de déblocage du compte d'un adhérent bloqué 
+	 * @return
+	 */
+
+	@Bean
+	Queue queue6() {
+		return new Queue(queueName6, false);
+	}
+
+	@Bean
+	Binding binding6(TopicExchange exchange) {
+		return BindingBuilder.bind(queue6()).to(exchange).with(queueName6);
 	}
 	
 	

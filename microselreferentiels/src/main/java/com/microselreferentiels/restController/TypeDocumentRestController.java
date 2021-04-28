@@ -46,7 +46,7 @@ public class TypeDocumentRestController {
 	  @ApiResponse(code = 409, message = 
 			  "Un autre type de document existe déjà avec ces attributs"), })
 
-	@PostMapping("/typedocuments")
+	@PostMapping("/admin/typedocuments")
 	public ResponseEntity<TypeDocument> createTypeDocument(@Valid @RequestBody TypeDocumentDTO typeDocumentDTO) throws EntityAlreadyExistsException {
 	  return new ResponseEntity<TypeDocument>(typeDocumentService.createTypeDocument(typeDocumentDTO), HttpStatus.OK);
 	}
@@ -56,7 +56,7 @@ public class TypeDocumentRestController {
 	  @ApiResponse(code = 200, message = 
 			  "La recherche a été réalisée avec succés"), })
 	  
-	  @GetMapping(value="/typedocuments/Page", produces="application/json") 
+	  @GetMapping(value="/admin/typedocuments/Page", produces="application/json") 
 	  public ResponseEntity<Page<TypeDocument>> getAllTypeDocumentsByCriteria(
 			  @RequestParam(name = "page", defaultValue= "0") int page, @RequestParam(name="size", defaultValue= "10") int size) { 
 	  	  
@@ -69,7 +69,7 @@ public class TypeDocumentRestController {
 	  @ApiResponse(code = 200, message = 
 			  "La recherche a été réalisée avec succés"), })
 	  
-	  @GetMapping(value="/typedocuments", produces="application/json") 
+	  @GetMapping(value="/admin/typedocuments", produces="application/json") 
 	  public ResponseEntity<List<TypeDocument>> getAllTypeDocuments() { 
 	  	  List<TypeDocument> typeDocuments = typeDocumentService.getAllTypeDocuments(); 	
 		  return new ResponseEntity<List<TypeDocument>>(typeDocuments, HttpStatus.OK); 

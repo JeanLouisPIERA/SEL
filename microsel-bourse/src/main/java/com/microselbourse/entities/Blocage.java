@@ -12,6 +12,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+
 @Entity
 @Table(name = "blocages")
 public class Blocage implements Serializable {
@@ -24,15 +31,25 @@ public class Blocage implements Serializable {
 	@Column(name = "adherent_id", length = 5, nullable = false)
 	private String adherentId;
 
+	@Column(name = "adherent_username", length = 5, nullable = false)
+	private String adherentUsername;
+
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+	@JsonSerialize(using = LocalDateSerializer.class)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "date_debut_blocage")
 	private LocalDate dateDebutBlocage;
 
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+	@JsonSerialize(using = LocalDateSerializer.class)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "date_fin_blocage")
 	private LocalDate dateFinBlocage;
 
 	@Column(name = "statut_blocage")
 	private EnumStatutBlocage statutBlocage;
 
+	
 	@ManyToOne
 	@JoinColumn(name = "echange_id")
 	private Echange echange;
@@ -55,6 +72,14 @@ public class Blocage implements Serializable {
 
 	public void setAdherentId(String adherentId) {
 		this.adherentId = adherentId;
+	}
+
+	public String getAdherentUsername() {
+		return adherentUsername;
+	}
+
+	public void setAdherentUsername(String adherentUsername) {
+		this.adherentUsername = adherentUsername;
 	}
 
 	public LocalDate getDateDebutBlocage() {
@@ -88,5 +113,9 @@ public class Blocage implements Serializable {
 	public void setEchange(Echange echange) {
 		this.echange = echange;
 	}
+
+
+	
+	
 
 }

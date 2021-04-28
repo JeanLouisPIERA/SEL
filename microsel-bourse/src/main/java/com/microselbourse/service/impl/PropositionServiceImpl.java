@@ -131,7 +131,9 @@ public class PropositionServiceImpl implements IPropositionService {
 	@Override
 	public Page<Proposition> searchAllPropositionsByCriteria(PropositionCriteria propositionCriteria,
 			Pageable pageable) {
+		
 		Specification<Proposition> propositionSpecification = new PropositionSpecification(propositionCriteria);
+		
 		Page<Proposition> propositions = propositionRepository.findAll(propositionSpecification, pageable);
 		return propositions;
 	}

@@ -25,7 +25,7 @@
 <div class="wrapper">
 
 <div>
- <a type="button" class="btn btn-primary btn-md" href="/referentiels/newTypeDocument">Créer un nouveau type de document</a>
+ <a type="button" class="btn btn-primary btn-md" href="/typedocuments/newTypeDocument">Créer un nouveau type de document</a>
  <br>
  <br>
  </div>
@@ -54,19 +54,21 @@
 					   <table class="table table-striped table-condensed table-bordered" style="text-align:center">
 					   		 <thead>		  	  	 
 					    			 <tr>
+					    			      <th style="text-align:center">N°</th>
 					    			      <th style="text-align:center">Intitulé</th>
 					    			      <th style="text-align:center">Description</th>
 									      <th style="text-align:center">Date Création</th>
-					    			      <th style="text-align:center">Dernière Mise à jour</th>
+					    			      <th style="text-align:center">DateArchivage</th>
 								     </tr>
 								     </thead>
 								     <tbody>
 					   				 <c:forEach var="typeDocument" items="${typeDocuments}">
 					   				 <tr>
+								          <td>${typeDocument.id}</td>
 								          <td>${typeDocument.typeName}</td>
 								          <td>${typeDocument.description}</td>
 								          <td>${typeDocument.dateCreation}</td>
-								          <td>${typeDocument.dateLastUpdate}</td>
+								          <td>${typeDocument.dateArchivage}</td>
 								        
 								         <%--  <td>
 								          	<a type="button"  class="btn btn-primary" 

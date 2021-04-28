@@ -6,6 +6,7 @@ public enum EnumStatutDocument {
 	
 	ENCOURS ("ENCOURS","ENCOURS"),
 	ARCHIVE ("ARCHIVE","ARCHIVE"),
+	PUBLIE ("PUBLIE","PUBLIE"),
 	INCONNU ("INCONNU","INCONNU")
 	;
 	
@@ -46,8 +47,11 @@ public enum EnumStatutDocument {
 	public String toString() {
 		if(this==ENCOURS) {
 			return"Document en-cours";
-		}else if (this==ARCHIVE) {
+		}
+		else if(this==ARCHIVE) {
 			return"Document archivé";
+		}else if (this==PUBLIE) {
+			return"Document publié";
 		}
 		return super.toString();
 	}   

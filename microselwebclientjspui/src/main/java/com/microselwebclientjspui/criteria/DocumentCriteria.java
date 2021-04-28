@@ -1,66 +1,34 @@
 package com.microselwebclientjspui.criteria;
 
-import java.time.LocalDate;
-
 public class DocumentCriteria {
 
-	private String auteurId;
-	private String auteurUsername;
-	private LocalDate dateCreation;
-	private LocalDate dateLastUpdate;
-	private String enumStatutDocument;
-	private String nomTypeDocument;
+	
+	private String statutDocument;
+	private String typeDocument;
 
 	public DocumentCriteria() {
 		super();
 	}
 
-	public String getAuteurId() {
-		return auteurId;
+	public String getStatutDocument() {
+		return statutDocument;
 	}
 
-	public void setAuteurId(String auteurId) {
-		this.auteurId = auteurId;
+	public void setStatutDocument(String statutDocument) {
+		this.statutDocument = statutDocument;
 	}
 
-	public String getAuteurUsername() {
-		return auteurUsername;
+	public String getTypeDocument() {
+		return typeDocument;
 	}
 
-	public void setAuteurUsername(String auteurUsername) {
-		this.auteurUsername = auteurUsername;
+	public void setTypeDocument(String typeDocument) {
+		this.typeDocument = typeDocument;
 	}
 
-	public LocalDate getDateCreation() {
-		return dateCreation;
-	}
+	
 
-	public void setDateCreation(LocalDate dateCreation) {
-		this.dateCreation = dateCreation;
-	}
+	
 
-	public LocalDate getDateLastUpdate() {
-		return dateLastUpdate;
-	}
-
-	public void setDateLastUpdate(LocalDate dateLastUpdate) {
-		this.dateLastUpdate = dateLastUpdate;
-	}
-
-	public String getEnumStatutDocument() {
-		return enumStatutDocument;
-	}
-
-	public void setEnumStatutDocument(String enumStatutDocument) {
-		this.enumStatutDocument = enumStatutDocument;
-	}
-
-	public String getNomTypeDocument() {
-		return nomTypeDocument;
-	}
-
-	public void setNomTypeDocument(String nomTypeDocument) {
-		this.nomTypeDocument = nomTypeDocument;
-	}
-
+	
 }

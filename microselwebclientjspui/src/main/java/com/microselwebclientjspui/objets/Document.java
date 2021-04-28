@@ -6,12 +6,14 @@ public class Document {
 
 	private Long id;
 	private String titre;
-	private Long auteurId;
+	private String auteurId;
 	private String auteurUsername;
 	private LocalDate dateCreation;
-	private LocalDate dateLastUpdate;
+	private LocalDate datePublication;
+	private LocalDate dateArchivage;
 	private String image;
 	private String contenu;
+	private String entete;
 	private EnumStatutDocument statutDocument;
 	private TypeDocument typeDocument;
 
@@ -35,11 +37,13 @@ public class Document {
 		this.titre = titre;
 	}
 
-	public Long getAuteurId() {
+	
+
+	public String getAuteurId() {
 		return auteurId;
 	}
 
-	public void setAuteurId(Long auteurId) {
+	public void setAuteurId(String auteurId) {
 		this.auteurId = auteurId;
 	}
 
@@ -59,12 +63,20 @@ public class Document {
 		this.dateCreation = dateCreation;
 	}
 
-	public LocalDate getDateLastUpdate() {
-		return dateLastUpdate;
+	public LocalDate getDatePublication() {
+		return datePublication;
 	}
 
-	public void setDateLastUpdate(LocalDate dateLastUpdate) {
-		this.dateLastUpdate = dateLastUpdate;
+	public void setDatePublication(LocalDate datePublication) {
+		this.datePublication = datePublication;
+	}
+
+	public LocalDate getDateArchivage() {
+		return dateArchivage;
+	}
+
+	public void setDateArchivage(LocalDate dateArchivage) {
+		this.dateArchivage = dateArchivage;
 	}
 
 	public String getImage() {
@@ -83,6 +95,14 @@ public class Document {
 		this.contenu = contenu;
 	}
 
+	public String getEntete() {
+		return entete;
+	}
+
+	public void setEntete(String entete) {
+		this.entete = entete;
+	}
+
 	public EnumStatutDocument getStatutDocument() {
 		return statutDocument;
 	}
@@ -99,4 +119,5 @@ public class Document {
 		this.typeDocument = typeDocument;
 	}
 
+	
 }

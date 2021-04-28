@@ -4,8 +4,10 @@ public class DocumentDTO {
 
 	private String titre;
 	private String auteurId;
+	private String auteurUsername;
 	private String image;
 	private String contenu;
+	private String entete;
 	private String typeDocument;
 
 	public DocumentDTO() {
@@ -42,6 +44,24 @@ public class DocumentDTO {
 
 	public void setContenu(String contenu) {
 		this.contenu = contenu;
+	}
+	
+	
+
+	public String getAuteurUsername() {
+		return auteurUsername;
+	}
+
+	public void setAuteurUsername(String auteurUsername) {
+		this.auteurUsername = auteurUsername;
+	}
+
+	public String getEntete() {
+		return entete;
+	}
+
+	public void setEntete(String entete) {
+		this.entete = entete;
 	}
 
 	public String getTypeDocument() {

@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 
 import javax.mail.MessagingException;
 
+import com.microselbourse.exceptions.EntityAlreadyExistsException;
+import com.microselbourse.exceptions.EntityNotFoundException;
+
 public interface IMailScheduler {
 
 	
@@ -20,8 +23,8 @@ public interface IMailScheduler {
 	void sendMailsEchangesASupprimer() throws MessagingException, UnsupportedEncodingException;
 	
 	
-	public void sendMailsEchangesAForceValiderList() throws MessagingException, UnsupportedEncodingException;
+	public void sendMailsEchangesAForceValiderList() throws MessagingException, UnsupportedEncodingException, EntityNotFoundException, EntityAlreadyExistsException;
 
-	public void sendMailsEchangesAForceRefuserList() throws MessagingException, UnsupportedEncodingException;
+	public void sendMailsEchangesAForceRefuserList() throws MessagingException, UnsupportedEncodingException, EntityNotFoundException;
 
 }

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.microselbourse.beans.UserBean;
 import com.microselbourse.dao.IEchangeRepository;
@@ -29,6 +30,7 @@ import com.microselbourse.service.ITransactionService;
 import com.microselbourse.service.IWalletService;
 
 @Service
+@Transactional
 public class TransactionServiceImpl implements ITransactionService {
 
 	@Autowired
@@ -73,6 +75,8 @@ public class TransactionServiceImpl implements ITransactionService {
 		transactionToCreate.setTitreEchange(reponseFromEchange.get().getTitre());
 		transactionToCreate.setEmetteurUsername(echangeToTransaction.get().getEmetteurUsername());
 		transactionToCreate.setRecepteurUsername(echangeToTransaction.get().getRecepteurUsername());
+		transactionToCreate.setEmetteurId(echangeToTransaction.get().getEmetteurId());
+		transactionToCreate.setRecepteurId(echangeToTransaction.get().getRecepteurId());
 
 		UserBean emetteur = usersProxy.consulterCompteAdherent(echangeToTransaction.get().getEmetteurId());
 		UserBean recepteur = usersProxy.consulterCompteAdherent(echangeToTransaction.get().getRecepteurId());
@@ -128,7 +132,7 @@ public class TransactionServiceImpl implements ITransactionService {
 				Transaction transactionSaved = transactionRepository.save(transactionToCreate);
 
 				walletService.enregistrerTransaction(transactionSaved.getId());
-
+				
 				return transactionSaved;
 
 			}
@@ -273,6 +277,104 @@ public class TransactionServiceImpl implements ITransactionService {
 			walletService.enregistrerTransaction(transactionSaved.getId());
 
 			return transactionSaved;
+		}
+		
+		// *******************************************************************************************************************************
+
+		// SCENARIO 3 L'ECHANGE EST EN STATUT FORCEVALID
+
+		// Cela signifie que le WALLET COUNTERPART va être utilisé au moins 1 fois
+
+		else if(echangeToTransaction.get().getStatutEchange().equals(EnumStatutEchange.FORCEVALID)) {
+			
+			// 2 POSSIBILIES :
+			// EMETTEUR VALIDE ET RECEPTEUR FORCEMENT SANS (SCENARIO 1EV-RR),
+			// EMETTEUR SANS ET RECEPTEUR VALIDE (SCENARIO 1ER-RV)
+			
+			// SCENARIO 1EV-RR - PAS BESOIN DE VERIFIER QUE AVIS RECEPTEUR = SANS PUISQUE ECHANGE = FORCEVALID
+			if (echangeToTransaction.get().getAvisEmetteur().equals(EnumEchangeAvis.VALIDE)) {
+
+				Optional<Wallet> walletEmetteur = walletRepository
+						.readByTitulaireId(echangeToTransaction.get().getEmetteurId());
+				if (walletEmetteur.isEmpty()) {
+					Wallet walletEmetteurToCreate = walletService
+							.createWallet(echangeToTransaction.get().getEmetteurId());
+
+					Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId((String) "000.000.000");
+					if (walletRecepteur.isEmpty())
+						throw new EntityNotFoundException(
+								"Transaction impossible : le portefeuille COUNTERPART n'existe pas ");
+
+					List<Wallet> transactionToCreateInvolvedWallets = Arrays.asList(walletEmetteurToCreate,
+							walletRecepteur.get());
+					transactionToCreate.setWallets(transactionToCreateInvolvedWallets);
+
+					Transaction transactionSaved = transactionRepository.save(transactionToCreate);
+					
+					System.out.println("transactionId ***************=" + transactionSaved.getId());
+
+					walletService.enregistrerTransaction(transactionSaved.getId());
+
+					return transactionSaved;
+				}
+
+				Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId((String) "000.000.000");
+				if (walletRecepteur.isEmpty())
+					throw new EntityNotFoundException(
+							"Transaction impossible : le portefeuille COUNTERPART n'existe pas ");
+
+				List<Wallet> transactionToCreateInvolvedWallets = Arrays.asList(walletEmetteur.get(),
+						walletRecepteur.get());
+				transactionToCreate.setWallets(transactionToCreateInvolvedWallets);
+
+				Transaction transactionSaved = transactionRepository.save(transactionToCreate);
+
+				walletService.enregistrerTransaction(transactionSaved.getId());
+
+				return transactionSaved;
+
+			} 
+			else if (echangeToTransaction.get().getAvisRecepteur().equals(EnumEchangeAvis.VALIDE)) {
+				// SCENARIO 1ER-RV
+				
+					Optional<Wallet> walletRecepteur = walletRepository
+							.readByTitulaireId(echangeToTransaction.get().getRecepteurId());
+					if (walletRecepteur.isEmpty()) {
+						Wallet walletRecepteurToCreate = walletService
+								.createWallet(echangeToTransaction.get().getRecepteurId());
+
+						Optional<Wallet> walletEmetteur = walletRepository.readByTitulaireId((String) "000.000.000");
+						if (walletRecepteur.isEmpty())
+							throw new EntityNotFoundException(
+									"Transaction impossible : le portefeuille COUNTERPART n'existe pas ");
+
+						List<Wallet> transactionToCreateInvolvedWallets = Arrays.asList(walletEmetteur.get(),
+								walletRecepteurToCreate);
+						transactionToCreate.setWallets(transactionToCreateInvolvedWallets);
+
+						Transaction transactionSaved = transactionRepository.save(transactionToCreate);
+
+						walletService.enregistrerTransaction(transactionSaved.getId());
+
+						return transactionSaved;
+					}
+
+					Optional<Wallet> walletEmetteur = walletRepository.readByTitulaireId((String) "000.000.000");
+					if (walletRecepteur.isEmpty())
+						throw new EntityNotFoundException(
+								"Transaction impossible : le portefeuille COUNTERPART n'existe pas ");
+
+					List<Wallet> transactionToCreateInvolvedWallets = Arrays.asList(walletEmetteur.get(),
+							walletRecepteur.get());
+					transactionToCreate.setWallets(transactionToCreateInvolvedWallets);
+
+					Transaction transactionSaved = transactionRepository.save(transactionToCreate);
+
+					walletService.enregistrerTransaction(transactionSaved.getId());
+
+					return transactionSaved;
+
+				}
 		}
 		return null;
 	}

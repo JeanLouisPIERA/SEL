@@ -17,14 +17,14 @@
 
 <%@ include file="common/navigation.jspf"%>
 
-<div class="container col-md-8 col-md-offset-1">
+<!-- <div class="container col-md-8 col-md-offset-1">
 <div class="wrapper">
 </div>
-</div>
+</div> -->
 
  <div class="container-fluid">
  <div class="row justify-content-center mb-3">
-  <div class="col-md-10 col-md-offset-1 ">
+  <div class="col-md-12 col-md-offset-0 ">
  <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
 <div class="panel panel-primary">
     <div class="panel-heading">
@@ -37,9 +37,9 @@
 </div>
 
 <div class="row">
-<div class="container col-md-10 col-md-offset-1">
+<div class="container col-md-10 col-md-offset-0">
 <div class="wrapper">
-<section class="container col-md-10 col-md-offset-1 justify-content:stretch">
+<section class="container col-md-9 col-md-offset-2 justify-content:stretch">
   <h2>Le Bureau vous informe :</h2>
    <p>Le xx-xx-2021 par Bureau</p>
   <article>
@@ -51,6 +51,19 @@
 
 </div>
 </div>
+
+<aside class="container col-md-2 col-md-offset-0 justify-content:right">
+  <ul>
+  <br></br>
+  <h4>Déjà parus</h4>
+  	<a href="/accueil">Article 1</a> 
+  	<br></br> <a href="/accueil">Article 2</a> 
+  	<!-- <br></br> <a href="/accueil">Article 3</a>  -->
+  	<br></br>
+  </ul>
+ 
+</aside>  
+
 </div>
 
 <div class="row">
@@ -93,27 +106,28 @@
 </section>
 
 <aside class="container col-md-2 col-md-offset-0 justify-content:right">
-  <ul>
+  <!-- <ul>
   <br></br>
   <h4>Déjà parus</h4>
   	<a href="/accueil">Article 1</a> 
   	<br></br> <a href="/accueil">Article 2</a> 
-  	<!-- <br></br> <a href="/accueil">Article 3</a>  -->
+  	<br></br> <a href="/accueil">Article 3</a> 
   	<br></br>
-  </ul>
+  </ul> -->
   <ul>
   <h4>Renseignez-vous</h4>
-    <a href="/accueil">Qu'est ce qu'un SEL ? </a> 
-  	<br></br> <a href="/accueil">Les Bourses d'échanges</a> 
-  	<br></br> <a href="/accueil">Le réseau des SEL</a> 
+    <a href="/documents/static/1">Qu'est ce qu'un SEL ? </a> 
+  	<br></br> <a href="/documents/static/2">Les Bourses d'échanges</a> 
+  	<br></br> <a href="/documents/static/3">Le réseau des SEL</a> 
+  	<br></br> <a href="/documents/static/4">CGU</a>
+  	<br></br> <a href="/documents/static/5">Infos Légales</a>  
+  	<br></br> <a href="/documents/static/6">FAQ</a> 
   	<br></br>
   </ul>
   <ul>
   <h4>Adhérez</h4>
-  <a href="http://localhost:8180/auth/realms/microsel-realm/login-actions/registration?client_id=microselwebclientjspui&tab_id=mM2utuJ_IjE">Enregistrez-vous </a> 
-  <!-- <ul>
-    <li><a th:href="@{/registration}" href="#">Sign-Up </a></li>
-  </ul> -->
+  <a href="http://localhost:8180/auth/realms/microsel-realm/login-actions/registration?client_id=microselwebclientjspui&tab_id=VrIY2MIjW7Y">Enregistrez-vous </a> 
+  
   </ul>
 </aside>  
 </div>

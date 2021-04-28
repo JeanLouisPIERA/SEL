@@ -15,4 +15,10 @@ public interface IDocumentService {
 
 	Document searchById(Long id);
 
+	Document publierById(Long id);
+
+	Document archiverById(Long id);
+
+	Document searchByTypeDocumentId(Long typedocumentId);
+
 }

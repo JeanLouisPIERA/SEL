@@ -25,10 +25,10 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 	protected void configure(HttpSecurity http) throws Exception {
 		super.configure(http);
 		http.authorizeRequests()
-				.antMatchers("/accueil", "/propositions", "/echanges").permitAll()
+				.antMatchers("/accueil", "/propositions", "/echanges", "/documents/static/**").permitAll()
 				.antMatchers("/propositions/**", "/propositions/adherent/**", "/propositions/close/**", "/reponses/**", "/echanges/**",
 						"/echanges/adherent/**", "/evaluations/**", "/transactions/**", "/wallets/**",
-						"/referentiels/**", "/documents/**", "/accounts/**", "/accueilAdmin", "/login")
+						"/referentiels/**", "/documents/**", "/accounts/**", "/accueilAdmin", "/blocages", "/blocages/**","/login")
 				.authenticated();
 
 	}

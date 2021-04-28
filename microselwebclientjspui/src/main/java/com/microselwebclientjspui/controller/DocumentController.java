@@ -39,12 +39,12 @@ public class DocumentController {
 	@Autowired
 	private ConvertToExceptionMessage convertToExceptionMessage;
 
-//CREATE PROPOSITION *****************************************************************************************************
+//CREATE DOCUMENT*****************************************************************************************************
 
 	/**
 	 * Permet d'afficher le formulaire de création d'un document
 	 */
-	@GetMapping("/referentiels/newDocument")
+	@GetMapping("/documents/newDocument")
 	public String newDocument(Model model) {
 
 		List<TypeDocument> typeDocuments = typeDocumentService.getAll();
@@ -59,7 +59,7 @@ public class DocumentController {
 	/**
 	 * Permet de valider l'enregistrement d'un nouveau document
 	 */
-	@PostMapping("/referentiels/newDocument")
+	@PostMapping("/documents/newDocument")
 	public String createDocument(Model model, @ModelAttribute("documentDTO") DocumentDTO documentDTO,
 			BindingResult result) {
 
@@ -84,19 +84,21 @@ public class DocumentController {
 	/**
 	 * Permet d'afficher une sélection de documents sous forme de page
 	 */
-	@GetMapping(value = "/referentiels/documents")
+	@GetMapping(value = "/documents")
 	public String searchByCriteria(Model model,
 			@PathParam(value = "documentCriteria") DocumentCriteria documentCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "6") int size) {
+			@RequestParam(name = "size", defaultValue = "10") int size) {
 
 		List<TypeDocument> typeDocuments = typeDocumentService.getAll();
 
 		model.addAttribute("documentCriteria", new DocumentCriteria());
-		model.addAttribute("enumStatutDocument", EnumStatutDocument.getListEnumStatutDocument());
+		model.addAttribute("enumStatutDocumentList", EnumStatutDocument.getListEnumStatutDocument());
 		model.addAttribute("typeDocumentsList", typeDocuments);
 
 		Page<Document> documents = documentService.searchByCriteria(documentCriteria, PageRequest.of(page, size));
+		
+		System.out.println("resultatCount = " + documents.getContent().size());
 
 		model.addAttribute("documents", documents.getContent());
 		model.addAttribute("page", Integer.valueOf(page));
@@ -124,6 +126,57 @@ public class DocumentController {
 			return "/error";
 		}
 		return "documents/documentView";
+	}
+	
+	/**
+	 * Permet de lire le contenu d'un document statique par la référence à son type de document (document publié unique)
+	 */
+	@GetMapping("/documents/static/{id}")
+	public String readDocumentStatic(Model model, @PathVariable("id") Long typedocumentId) {
+		try {
+			Document readDocument = documentService.searchByTypeDocumentId(typedocumentId);
+			model.addAttribute("document", readDocument);
+
+		} catch (HttpClientErrorException e) {
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
+			model.addAttribute("error", errorMessage);
+			return "/error";
+		}
+		return "documents/documentView";
+	}
+	
+	/**
+	 * Permet de publier le contenu d'un document
+	 */
+	@GetMapping("/documents/publication/{id}")
+	public String publierDocument(Model model, @PathVariable("id") Long id) {
+		try {
+			Document publishedDocument = documentService.publierById(id);
+			model.addAttribute("document", publishedDocument);
+
+		} catch (HttpClientErrorException e) {
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
+			model.addAttribute("error", errorMessage);
+			return "/error";
+		}
+		return "documents/documentPublicationConfirmation";
+	}
+	
+	/**
+	 * Permet d'archiver le contenu d'un document
+	 */
+	@GetMapping("/documents/archivage/{id}")
+	public String archiverDocument(Model model, @PathVariable("id") Long id) {
+		try {
+			Document archivedDocument = documentService.archiverById(id);
+			model.addAttribute("document", archivedDocument);
+
+		} catch (HttpClientErrorException e) {
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
+			model.addAttribute("error", errorMessage);
+			return "/error";
+		}
+		return "documents/documentArchivageConfirmation";
 	}
 
 }

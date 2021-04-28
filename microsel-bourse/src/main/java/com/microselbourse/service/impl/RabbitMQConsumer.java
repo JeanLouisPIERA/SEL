@@ -12,8 +12,10 @@ import org.springframework.stereotype.Component;
 
 import com.microselbourse.beans.UserBean;
 import com.microselbourse.dao.IEchangeRepository;
+import com.microselbourse.entities.Blocage;
 import com.microselbourse.entities.Echange;
 import com.microselbourse.entities.Evaluation;
+import com.microselbourse.entities.MessageMailDeblocage;
 import com.microselbourse.entities.MessageMailEchange;
 import com.microselbourse.entities.MessageMailEchangeEvaluation;
 import com.microselbourse.entities.MessageMailReponse;
@@ -127,6 +129,24 @@ public class RabbitMQConsumer {
 		mailService.sendHtmlMessage(to, name, subject, htmlBody);
 		
 		System.out.println("Recieved MessageMailScheduler Success From RabbitMQ: " + messageMailScheduler);
+
+	}
+	
+	@RabbitListener(queues = "${microselbourse.rabbitmq.queue6}")
+	public void recievedMessageMailDeblocage(MessageMailDeblocage messageMailDeblocage)
+			throws EntityAlreadyExistsException, EntityNotFoundException, UnsupportedEncodingException, MessagingException {
+
+		System.out.println("Recieved MessageMailDeblocage From RabbitMQ: " + messageMailDeblocage);
+		Blocage blocageToAnnuler = messageMailDeblocage.getBlocage();
+		UserBean destinataire=messageMailDeblocage.getAdherent();
+		String subject =messageMailDeblocage.getSubject();
+		String microselBourseMailTemplate=messageMailDeblocage.getMicroselBourseMailTemplate();
+		
+		
+		mailSender.sendMailAnnulationBlocage(blocageToAnnuler,destinataire, subject, microselBourseMailTemplate);
+		 
+		
+		System.out.println("Recieved MessageMailEchangeEvaluation Success From RabbitMQ: " + messageMailDeblocage);
 
 	}
 

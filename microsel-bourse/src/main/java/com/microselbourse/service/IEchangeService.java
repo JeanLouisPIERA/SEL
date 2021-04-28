@@ -69,8 +69,10 @@ public interface IEchangeService {
 	 * Lorsque le système bloque l’accès d’un adhérent à son espace personnel, il passe toutes les PROPOSITIONS et toutes
 	 * les REPONSES de cet adhérent dans la bourse d’échanges en statut BLOQUE
 	 * @return
+	 * @throws EntityAlreadyExistsException 
+	 * @throws EntityNotFoundException 
 	 */
-	List<Echange> searchAndUpdateEchangesAForceValiderRecepteur();
+	List<Echange> searchAndUpdateEchangesAForceValiderRecepteur() throws EntityNotFoundException, EntityAlreadyExistsException;
 
 	/**
 	  * Si seul le récepteur ou seul l’émetteur a renseigné un avis VALIDE sur l’échange, le système : 
@@ -81,10 +83,12 @@ public interface IEchangeService {
 	 * Lorsque le système bloque l’accès d’un adhérent à son espace personnel, il passe toutes les PROPOSITIONS et toutes
 	 * les REPONSES de cet adhérent dans la bourse d’échanges en statut BLOQUE
 	 * @return
+	 * @throws EntityAlreadyExistsException 
+	 * @throws EntityNotFoundException 
 	 */
-	List<Echange> searchAndUpdateEchangesAForceValiderEmetteur();
+	List<Echange> searchAndUpdateEchangesAForceValiderEmetteur() throws EntityNotFoundException, EntityAlreadyExistsException;
 
-	List<Echange> searchAndUpdateEchangesAForceRefuserRecepteur();
+	List<Echange> searchAndUpdateEchangesAForceRefuserRecepteur() throws EntityNotFoundException;
 
 	/**
 	 * Si seul le récepteur ou seul l’émetteur a renseigné un avis REFUSE sur l’échange, le système : 
@@ -92,8 +96,9 @@ public interface IEchangeService {
 	 * • N’enregistre aucune transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur qui a refusé l’échange. 
 	 * • Bloque l’accès à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (= silencieux) et lui envoie un mail
 	 * @return
+	 * @throws EntityNotFoundException 
 	 */
-	List<Echange> searchAndUpdateEchangesAForceRefuserEmetteur();
+	List<Echange> searchAndUpdateEchangesAForceRefuserEmetteur() throws EntityNotFoundException;
 
 
 

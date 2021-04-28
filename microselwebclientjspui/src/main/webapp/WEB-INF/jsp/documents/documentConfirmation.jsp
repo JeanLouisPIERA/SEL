@@ -26,7 +26,7 @@
  <div class="panel panel-primary ">
  
   <div class="panel-heading">
-   <h5>${document.auteurUsername}, le nouveau document que vous venez de créer a été enregistré</h5>
+   <h5>${document.auteurUsername}, ce document que vous venez de créer a été enregistré</h5>
   </div>
   
   <div class="panel-body">
@@ -66,7 +66,7 @@
  </div>
  </div>
  <div>
- <a type="button" class="btn btn-primary btn-md" href="/referentiels">Retour au menu</a>
+ <a type="button" class="btn btn-primary btn-md" href="/documents">Retour au menu</a>
  </div>
  </div>
  

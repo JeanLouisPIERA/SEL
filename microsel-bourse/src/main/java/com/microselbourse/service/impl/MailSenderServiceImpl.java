@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.microselbourse.beans.UserBean;
+import com.microselbourse.entities.Blocage;
 import com.microselbourse.entities.Echange;
 import com.microselbourse.entities.Evaluation;
 import com.microselbourse.entities.Reponse;
@@ -126,6 +127,28 @@ public class MailSenderServiceImpl implements IMailSenderService {
 		this.populateModel("evaluation_id", evaluation.getId());
 
 		this.populateModel("destinataire_username", nomUser);
+
+		mailService.sendMessageUsingThymeleafTemplate(mailTo, nomUser, subject, model, microselBourseMailTemplate);
+
+	}
+	
+	
+	
+	
+
+	@Override
+	public void sendMailAnnulationBlocage(Blocage blocage, UserBean destinataire,String subject,
+			String microselBourseMailTemplate) throws UnsupportedEncodingException, MessagingException {
+
+		String mailTo = destinataire.getEmail();
+		String nomUser = destinataire.getUsername();
+
+		this.populateModel("id", blocage.getId());
+		this.populateModel("adherentId", blocage.getAdherentId());
+		this.populateModel("adherentUsername", blocage.getAdherentUsername());
+		this.populateModel("dateDebutBlocage", blocage.getDateDebutBlocage());
+		this.populateModel("dateFinBlocage", blocage.getDateFinBlocage());
+		this.populateModel("echangeId", blocage.getEchange().getId());
 
 		mailService.sendMessageUsingThymeleafTemplate(mailTo, nomUser, subject, model, microselBourseMailTemplate);
 

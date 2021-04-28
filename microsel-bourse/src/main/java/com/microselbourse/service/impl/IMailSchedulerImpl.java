@@ -13,6 +13,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.microselbourse.entities.Echange;
+import com.microselbourse.exceptions.EntityAlreadyExistsException;
+import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.service.IEchangeService;
 import com.microselbourse.service.IMailScheduler;
 import com.microselbourse.service.IMailService;
@@ -107,10 +109,12 @@ public class IMailSchedulerImpl implements IMailScheduler {
 	 * Lorsque le système bloque l’accès d’un adhérent à son espace personnel, il passe toutes les PROPOSITIONS et toutes
 	 * les REPONSES de cet adhérent dans la bourse d’échanges en statut BLOQUE
 	 * @return
+	 * @throws EntityAlreadyExistsException 
+	 * @throws EntityNotFoundException 
 	 */
 	@Override
 	@Scheduled(cron = "${application.cron}")
-	public void sendMailsEchangesAForceValiderList() throws MessagingException, UnsupportedEncodingException {
+	public void sendMailsEchangesAForceValiderList() throws MessagingException, UnsupportedEncodingException, EntityNotFoundException, EntityAlreadyExistsException {
 		List<Echange> echangesAForceValiderListEmetteur = echangeService.searchAndUpdateEchangesAForceValiderEmetteur();
 
 		for (Echange echangeAForceValider : echangesAForceValiderListEmetteur) {
@@ -145,10 +149,11 @@ public class IMailSchedulerImpl implements IMailScheduler {
 	 * • N’enregistre aucune transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur qui a refusé l’échange. 
 	 * • Bloque l’accès à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (= silencieux) et lui envoie un mail
 	 * @return
+	 * @throws EntityNotFoundException 
 	 */
 	@Override
 	@Scheduled(cron = "${application.cron}")
-	public void sendMailsEchangesAForceRefuserList() throws MessagingException, UnsupportedEncodingException {
+	public void sendMailsEchangesAForceRefuserList() throws MessagingException, UnsupportedEncodingException, EntityNotFoundException {
 		List<Echange> echangesAForceRefuserListEmetteur = echangeService.searchAndUpdateEchangesAForceRefuserEmetteur();
 
 		for (Echange echangeAForceRefuser : echangesAForceRefuserListEmetteur) {

@@ -7,12 +7,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.microselreferentiels.beans.UserBean;
 
-@FeignClient(name = "microsel-adherent") 
-@RibbonClient(name = "microsel-adherent")
+@FeignClient(name = "microseluser") 
+@RibbonClient(name = "microseluser")
 public interface IMicroselAdherentsProxy {
 	
-	@GetMapping( value = "/sel/adherents/users/accounts/{id}")
-	UserBean consulterCompteAdherent(@PathVariable("id") Long id);
+	
+	@GetMapping(value = "/sel/users/accounts/{id}")
+	UserBean consulterCompteAdherent(@PathVariable("id") String id);
 
 
 }

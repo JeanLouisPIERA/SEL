@@ -4,20 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum EnumStatutDocument {
-
-	ENCOURS("ENCOURS", "ENCOURS"), ARCHIVE("ARCHIVE", "ARCHIVE"), INCONNU("INCONNU", "INCONNU");
-
-	private String code;
-	private String text;
-
+	
+	ENCOURS ("ENCOURS","ENCOURS"),
+	ARCHIVE ("ARCHIVE","ARCHIVE"),
+	PUBLIE ("PUBLIE","PUBLIE"),
+	INCONNU ("INCONNU","INCONNU")
+	;
+	
+	 private String code;
+	  private String text;
+	  
 	private EnumStatutDocument(String code, String text) {
 		this.code = code;
 		this.text = text;
 	}
-
+	
 	public static EnumStatutDocument getEnumStatutDocumentByCode(String code) {
 		for (EnumStatutDocument enumStatutDocument : EnumStatutDocument.values()) {
-			if (enumStatutDocument.code.equals(code)) {
+			if(enumStatutDocument.code.equals(code)){
 				return enumStatutDocument;
 			}
 		}
@@ -42,21 +46,25 @@ public enum EnumStatutDocument {
 
 	@Override
 	public String toString() {
-		if (this == ENCOURS) {
-			return "Document en-cours";
-		} else if (this == ARCHIVE) {
-			return "Document archivé";
+		if(this==ENCOURS) {
+			return"Document en-cours";
+		}
+		else if(this==ARCHIVE) {
+			return"Document archivé";
+		}else if (this==PUBLIE) {
+			return"Document publié";
 		}
 		return super.toString();
-	}
-
+	}   
+	
 	public static EnumStatutDocument fromValueCode(String code) {
 		try {
-			return valueOf(code);
-		} catch (IllegalArgumentException e) {
-			return EnumStatutDocument.INCONNU;
-		}
+	        return valueOf(code);
+	    } catch (IllegalArgumentException e) {
+	        return EnumStatutDocument.INCONNU;
+	    }
 	}
+	
 
 	public static List<EnumStatutDocument> getListEnumStatutDocument() {
 
@@ -67,5 +75,6 @@ public enum EnumStatutDocument {
 		return ListEnumStatutDocument;
 
 	}
+
 
 }

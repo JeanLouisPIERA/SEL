@@ -4,6 +4,7 @@ public class TypeDocumentDTO {
 
 	private String typeName;
 	private String description;
+	private String entete;
 
 	public TypeDocumentDTO() {
 		super();
@@ -24,5 +25,15 @@ public class TypeDocumentDTO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public String getEntete() {
+		return entete;
+	}
+
+	public void setEntete(String entete) {
+		this.entete = entete;
+	}
+	
+	
 
 }

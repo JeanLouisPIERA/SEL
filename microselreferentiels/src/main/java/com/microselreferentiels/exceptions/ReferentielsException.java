@@ -1,7 +1,7 @@
 package com.microselreferentiels.exceptions;
 
-public class ReferentielsException extends Exception {
-	
+public class ReferentielsException extends Exception{
+
 	private String message;
 
 	public ReferentielsException() {
@@ -12,5 +12,4 @@ public class ReferentielsException extends Exception {
 		super(message);
 	}
 	
-
 }

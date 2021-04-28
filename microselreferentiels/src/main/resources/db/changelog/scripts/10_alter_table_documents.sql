@@ -1,0 +1,2 @@
+ALTER TABLE documents
+MODIFY auteur_id VARCHAR(255) NOT NULL;

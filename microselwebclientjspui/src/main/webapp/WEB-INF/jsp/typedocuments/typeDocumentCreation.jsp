@@ -50,8 +50,18 @@
       	<fieldset class="form-row">
 	       <fieldset class="form-group">
 		       <form:textarea path="description" rows="6" cols="100"
-		        placeholder="Décrire ici le type de document à créer : ne pas dépasser 255 caractères" required="required" maxlength="255"/>
+		        placeholder="DESCRIPTION :Décrire ici le type de document à créer : ne pas dépasser 10000 caractères" required="required" maxlength="10000"/>
 		       <form:errors path="description" cssClass="text-warning" />
+	      	</fieldset>
+      	</fieldset> 
+      	
+      	<br>
+      	
+      	<fieldset class="form-row">
+	       <fieldset class="form-group">
+		       <form:textarea path="entete" rows="6" cols="100"
+		        placeholder="ENTETE : Décrire ici en résumé le type de document à créer : ne pas dépasser 255 caractères" required="required" maxlength="255"/>
+		       <form:errors path="entete" cssClass="text-warning" />
 	      	</fieldset>
       	</fieldset> 
       	

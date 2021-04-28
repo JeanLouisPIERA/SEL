@@ -35,6 +35,10 @@
   <div class="panel-heading">
    <span>Date de création :</span>
    <h7>${document.dateCreation}</h7>
+    </div>
+    <div class="panel-heading">
+   <span> Résumé :</span>
+   <h7>${document.entete}</h7>
   </div>
   
   <div class="panel-body">

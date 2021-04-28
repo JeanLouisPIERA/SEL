@@ -12,7 +12,7 @@ public class TypeDocument {
 
 	private LocalDate dateCreation;
 
-	private LocalDate dateLastUpdate;
+	private LocalDate dateArchivage;
 
 	public TypeDocument() {
 		super();
@@ -51,12 +51,13 @@ public class TypeDocument {
 		this.dateCreation = dateCreation;
 	}
 
-	public LocalDate getDateLastUpdate() {
-		return dateLastUpdate;
+	public LocalDate getDateArchivage() {
+		return dateArchivage;
 	}
 
-	public void setDateLastUpdate(LocalDate dateLastUpdate) {
-		this.dateLastUpdate = dateLastUpdate;
+	public void setDateArchivage(LocalDate dateArchivage) {
+		this.dateArchivage = dateArchivage;
 	}
 
+	
 }

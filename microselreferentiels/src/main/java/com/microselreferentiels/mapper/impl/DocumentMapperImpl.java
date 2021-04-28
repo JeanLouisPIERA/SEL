@@ -20,7 +20,9 @@ public class DocumentMapperImpl implements IDocumentMapper {
         DocumentDTO documentDTO = new DocumentDTO();
         
         documentDTO.setAuteurId(entity.getAuteurId());
+        documentDTO.setAuteurUsername(entity.getAuteurUsername());
         documentDTO.setContenu(entity.getContenu());
+        documentDTO.setEntete(entity.getEntete());
         documentDTO.setImage(entity.getImage());
         documentDTO.setTitre(entity.getTitre());
        
@@ -39,7 +41,9 @@ public class DocumentMapperImpl implements IDocumentMapper {
 	        Document document = new Document();
 	        
 	        document .setAuteurId(dto.getAuteurId());
+	        document.setAuteurUsername(dto.getAuteurUsername());
 	        document.setContenu(dto.getContenu());
+	        document.setEntete(dto.getEntete());
 	        document.setImage(dto.getImage());
 	        document.setTitre(dto.getTitre());
 	        

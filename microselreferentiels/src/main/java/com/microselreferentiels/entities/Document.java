@@ -24,8 +24,8 @@ public class Document implements Serializable{
 	@Column(name = "titre", length = 25, nullable=false)
 	private String titre;
 	
-	@Column(name = "auteur_id", length = 5, nullable=false)
-	private Long auteurId; 
+	@Column(name = "auteur_id", length = 255, nullable=false)
+	private String auteurId; 
 	
 	@Column(name = "auteur_username", length = 25, nullable=false)
 	private String auteurUsername;
@@ -33,14 +33,20 @@ public class Document implements Serializable{
 	@Column(name = "date_creation")
 	private LocalDate dateCreation; 
 	
-	@Column(name = "date_last_update")
-	private LocalDate dateLastUpdate;
+	@Column(name = "date_publication")
+	private LocalDate datePublication;
+	
+	@Column(name = "date_archivage")
+	private LocalDate dateArchivage;
 	
 	@Column(name = "image", length = 25)
 	private String image;
 	
 	@Column(name = "contenu", length = 255, nullable=false)
 	private String contenu;
+	
+	@Column(name="entete", length = 50, nullable=false)
+	private String entete;
 	
 	@Column(name = "statut_document", length = 3)
 	private EnumStatutDocument statutDocument;
@@ -69,11 +75,13 @@ public class Document implements Serializable{
 		this.titre = titre;
 	}
 
-	public Long getAuteurId() {
+	
+
+	public String getAuteurId() {
 		return auteurId;
 	}
 
-	public void setAuteurId(Long auteurId) {
+	public void setAuteurId(String auteurId) {
 		this.auteurId = auteurId;
 	}
 
@@ -93,12 +101,20 @@ public class Document implements Serializable{
 		this.dateCreation = dateCreation;
 	}
 
-	public LocalDate getDateLastUpdate() {
-		return dateLastUpdate;
+	public LocalDate getDatePublication() {
+		return datePublication;
 	}
 
-	public void setDateLastUpdate(LocalDate dateLastUpdate) {
-		this.dateLastUpdate = dateLastUpdate;
+	public void setDatePublication(LocalDate datePublication) {
+		this.datePublication = datePublication;
+	}
+
+	public LocalDate getDateArchivage() {
+		return dateArchivage;
+	}
+
+	public void setDateArchivage(LocalDate dateArchivage) {
+		this.dateArchivage = dateArchivage;
 	}
 
 	public String getImage() {
@@ -117,6 +133,14 @@ public class Document implements Serializable{
 		this.contenu = contenu;
 	}
 
+	public String getEntete() {
+		return entete;
+	}
+
+	public void setEntete(String entete) {
+		this.entete = entete;
+	}
+
 	public EnumStatutDocument getStatutDocument() {
 		return statutDocument;
 	}
@@ -132,7 +156,7 @@ public class Document implements Serializable{
 	public void setTypeDocument(TypeDocument typeDocument) {
 		this.typeDocument = typeDocument;
 	}
-	
+
 	
 
 }

@@ -3,6 +3,8 @@ package com.microselwebclientjspui.service.impl;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -25,19 +27,27 @@ import com.microselwebclientjspui.service.ITypeDocumentService;
 public class TypeDocumentServiceImpl implements ITypeDocumentService {
 
 	@Autowired
+	private HttpHeadersFactory httpHeadersFactory;
+
+	@Autowired
+	private HttpServletRequest request;
+
+	@Autowired
 	private RestTemplate restTemplate;
+
 
 	@Value("${application.uRLTypeDocument}")
 	private String uRLTypeDocument;
+	
+	@Value("${application.uRLTypeDocumentAdmin}")
+	private String uRLTypeDocumentAdmin;
+
 
 	@Override
 	public Object createTypeDocument(TypeDocumentDTO typeDocumentDTO) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 		HttpEntity<TypeDocumentDTO> requestEntity = new HttpEntity<>(typeDocumentDTO, headers);
-		ResponseEntity<TypeDocument> response = restTemplate.exchange(uRLTypeDocument, HttpMethod.POST, requestEntity,
+		ResponseEntity<TypeDocument> response = restTemplate.exchange(uRLTypeDocumentAdmin, HttpMethod.POST, requestEntity,
 				TypeDocument.class);
 
 		return response.getBody();
@@ -45,13 +55,11 @@ public class TypeDocumentServiceImpl implements ITypeDocumentService {
 
 	@Override
 	public Page<TypeDocument> getAll(Pageable pageable) {
-		HttpHeaders headers = new HttpHeaders();
-
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		String url = uRLTypeDocument + "/Page";
+		String url = uRLTypeDocumentAdmin + "/Page";
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("page", pageable.getPageNumber()).queryParam("size", pageable.getPageSize());
@@ -68,13 +76,11 @@ public class TypeDocumentServiceImpl implements ITypeDocumentService {
 	@Override
 	public List<TypeDocument> getAll() {
 
-		HttpHeaders headers = new HttpHeaders();
-
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLTypeDocument);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLTypeDocumentAdmin);
 
 		ResponseEntity<List<TypeDocument>> typeDocuments = restTemplate.exchange(builder.build().toUriString(),
 				HttpMethod.GET, entity, new ParameterizedTypeReference<List<TypeDocument>>() {

@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public class UserBean {
 	
 	
-	private Long id;
+	private String id;
 	
 	/*
 	 * Long sel;
@@ -45,13 +45,19 @@ public class UserBean {
 		super();
 	}
 
-	public Long getId() {
+	
+
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+
+
+	public void setId(String id) {
 		this.id = id;
 	}
+
+
 
 	public String getUsername() {
 		return username;
@@ -167,15 +173,7 @@ public class UserBean {
 		this.dateAdminFin = dateAdminFin;
 	}
 
-	@Override
-	public String toString() {
-		return "UserBean [id=" + id + ", username=" + username + ", password=" + password + ", passwordConfirm="
-				+ passwordConfirm + ", email=" + email + ", statut=" + statut + ", dateAdhesion=" + dateAdhesion
-				+ ", dateClotureDebut=" + dateClotureDebut + ", dateClotureFin=" + dateClotureFin
-				+ ", dateBlocageDebut=" + dateBlocageDebut + ", dateBlocageFin=" + dateBlocageFin + ", dateBureauDebut="
-				+ dateBureauDebut + ", dateBureauFin=" + dateBureauFin + ", dateAdminDebut=" + dateAdminDebut
-				+ ", dateAdminFin=" + dateAdminFin + "]";
-	}
+	
 
 	
 	

@@ -4,6 +4,7 @@ public class TypePropositionDTO {
 	
 	private String typeName;
 	private String description;
+	private String entete;
 	
 	public TypePropositionDTO() {
 		super();
@@ -24,6 +25,16 @@ public class TypePropositionDTO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public String getEntete() {
+		return entete;
+	}
+
+	public void setEntete(String entete) {
+		this.entete = entete;
+	}
+	
+	
 	
 	
 	

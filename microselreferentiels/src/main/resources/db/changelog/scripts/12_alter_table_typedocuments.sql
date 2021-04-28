@@ -1,0 +1,7 @@
+ALTER TABLE typedocuments
+  ADD DATE_ARCHIVAGE DATE
+    AFTER DATE_LAST_UPDATE;
+ 
+
+ 
+ 

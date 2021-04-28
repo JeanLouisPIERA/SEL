@@ -2,6 +2,8 @@ package com.microselwebclientjspui.service.impl;
 
 import java.util.Arrays;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -20,24 +22,42 @@ import com.microselwebclientjspui.criteria.DocumentCriteria;
 import com.microselwebclientjspui.dto.DocumentDTO;
 import com.microselwebclientjspui.objets.Document;
 import com.microselwebclientjspui.service.IDocumentService;
+import com.microselwebclientjspui.service.IUserService;
 
 @Service
 public class DocumentServiceImpl implements IDocumentService {
 
 	@Autowired
+	private HttpHeadersFactory httpHeadersFactory;
+
+	@Autowired
+	private HttpServletRequest request;
+
+	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private IUserService userService;
+
 
 	@Value("${application.uRLDocument}")
 	private String uRLDocument;
+	
+	@Value("${application.uRLDocumentAdmin}")
+	private String uRLDocumentAdmin;
 
 	@Override
 	public Object createDocument(DocumentDTO documentDTO) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+		
+		String emetteurId = userService.identifyPrincipalId();
+		documentDTO.setAuteurId(emetteurId);
+		
+		String emetteurUsername = userService.identifyPrincipalUsername();
+		documentDTO.setAuteurUsername(emetteurUsername);
+		
 		HttpEntity<DocumentDTO> requestEntity = new HttpEntity<>(documentDTO, headers);
-		ResponseEntity<Document> response = restTemplate.exchange(uRLDocument, HttpMethod.POST, requestEntity,
+		ResponseEntity<Document> response = restTemplate.exchange(uRLDocumentAdmin, HttpMethod.POST, requestEntity,
 				Document.class);
 
 		return response.getBody();
@@ -45,19 +65,13 @@ public class DocumentServiceImpl implements IDocumentService {
 
 	@Override
 	public Page<Document> searchByCriteria(DocumentCriteria documentCriteria, Pageable pageable) {
-		HttpHeaders headers = new HttpHeaders();
-
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLDocument)
-				.queryParam("auteurId", documentCriteria.getAuteurId())
-				.queryParam("auteurUsername", documentCriteria.getAuteurUsername())
-				.queryParam("dateCreation", documentCriteria.getDateCreation())
-				.queryParam("dateLastUpdate", documentCriteria.getDateLastUpdate())
-				.queryParam("enumStatutProposition", documentCriteria.getEnumStatutDocument())
-				.queryParam("nomTypeDocument", documentCriteria.getNomTypeDocument())
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLDocumentAdmin)
+				.queryParam("statutDocument", documentCriteria.getStatutDocument())
+				.queryParam("typeDocument", documentCriteria.getTypeDocument())
 				.queryParam("page", pageable.getPageNumber()).queryParam("size", pageable.getPageSize());
 
 		ResponseEntity<RestResponsePage<Document>> documents = restTemplate.exchange(builder.build().toUriString(),
@@ -68,16 +82,61 @@ public class DocumentServiceImpl implements IDocumentService {
 		return pageDocument;
 	}
 
+
 	@Override
 	public Document searchById(Long id) {
+		
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+		HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+
+		String url = uRLDocumentAdmin + "/" + id;
+
+		ResponseEntity<Document> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Document.class);
+
+		return response.getBody();
+		
+	}
+
+	@Override
+	public Document publierById(Long id) {
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+		HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+
+		String url = uRLDocumentAdmin + "/publication/" + id;
+
+		ResponseEntity<Document> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Document.class);
+
+		return response.getBody();
+	}
+
+	@Override
+	public Document archiverById(Long id) {
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+		HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+
+		String url = uRLDocumentAdmin + "/archivage/" + id;
+
+		ResponseEntity<Document> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Document.class);
+
+		return response.getBody();
+	}
+
+	@Override
+	public Document searchByTypeDocumentId(Long typedocumentId) {
+		
 		HttpHeaders headers = new HttpHeaders();
 
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-
-		String url = uRLDocument + "/" + id;
+		
+		String url = uRLDocument + "/" + typedocumentId;
+		
+		System.out.println("uri" + url);
 
 		ResponseEntity<Document> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Document.class);
 

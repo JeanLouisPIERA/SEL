@@ -1,0 +1,4 @@
+ALTER TABLE documents
+  DROP COLUMN DATE_LAST_UPDATE; 
+ 
+ 

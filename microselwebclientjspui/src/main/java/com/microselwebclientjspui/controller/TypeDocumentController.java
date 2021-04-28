@@ -34,7 +34,7 @@ public class TypeDocumentController {
 	/**
 	 * Permet d'afficher le formulaire de création d'un type de document
 	 */
-	@GetMapping("/referentiels/newTypeDocument")
+	@GetMapping("/typedocuments/newTypeDocument")
 	public String newTypeDocument(Model model) {
 		model.addAttribute("typeDocumentDTO", new TypeDocumentDTO());
 
@@ -44,7 +44,7 @@ public class TypeDocumentController {
 	/**
 	 * Permet de valider l'enregistrement d'un nouveau type de document
 	 */
-	@PostMapping("/referentiels/newTypeDocument")
+	@PostMapping("/typedocuments/newTypeDocument")
 	public String createTypeDocument(Model model, @ModelAttribute("typeDocumentDTO") TypeDocumentDTO typeDocumentDTO,
 			BindingResult result) {
 
@@ -69,7 +69,7 @@ public class TypeDocumentController {
 	/**
 	 * Permet d'afficher tous les types de documents sous forme de page
 	 */
-	@GetMapping(value = "/referentiels/typedocuments")
+	@GetMapping(value = "/typedocuments")
 	public String getAll(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
 

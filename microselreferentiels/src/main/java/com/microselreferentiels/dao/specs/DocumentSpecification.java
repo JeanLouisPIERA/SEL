@@ -26,24 +26,17 @@ public class DocumentSpecification implements Specification<Document>{
 		
         Predicate predicates = builder.conjunction();
 
-	        if (documentCriteria.getEnumStatutDocument()!= null && !documentCriteria.getEnumStatutDocument().isEmpty()) {
-	        	predicates.getExpressions().add(builder.equal(root.get("statutDocument"), EnumStatutDocument.fromValueCode(documentCriteria.getEnumStatutDocument())));	
+	        if (documentCriteria.getStatutDocument()!= null && !documentCriteria.getStatutDocument().isEmpty()) {
+	        	predicates.getExpressions().add(builder.equal(root.get("statutDocument"), EnumStatutDocument.fromValueCode(documentCriteria.getStatutDocument())));	
+	        	System.out.println("statut = " + documentCriteria.getStatutDocument().toString());
 	        }
 	        
-        	if (documentCriteria.getAuteurId()!= null) {
-            	predicates.getExpressions().add(builder.equal(root.get("auteurId"), documentCriteria.getAuteurId()));		
-            }
         	
-        	 if (documentCriteria.getAuteurUsername()!= null) {
-             	predicates.getExpressions().add(builder.like(root.get("auteurUsername"), "%" + documentCriteria.getAuteurUsername()+ "%"));	
-             }
-        	
-            if (documentCriteria.getNomTypeDocument()!= null && !documentCriteria.getNomTypeDocument().isEmpty()) {
-            	predicates.getExpressions().add(builder.like(root.get("typeDocument").get("typeName"), documentCriteria.getNomTypeDocument()));	
+            if (documentCriteria.getTypeDocument()!= null && !documentCriteria.getTypeDocument().isEmpty()) {
+            	predicates.getExpressions().add(builder.like(root.get("typeDocument").get("typeName"), "%" +documentCriteria.getTypeDocument()+ "%"));	
+            	System.out.println("typeDocument = " + documentCriteria.getTypeDocument().toString());
             }
-            
            
-         
        
         return builder.and(predicates);
 		

@@ -25,5 +25,7 @@ public class ReferentielsExceptionReponse {
 	public void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
 	}
+	
+	
 
 }

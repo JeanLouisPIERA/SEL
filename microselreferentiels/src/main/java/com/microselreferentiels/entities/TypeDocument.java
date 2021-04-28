@@ -35,8 +35,8 @@ public class TypeDocument {
 	@Column(name = "date_creation")
 	private LocalDate dateCreation; 
 	
-	@Column(name = "date_last_update")
-	private LocalDate dateLastUpdate;
+	@Column(name = "date_archivage")
+	private LocalDate dateArchivage;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy="typeDocument", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
@@ -79,12 +79,14 @@ public class TypeDocument {
 		this.dateCreation = dateCreation;
 	}
 
-	public LocalDate getDateLastUpdate() {
-		return dateLastUpdate;
+	
+
+	public LocalDate getDateArchivage() {
+		return dateArchivage;
 	}
 
-	public void setDateLastUpdate(LocalDate dateLastUpdate) {
-		this.dateLastUpdate = dateLastUpdate;
+	public void setDateArchivage(LocalDate dateArchivage) {
+		this.dateArchivage = dateArchivage;
 	}
 
 	public List<Document> getDocuments() {

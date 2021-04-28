@@ -1,0 +1,4 @@
+ALTER TABLE typedocuments
+  DROP COLUMN DATE_LAST_UPDATE; 
+ 
+ 

@@ -1,13 +1,13 @@
 package com.microselreferentiels.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-@ResponseStatus(HttpStatus.CONFLICT)
-public class EntityAlreadyExistsException extends Exception{
+public class EntityAlreadyExistsException extends ReferentielsException{
 	
+	public EntityAlreadyExistsException(){
+		super();
+	}
+ 
 	public EntityAlreadyExistsException(String message) {
-        super(message);
-    }
+		super(message);
+	}
 
 }

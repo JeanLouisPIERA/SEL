@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.microselbourse.criteria.PropositionCriteria;
 import com.microselbourse.entities.EnumCategorie;
+import com.microselbourse.entities.EnumStatutEchange;
 import com.microselbourse.entities.EnumStatutProposition;
 import com.microselbourse.entities.EnumTradeType;
 import com.microselbourse.entities.Proposition;
@@ -36,8 +37,7 @@ public class PropositionSpecification implements Specification<Proposition> {
 					.add(builder.like(root.get("emetteurUsername"), "%" + propositionCriteria.getEmetteurUsername() + "%"));
 		}
 
-		if (propositionCriteria.getCodeEnumTradeType() != null
-				&& !propositionCriteria.getCodeEnumTradeType().isEmpty()) {
+		if (propositionCriteria.getCodeEnumTradeType() != null && !propositionCriteria.getCodeEnumTradeType().isEmpty()) {
 			predicates.getExpressions().add(builder.equal(root.get("enumTradeType"),
 					EnumTradeType.fromValueCode(propositionCriteria.getCodeEnumTradeType())));
 		}

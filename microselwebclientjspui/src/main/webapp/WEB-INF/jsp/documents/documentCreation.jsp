@@ -45,17 +45,7 @@
       
       <br>
 
-	   
-	   <fieldset class="form-row">     
-       <fieldset class="form-group">
-	       <form:label path="auteurId" class="col-auto col-form-label">Identifiant de l'auteur de document :</form:label>
-	       <form:input path="auteurId" type="text" class="form-control"
-	        placeholder="e.g 12" required="required" />
-	       <form:errors path="auteurId" cssClass="text-warning" />
-      	</fieldset>
-      	</fieldset>
-      	
-      	<br>
+	 
       	
       	<fieldset class="form-row">
        <fieldset class="form-group">
@@ -67,6 +57,15 @@
       	</fieldset>
       
       <br>
+      
+      	<fieldset class="form-row">
+	       <fieldset class="form-group">
+		       <form:textarea path="entete" rows="3" cols="100"
+		        placeholder="Rédiger ici un résumé du texte à publier : ne pas dépasser 255 caractères" required="required" maxlength="255"/>
+		       <form:errors path="entete" cssClass="text-warning" />
+	      	</fieldset>
+      	</fieldset>
+      	
       	
       	
       	<fieldset class="form-row">
@@ -77,17 +76,7 @@
 	      	</fieldset>
       	</fieldset>
       	
-    <%--  <fieldset class="form-group">
-       <form:label path="categorieName" class="col-auto col-form-label">Rubrique :</form:label>
-      	<form:select path="categorieName" class="form-control">
-	     	 <c:forEach var="enumCategorie" items="${enumCategorie}">
-	     	 	<c:if test="${enumCategorie.getCode() != 'INCONNUE'}">
-			    <option value="${enumCategorie.getCode()}">${enumCategorie.toString()}</option>
-			    </c:if>
-			 </c:forEach>
-        </form:select>
-        </fieldset>
-        </fieldset> 	 --%>
+   
       	
       
       <br>
@@ -102,24 +91,7 @@
         </fieldset>
         </fieldset>
         
-        <%-- <fieldset class="form-group">
-	        <form:label path="typeDocument" class="col-auto col-form-label">Type de document :</form:label>
-	      	<form:select path="typeDocument">
-		     	 <form:option value="-" label="Merci de choisir un type de document"/>
-				 <form:options items="${typeDocumentsList}" itemValue="typeName" itemLabel="typeName" />
-	        </form:select>
-	       </fieldset> --%>
-       
-      
-     <%--   <fieldset class="form-group">
-      		<label> Type de document : </label>
-	      	<select name="typeName" class="form-control">
-	      		<option value="${typeDocument}">${'Votre Choix'}</option>
-		     	 <c:forEach var="typeDocument" items="${typeDocumentsList}">
-				    <option value="${typeDocument.getTypeName()}">${typeDocument.getTypeName()}</option>
-				 </c:forEach>
-	        </select>
-       	</fieldset> --%>
+        
       	
       	 <br>
       	 
