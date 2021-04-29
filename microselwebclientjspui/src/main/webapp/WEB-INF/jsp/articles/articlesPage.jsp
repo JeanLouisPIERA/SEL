@@ -129,14 +129,19 @@
 												<td><a type="button" class="btn btn-primary"
 													href="/articles/${article.id}">Contenu</a></td>
 												
-												<sec:authorize access="isAuthenticated()"> 	
+												<sec:authorize access="hasAuthority('ADMIN')"> 	
+													
 												<td><a type="button" class="btn btn-success"
-													href="/articles/moderation/${article.id}">Modérer</a>
+													href="/articles/publication/${article.id}">Publier</a>
 												</td>
-												
+													
 												<td><a type="button" class="btn btn-warning"
 													href="/articles/archivage/${article.id}">Archiver</a>
 												</td>
+												<td><a type="button" class="btn btn-danger"
+													href="/articles/moderation/${article.id}">Modérer</a>
+												</td>
+											
 												</sec:authorize>
 
 											</tr>

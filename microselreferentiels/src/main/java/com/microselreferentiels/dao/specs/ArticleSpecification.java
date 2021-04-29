@@ -27,18 +27,20 @@ public class ArticleSpecification implements Specification<Article>{
 	public Predicate toPredicate(Root<Article> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 		
         Predicate predicates = builder.conjunction();
+        
+        predicates.getExpressions().add(builder.equal(root.get("isModerated"), Boolean.FALSE));	
+    	System.out.println("typeArticleCriteria = " + articleCriteria.getTypeArticle().toString());
 
 	        if (articleCriteria.getStatutDocument()!= null && !articleCriteria.getStatutDocument().isEmpty()) {
 	        	predicates.getExpressions().add(builder.equal(root.get("statutDocument"), EnumStatutDocument.fromValueCode(articleCriteria.getStatutDocument())));	
-	        	System.out.println("statut = " + articleCriteria.getStatutDocument().toString());
+	        	System.out.println("statutCriteria = " + articleCriteria.getStatutDocument().toString());
 	        }
 	        
         	
             if (articleCriteria.getTypeArticle()!= null && !articleCriteria.getTypeArticle().isEmpty()) {
             	predicates.getExpressions().add(builder.like(root.get("typeArticle").get("typeName"), "%" +articleCriteria.getTypeArticle()+ "%"));	
-            	System.out.println("typeArticle = " + articleCriteria.getTypeArticle().toString());
-            }
-           
+            	System.out.println("typeArticleCriteria = " + articleCriteria.getTypeArticle().toString());
+            }          
        
         return builder.and(predicates);
 		

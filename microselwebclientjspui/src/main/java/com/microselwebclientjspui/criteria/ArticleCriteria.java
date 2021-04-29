@@ -4,7 +4,8 @@ public class ArticleCriteria {
 
 	
 	private String statutDocument;
-	private String typeDocument;
+	private String typeArticle;
+	
 
 	public ArticleCriteria() {
 		super();
@@ -18,13 +19,15 @@ public class ArticleCriteria {
 		this.statutDocument = statutDocument;
 	}
 
-	public String getTypeDocument() {
-		return typeDocument;
+	public String getTypeArticle() {
+		return typeArticle;
 	}
 
-	public void setTypeDocument(String typeDocument) {
-		this.typeDocument = typeDocument;
+	public void setTypeArticle(String typeArticle) {
+		this.typeArticle = typeArticle;
 	}
+
+	
 
 	
 

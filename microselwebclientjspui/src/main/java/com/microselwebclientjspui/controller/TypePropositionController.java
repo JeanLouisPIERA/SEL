@@ -29,7 +29,7 @@ public class TypePropositionController {
 	/**
 	 * Permet d'afficher le formulaire de création d'un type de Proposition
 	 */
-	@GetMapping("/referentiels/newTypeProposition")
+	@GetMapping("/typepropositions/newTypeProposition")
 	public String newTypeProposition(Model model) {
 		model.addAttribute("typePropositionDTO", new TypePropositionDTO());
 
@@ -39,7 +39,7 @@ public class TypePropositionController {
 	/**
 	 * Permet de valider l'enregistrement d'un nouveau type de Proposition
 	 */
-	@PostMapping("/referentiels/newTypeProposition")
+	@PostMapping("/typepropositions/newTypeProposition")
 	public String createTypeProposition(Model model,
 			@ModelAttribute("typePropositionDTO") TypePropositionDTO typePropositionDTO, BindingResult result) {
 
@@ -64,7 +64,7 @@ public class TypePropositionController {
 	/**
 	 * Permet d'afficher tous les types de propositions sous forme de page
 	 */
-	@GetMapping(value = "/referentiels/typepropositions")
+	@GetMapping(value = "/typepropositions")
 	public String getAll(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
 

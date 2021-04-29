@@ -1,12 +1,18 @@
 package com.microselwebclientjspui.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class ArticleDTO {
 
+	@NotNull
 	private String titre;
 	private String auteurId;
+	@NotNull
 	private String auteurUsername;
 	private String image;
+	@NotNull
 	private String contenu;
+	@NotNull
 	private String entete;
 	private String typeArticle;
 

@@ -154,4 +154,88 @@ databaseChangeLog:
             path: scripts/13_alter_table_typedocuments.sql
             relativeToChangelogFile: true
             splitStatements: true
-            stripComments: true                                                                                                                                                                               
+            stripComments: true 
+ - changeSet:
+        id: script14
+        author: JeanLouis PIERA
+        changes:
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            endDelimiter: \nGO
+            path: scripts/14_create_table_typearticles.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true 
+ - changeSet:
+        id: script15
+        author: JeanLouis PIERA
+        changes:
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            endDelimiter: \nGO
+            path: scripts/15_create_table_articles.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true   
+ - changeSet:
+        id: script16
+        author: JeanLouis PIERA
+        changes:
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            endDelimiter: \nGO
+            path: scripts/16_alter_table_typedocuments.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true 
+ - changeSet:
+        id: script17
+        author: JeanLouis PIERA
+        changes:
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            endDelimiter: \nGO
+            path: scripts/17_alter_table_typearticles.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true 
+ - changeSet:
+        id: script18
+        author: JeanLouis PIERA
+        changes:
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            endDelimiter: \nGO
+            path: scripts/18_alter_table_articles.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true   
+ - changeSet:
+        id: script19
+        author: JeanLouis PIERA
+        changes:
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            endDelimiter: \nGO
+            path: scripts/19_alter_table_articles.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true  
+ - changeSet:
+        id: script20
+        author: JeanLouis PIERA
+        changes:
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            endDelimiter: \nGO
+            path: scripts/20_alter_table_articles.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true                                                                                                                                                                                                                                                                                                                                                         

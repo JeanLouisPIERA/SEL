@@ -25,7 +25,7 @@
 <div class="container-fluid">
 
 <div class="row d-flex justify-content-center">
-<div class="container col-md-10 col-md-offset-1">
+<div class="container col-md-6 col-md-offset-3">
  <div class="panel panel-primary ">
  
   <div class="panel-heading">
@@ -33,16 +33,12 @@
   </div>
   
   <div class="panel-heading">
-   <span>Date de création :</span>
-   <h7>${article.dateCreation}</h7>
+   <span>Date de création : ${article.dateCreation} Posté par :${article.auteurUsername} </span>
+   <!-- <h7></h7>
     </div>
-    <div class="panel-heading">
-   <span> Résumé :</span>
-   <h7>${article.entete}</h7>
-  </div>
   <div class="panel-heading">
-   <span> Posté par :</span>
-   <h7>${article.auteurUsername}</h7>
+   <span> </span>
+   <h7></h7> -->
   </div>
   
   <div class="panel-body">

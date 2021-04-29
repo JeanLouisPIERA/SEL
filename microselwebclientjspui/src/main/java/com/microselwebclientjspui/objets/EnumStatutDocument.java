@@ -47,12 +47,12 @@ public enum EnumStatutDocument {
 	@Override
 	public String toString() {
 		if(this==ENCOURS) {
-			return"Document en-cours";
+			return"en-cours";
 		}
 		else if(this==ARCHIVE) {
-			return"Document archivé";
+			return"archivé";
 		}else if (this==PUBLIE) {
-			return"Document publié";
+			return"publié";
 		}
 		return super.toString();
 	}   

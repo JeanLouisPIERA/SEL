@@ -1,5 +1,8 @@
 package com.microselreferentiels.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -29,6 +32,10 @@ public interface IArticleService {
 	Article readArticleByTypeArticle(@Valid Long typearticleId) throws EntityNotFoundException;
 
 	Page<Article> searchAllArticlesByCriteria(ArticleCriteria articleCriteria, Pageable pageable);
+
+	Article publierArticle(@Valid Long id) throws EntityNotFoundException, DeniedAccessException;
+
+	
 
 	
 

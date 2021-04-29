@@ -1,6 +1,8 @@
 package com.microselwebclientjspui.service.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,17 +22,15 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.microselwebclientjspui.criteria.ArticleCriteria;
-import com.microselwebclientjspui.criteria.DocumentCriteria;
 import com.microselwebclientjspui.dto.ArticleDTO;
-import com.microselwebclientjspui.dto.DocumentDTO;
 import com.microselwebclientjspui.objets.Article;
-import com.microselwebclientjspui.objets.Document;
+import com.microselwebclientjspui.objets.EnumStatutDocument;
 import com.microselwebclientjspui.service.IArticleService;
 import com.microselwebclientjspui.service.IUserService;
 
 @Service
-public class ArticleServiceImpl implements IArticleService{
-	
+public class ArticleServiceImpl implements IArticleService {
+
 	@Autowired
 	private HttpHeadersFactory httpHeadersFactory;
 
@@ -38,14 +39,13 @@ public class ArticleServiceImpl implements IArticleService{
 
 	@Autowired
 	private RestTemplate restTemplate;
-	
+
 	@Autowired
 	private IUserService userService;
 
-
 	@Value("${application.uRLArticle}")
 	private String uRLArticle;
-	
+
 	@Value("${application.uRLArticleAdmin}")
 	private String uRLArticleAdmin;
 
@@ -55,22 +55,31 @@ public class ArticleServiceImpl implements IArticleService{
 
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		
-		String emetteurId = userService.identifyPrincipalId();
-		if(emetteurId!=null) {
-		articleDTO.setAuteurId(emetteurId);
+
+		String emetteurId;
+		try {
+			emetteurId = userService.identifyPrincipalId();
+		} catch (Exception e) {
+			articleDTO.setAuteurUsername("visiteur");
+
+			HttpEntity<ArticleDTO> requestEntity = new HttpEntity<>(articleDTO, headers);
+			ResponseEntity<Article> response = restTemplate.exchange(uRLArticle, HttpMethod.POST, requestEntity,
+					Article.class);
+
+			return response.getBody();
 		}
-		
+
 		String emetteurUsername = userService.identifyPrincipalUsername();
-		if(emetteurUsername!=null) {
+
+		articleDTO.setAuteurId(emetteurId);
 		articleDTO.setAuteurUsername(emetteurUsername);
-		}
-		
+
 		HttpEntity<ArticleDTO> requestEntity = new HttpEntity<>(articleDTO, headers);
 		ResponseEntity<Article> response = restTemplate.exchange(uRLArticle, HttpMethod.POST, requestEntity,
 				Article.class);
 
 		return response.getBody();
+
 	}
 
 	@Override
@@ -79,12 +88,12 @@ public class ArticleServiceImpl implements IArticleService{
 
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		
+
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLArticle)
 				.queryParam("statutDocument", articleCriteria.getStatutDocument())
-				.queryParam("typeArticle", articleCriteria.getTypeDocument())
+				.queryParam("typeArticle", articleCriteria.getTypeArticle())
 				.queryParam("page", pageable.getPageNumber()).queryParam("size", pageable.getPageSize());
 
 		ResponseEntity<RestResponsePage<Article>> articles = restTemplate.exchange(builder.build().toUriString(),
@@ -95,10 +104,9 @@ public class ArticleServiceImpl implements IArticleService{
 		return pageArticle;
 	}
 
-
 	@Override
 	public Article searchById(Long id) {
-		
+
 		HttpHeaders headers = new HttpHeaders();
 
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
@@ -111,20 +119,31 @@ public class ArticleServiceImpl implements IArticleService{
 		ResponseEntity<Article> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Article.class);
 
 		return response.getBody();
-		
+
+	}
+
+	@Override
+	public Article publierById(Long id) {
+
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+
+		HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+
+		String url = uRLArticleAdmin + "/publication/" + id;
+
+		ResponseEntity<Article> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Article.class);
+
+		return response.getBody();
+
 	}
 
 	@Override
 	public Article modererById(Long id) {
-		HttpHeaders headers = new HttpHeaders();
-
-		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 
-		String url = uRLArticle + "/moderation/" + id;
+		String url = uRLArticleAdmin + "/moderation/" + id;
 
 		ResponseEntity<Article> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Article.class);
 
@@ -144,23 +163,26 @@ public class ArticleServiceImpl implements IArticleService{
 		return response.getBody();
 	}
 
-	/*
-	 * @Override public Article searchByTypeArticleId(Long typeArticleId) {
-	 * 
-	 * HttpHeaders headers = new HttpHeaders();
-	 * 
-	 * headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-	 * headers.setContentType(MediaType.APPLICATION_JSON);
-	 * 
-	 * HttpEntity<?> requestEntity = new HttpEntity<>(headers);
-	 * 
-	 * String url = uRLArticle + "/" + typeArticleId;
-	 * 
-	 * ResponseEntity<Article> response = restTemplate.exchange(url, HttpMethod.GET,
-	 * requestEntity, Article.class);
-	 * 
-	 * return response.getBody(); }
-	 */
+	@Override
+	public List<Article> select4ArticlesToBePublished() {
 
+		ArticleCriteria articleCriteria = new ArticleCriteria();
+		articleCriteria.setStatutDocument(EnumStatutDocument.PUBLIE.getCode());
+		Page<Article> articlePublishablePage = this.searchByCriteria(articleCriteria, PageRequest.of(0, 10));
+		
+		List<Article> articleToBePublishedList = new ArrayList();
+
+		if (!articlePublishablePage.getContent().isEmpty()) {
+			// Evaluation de la taille de la liste récupérée
+			int taille = articlePublishablePage.getContent().size();
+
+			for (int nombre = 1; nombre <= 4; nombre++) {
+				Article articleToBePublished = articlePublishablePage.getContent().get(taille - nombre);
+				articleToBePublishedList.add(articleToBePublished);
+			}
+		}
+
+		return articleToBePublishedList;
+	}
 
 }

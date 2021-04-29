@@ -27,5 +27,6 @@ public interface IArticleRepository extends JpaRepository<Article, Long>, JpaSpe
 	Optional<Article> findByTypeArticleIdAndStatutDocument(@Valid Long typearticleId, EnumStatutDocument publie);
 
 	
+	
 
 }

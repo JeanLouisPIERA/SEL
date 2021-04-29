@@ -13,9 +13,10 @@ public class ArticleDTO {
 	@NotEmpty(message="Merci de saisir le titre de votre article")
 	private String titre;
 	
-	@NotNull(message="Merci d'indiquer l'identifiant de l'adhérent auteur de ce document")
+	
 	private String auteurId; 
 	
+	@NotNull(message="Merci d'indiquer le nom de l' auteur de cet article")
 	private String auteurUsername;
 	
 	private String image;

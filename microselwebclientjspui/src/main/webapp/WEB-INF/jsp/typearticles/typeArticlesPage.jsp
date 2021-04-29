@@ -9,7 +9,7 @@
 
 <head>
 
-<title>Page Types Document</title>
+<title>Page Types Article</title>
 <%@ include file="/WEB-INF/jsp/common/header1.jspf"%>
 </head>
 
@@ -25,7 +25,7 @@
 <div class="wrapper">
 
 <div>
- <a type="button" class="btn btn-primary btn-md" href="/typedocuments/newTypeDocument">Créer un nouveau type de document</a>
+ <a type="button" class="btn btn-primary btn-md" href="/typearticles/newTypeArticle">Créer un nouveau type d'article</a>
  <br>
  <br>
  </div>
@@ -48,7 +48,7 @@
 			<div class="wrapper">
 				 <div class="panel panel-primary">
 				  <div class="panel-heading">
-				   <h3><center>Types de Document </center></h3>
+				   <h3><center>Types d'Article </center></h3>
 				  </div>
   					<div class="panel-body">
 					   <table class="table table-striped table-condensed table-bordered" style="text-align:center">
@@ -62,20 +62,15 @@
 								     </tr>
 								     </thead>
 								     <tbody>
-					   				 <c:forEach var="typeDocument" items="${typeDocuments}">
+					   				 <c:forEach var="typeArticle" items="${typeArticles}">
 					   				 <tr>
-								          <td>${typeDocument.id}</td>
-								          <td>${typeDocument.typeName}</td>
-								          <td>${typeDocument.description}</td>
-								          <td>${typeDocument.dateCreation}</td>
-								        
-								        
-								         <%--  <td>
-								          	<a type="button"  class="btn btn-primary" 
-								        	href="/propositions/reponses/${proposition.id}">Archiver</a>
-								          </td> --%>
-								          								    
+								          <td>${typeArticle.id}</td>
+								          <td>${typeArticle.typeName}</td>
+								          <td>${typeArticle.description}</td>
+								          <td>${typeArticle.dateCreation}</td>
 								          
+								        
+								       
 					    				 </tr>
 				   					</c:forEach>
 				   					
@@ -83,12 +78,12 @@
 							</table>			
 			   			<div class="container">
 			    		<!-- div class="row-lg-2" -->
-			    			<c:if test="${typeDocuments.size() > 0 }">
+			    			<c:if test="${typeArticles.size() > 0 }">
 					            <!-- ul class="pagination-sm"-->
 					            <ul class="nav nav-pills">
 					                <c:forEach begin="0" end="${totalPages-1}" var="page">
 					                    <li class="page-item">
-					                        <a class="btn btn-info" href="typeDocuments?page=${page}&size=${size}" class="page-target">${page+1}</a>
+					                        <a class="btn btn-info" href="typeArticles?page=${page}&size=${size}" class="page-target">${page+1}</a>
 					                    </li>
 					                </c:forEach>
 				           		 </ul>

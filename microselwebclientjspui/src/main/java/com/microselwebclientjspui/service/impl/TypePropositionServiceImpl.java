@@ -2,6 +2,8 @@ package com.microselwebclientjspui.service.impl;
 
 import java.util.Arrays;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -24,19 +26,27 @@ import com.microselwebclientjspui.service.ITypePropositionService;
 public class TypePropositionServiceImpl implements ITypePropositionService {
 
 	@Autowired
+	private HttpHeadersFactory httpHeadersFactory;
+
+	@Autowired
+	private HttpServletRequest request;
+	
+	
+	@Autowired
 	private RestTemplate restTemplate;
 
 	@Value("${application.uRLTypeProposition}")
 	private String uRLTypeProposition;
+	
+	@Value("${application.uRLTypePropositionAdmin}")
+	private String uRLTypePropositionAdmin;
 
 	@Override
 	public TypeProposition createTypeDocument(TypePropositionDTO typePropositionDTO) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<TypePropositionDTO> requestEntity = new HttpEntity<>(typePropositionDTO, headers);
-		ResponseEntity<TypeProposition> response = restTemplate.exchange(uRLTypeProposition, HttpMethod.POST,
+		ResponseEntity<TypeProposition> response = restTemplate.exchange(uRLTypePropositionAdmin, HttpMethod.POST,
 				requestEntity, TypeProposition.class);
 
 		return response.getBody();
@@ -44,13 +54,10 @@ public class TypePropositionServiceImpl implements ITypePropositionService {
 
 	@Override
 	public Page<TypeProposition> getAll(Pageable pageable) {
-		HttpHeaders headers = new HttpHeaders();
-
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-
+		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		String url = uRLTypeProposition + "/Page";
+		String url = uRLTypePropositionAdmin + "/Page";
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("page", pageable.getPageNumber()).queryParam("size", pageable.getPageSize());

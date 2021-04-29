@@ -8,7 +8,7 @@
 
 <head>
 
-<title>Type de Document Confirmation</title>
+<title>Article Confirmation Publication </title>
 <%@ include file="/WEB-INF/jsp/common/header1.jspf"%>
 </head>
 
@@ -26,30 +26,39 @@
  <div class="panel panel-primary ">
  
   <div class="panel-heading">
-   <h5>Le nouveau type de document que vous avez créé a ete enregistré</h5>
+   <h5>Cet article a bien été sélectionné pour être publié </h5>
   </div>
   
   <div class="panel-body">
    <table class="table table-striped table-condensed table-bordered">
     <thead>
         <tr>
-            <th colspan="2"> Enregistrement N° : ${id}</th>
+            <th colspan="2"> Enregistrement N° : ${id.toString()}</th> 
         </tr>
     </thead>
     <tbody>
          <tr>
-            <td>Type de Document:</td>
-            <td>${typeDocument.typeName}</td>
+            <td>Titre:</td>
+            <td>${article.titre}</td>
         </tr>
         <tr>
-            <td>Description:</td>
-            <td>${typeDocument.description}</td>
+            <td>Date de création:</td>
+            <td>${article.dateCreation}</td>
         </tr>
         <tr>
-            <td>Date de création :</td>
-            <td>${typeDocument.dateCreation}</td>
+            <td>Entete:</td>
+            <td>${article.entete}</td>
+        </tr>
+        <tr>
+            <td>Type :</td>
+            <td>${article.typeArticle.getTypeName()}</td>
+        </tr>
+        <tr>
+            <td>Statut :</td>
+            <td>${article.statutDocument.toString()}</td>
         </tr>
         
+ 		
  		
     </tbody>
 </table>
@@ -57,7 +66,7 @@
  </div>
  </div>
  <div>
- <a type="button" class="btn btn-primary btn-md" href="/typedocuments">Retour au menu</a>
+ <a type="button" class="btn btn-primary btn-md" href="/articles">Retour au menu</a>
  </div>
  </div>
  

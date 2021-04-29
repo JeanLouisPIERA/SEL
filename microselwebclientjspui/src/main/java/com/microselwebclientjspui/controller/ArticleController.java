@@ -128,12 +128,27 @@ public class ArticleController {
 		return "articles/articleView";
 	}
 	
-	
+	/**
+	 * Permet de publier un article. Le statut publié permet de sélectionner l'article pour l'afficher en page d'accueil
+	 */
+	@GetMapping("/articles/publication/{id}")
+	public String publierArticle(Model model, @PathVariable("id") Long id) {
+		try {
+			Article publishedArticle = articleService.publierById(id);
+			model.addAttribute("article", publishedArticle);
+
+		} catch (HttpClientErrorException e) {
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
+			model.addAttribute("error", errorMessage);
+			return "/error";
+		}
+		return "articles/articlePublicationConfirmation";
+	}
 	
 	/**
 	 * Permet de modérer la publication d'un article
 	 */
-	@GetMapping("/articles/modération/{id}")
+	@GetMapping("/articles/moderation/{id}")
 	public String modererArticle(Model model, @PathVariable("id") Long id) {
 		try {
 			Article moderatedArticle = articleService.modererById(id);
@@ -148,7 +163,7 @@ public class ArticleController {
 	}
 	
 	/**
-	 * Permet d'archiver le contenu d'un article
+	 * Permet d'archiver un article. L'archivage d'un article empêche qu'il soit sélectionné pour être affiché en page d'accueil
 	 */
 	@GetMapping("/articles/archivage/{id}")
 	public String archiverArticle(Model model, @PathVariable("id") Long id) {

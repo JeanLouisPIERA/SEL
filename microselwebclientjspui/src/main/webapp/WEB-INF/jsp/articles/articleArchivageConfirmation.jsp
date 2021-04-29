@@ -26,14 +26,14 @@
  <div class="panel panel-primary ">
  
   <div class="panel-heading">
-   <h5>Ce document a bien été archivé</h5>
+   <h5>Cet article a bien été archivé</h5>
   </div>
   
   <div class="panel-body">
    <table class="table table-striped table-condensed table-bordered">
     <thead>
         <tr>
-            <th colspan="2"> Enregistrement N° : ${id}</th> 
+            <th colspan="2"> Enregistrement N° : ${id.toString()}</th> 
         </tr>
     </thead>
     <tbody>

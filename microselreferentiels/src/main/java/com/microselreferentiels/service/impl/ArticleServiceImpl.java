@@ -1,6 +1,7 @@
 package com.microselreferentiels.service.impl;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -54,22 +55,29 @@ public class ArticleServiceImpl implements IArticleService {
 		if (!typeArticleFound.isPresent())
 			throw new EntityNotFoundException("Le type d'article que vous souhaitez créer n'existe pas");
 
-		Optional<Article> articleToCreate = articleRepository
-				.findByTypeArticleAndDocumentStatutEncours(typeArticleFound.get(), EnumStatutDocument.ENCOURS);
-		if (articleToCreate.isPresent())
-			throw new EntityAlreadyExistsException(
-					"Il ne peut y exister qu'un seul document de ce type avec le statut en cours");
+		if (!articleDTO.getAuteurUsername().equals("visiteur")) {
+			UserBean auteurArticle = adherentsProxy.consulterCompteAdherent(articleDTO.getAuteurId());
+			if (!auteurArticle.getId().equals(articleDTO.getAuteurId()))
+				throw new EntityNotFoundException("Vous n'êtes pas identifié comme adhérent de l'association");
+			
+			Article articleCreated = articleMapper.articleDTOToArticle(articleDTO);
 
-		UserBean auteurArticle = adherentsProxy.consulterCompteAdherent(articleDTO.getAuteurId());
-		if (!auteurArticle.getId().equals(articleDTO.getAuteurId()))
-			throw new EntityNotFoundException("Vous n'êtes pas identifié comme adhérent de l'association");
+			articleCreated.setAuteurUsername(auteurArticle.getUsername());
+			articleCreated.setDateCreation(LocalDate.now());
+			articleCreated.setStatutDocument(EnumStatutDocument.ENCOURS);
+			articleCreated.setTypeArticle(typeArticleFound.get());
+			articleCreated.setIsModerated(Boolean.FALSE);
+
+			return articleRepository.save(articleCreated);
+		}
 
 		Article articleCreated = articleMapper.articleDTOToArticle(articleDTO);
 
-		articleCreated.setAuteurUsername(auteurArticle.getUsername());
+		articleCreated.setAuteurUsername(articleDTO.getAuteurUsername());
 		articleCreated.setDateCreation(LocalDate.now());
 		articleCreated.setStatutDocument(EnumStatutDocument.ENCOURS);
 		articleCreated.setTypeArticle(typeArticleFound.get());
+		articleCreated.setIsModerated(Boolean.FALSE);
 
 		return articleRepository.save(articleCreated);
 	}
@@ -89,6 +97,21 @@ public class ArticleServiceImpl implements IArticleService {
 
 		return articleToRead.get();
 	}
+	
+	@Override
+	public Article publierArticle(@Valid Long id) throws EntityNotFoundException, DeniedAccessException {
+		Optional<Article> articleToPublish = articleRepository.findById(id);
+		if (!articleToPublish.isPresent())
+			throw new EntityNotFoundException("L'article que vous souhaitez publier n'existe pas.");
+
+		if (!articleToPublish.get().getStatutDocument().equals(EnumStatutDocument.ENCOURS))
+			throw new DeniedAccessException("Vous ne pouvez pas publié un article qui est déjà publié, modéré ou archivé");
+
+		articleToPublish.get().setDatePublication(LocalDate.now());
+		articleToPublish.get().setStatutDocument(EnumStatutDocument.PUBLIE);
+
+		return articleRepository.save(articleToPublish.get());
+	}
 
 	@Override
 	public Article modererArticle(@Valid Long id) throws EntityNotFoundException, DeniedAccessException {
@@ -97,17 +120,7 @@ public class ArticleServiceImpl implements IArticleService {
 		if (!articleToModerate.isPresent())
 			throw new EntityNotFoundException("L'article que vous souhaitez modérer n'existe pas.");
 
-		/*
-		 * Optional<List<Article>> alreadyPublishedArticles =
-		 * articleRepository.findByStatutDocumentAndTypeArticle(
-		 * EnumStatutDocument.PUBLIE,
-		 * articleToModerate.get().getTypeArticle().getTypeName()); if
-		 * (alreadyPublishedArticles.isPresent()) throw new
-		 * EntityNotFoundException("Il ne peut y avoir qu'un seul document de ce type en cours de publication. Merci d'archiver les autres documents."
-		 * );
-		 */
-
-		if (!articleToModerate.get().getStatutDocument().equals(EnumStatutDocument.PUBLIE))
+		if (!articleToModerate.get().getStatutDocument().equals(EnumStatutDocument.ENCOURS))
 			throw new DeniedAccessException("Vous ne pouvez pas modérer un article qui est déjà modéré ou archivé");
 
 		articleToModerate.get().setIsModerated(true);
@@ -122,7 +135,7 @@ public class ArticleServiceImpl implements IArticleService {
 		if (!articleToArchive.isPresent())
 			throw new EntityNotFoundException("L'article que vous souhaitez archiver n'existe pas.");
 
-		if (!articleToArchive.get().getStatutDocument().equals(EnumStatutDocument.ARCHIVE))
+		if (articleToArchive.get().getStatutDocument().equals(EnumStatutDocument.ARCHIVE))
 			throw new DeniedAccessException("Vous ne pouvez pas archiver un document qui est déjà archivé");
 
 		articleToArchive.get().setStatutDocument(EnumStatutDocument.ARCHIVE);
@@ -140,5 +153,11 @@ public class ArticleServiceImpl implements IArticleService {
 
 		return articleToRead.get();
 	}
+
+	
+	
+	
+
+	
 
 }

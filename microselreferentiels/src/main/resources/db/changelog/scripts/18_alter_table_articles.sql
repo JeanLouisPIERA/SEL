@@ -1,0 +1,2 @@
+ALTER TABLE articles
+MODIFY contenu TEXT NOT NULL;

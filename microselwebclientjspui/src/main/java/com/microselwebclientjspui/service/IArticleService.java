@@ -1,5 +1,7 @@
 package com.microselwebclientjspui.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,10 @@ public interface IArticleService {
 	Article modererById(Long id);
 
 	Article archiverById(Long id);
+
+	Article publierById(Long id);
+
+	List<Article> select4ArticlesToBePublished();
 
 	
 

@@ -24,7 +24,7 @@ public class Article implements Serializable{
 	@Column(name = "titre", length = 25, nullable=false)
 	private String titre;
 	
-	@Column(name = "auteur_id", length = 255, nullable=false)
+	@Column(name = "auteur_id", length = 255 )
 	private String auteurId; 
 	
 	@Column(name = "auteur_username", length = 25, nullable=false)
@@ -32,6 +32,9 @@ public class Article implements Serializable{
 	
 	@Column(name = "date_creation")
 	private LocalDate dateCreation; 
+	
+	@Column(name = "date_publication")
+	private LocalDate datePublication; 
 	
 	@Column(name = "date_moderation")
 	private LocalDate dateModeration;
@@ -168,6 +171,14 @@ public class Article implements Serializable{
 
 	public void setIsModerated(Boolean isModerated) {
 		this.isModerated = isModerated;
+	}
+
+	public LocalDate getDatePublication() {
+		return datePublication;
+	}
+
+	public void setDatePublication(LocalDate datePublication) {
+		this.datePublication = datePublication;
 	}
 
 	

@@ -1,7 +1,5 @@
 package com.microselreferentiels.restController;
 
-import java.util.List;
-
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
@@ -21,17 +19,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.microselreferentiels.criteria.ArticleCriteria;
-import com.microselreferentiels.criteria.DocumentCriteria;
 import com.microselreferentiels.dto.ArticleDTO;
-import com.microselreferentiels.dto.DocumentDTO;
 import com.microselreferentiels.entities.Article;
 import com.microselreferentiels.entities.Document;
-import com.microselreferentiels.entities.TypeDocument;
 import com.microselreferentiels.exceptions.DeniedAccessException;
 import com.microselreferentiels.exceptions.EntityAlreadyExistsException;
 import com.microselreferentiels.exceptions.EntityNotFoundException;
 import com.microselreferentiels.service.IArticleService;
-import com.microselreferentiels.service.IDocumentService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -45,7 +39,7 @@ public class ArticleRestController {
 	@Autowired
 	private IArticleService articleService;
 	
-	@ApiOperation(value = "Enregistrement d'un article",  response = Document.class)
+	@ApiOperation(value = "Enregistrement d'un article",  response = Article.class)
 	  @ApiResponses(value = {
 	  @ApiResponse(code = 201, message = 
 			  "L'article a été créée"),
@@ -59,7 +53,7 @@ public class ArticleRestController {
 	  return new ResponseEntity<Article>(articleService.createArticle(articleDTO), HttpStatus.OK);
 	}
 	
-	 @ApiOperation(value = "Recherche multi-critères d'un ou plusieurs articles", response = Document.class)  
+	 @ApiOperation(value = "Recherche multi-critères d'un ou plusieurs articles", response = Article.class)  
 	  @ApiResponses(value = {
 	  @ApiResponse(code = 200, message = 
 			  "La recherche a été réalisée avec succés"), })
@@ -87,6 +81,21 @@ public class ArticleRestController {
 		return new ResponseEntity<Article>(articleService.readArticle(id), HttpStatus.OK);  
 	  }
 	  
+	  @ApiOperation(value = "Publication d'un article", response = Article.class)  
+	  @ApiResponses(value = {
+		  @ApiResponse(code = 201, message =
+		  "L'article recherché a été trouvé"),
+		  @ApiResponse(code = 400, message =
+		  "Les informations fournies ne sont pas correctes"),
+		  @ApiResponse(code = 413, message = 
+		  "L'article que vous voulez publier n'existe pas"), })
+	 
+	  @PutMapping("/admin/articles/publication/{id}")
+	  public ResponseEntity<Article> publierArticle(@PathVariable("id") @Valid Long id) throws EntityNotFoundException, DeniedAccessException {
+		return new ResponseEntity<Article>(articleService.publierArticle(id), HttpStatus.OK);  
+	  }
+	  
+	  
 	  @ApiOperation(value = "Modération d'un article", response = Article.class)  
 	  @ApiResponses(value = {
 		  @ApiResponse(code = 201, message =
@@ -96,12 +105,12 @@ public class ArticleRestController {
 		  @ApiResponse(code = 413, message = 
 		  "L'article que vous voulez consulter n'existe pas"), })
 	 
-	  @PutMapping("/admin/documents/moderation/{id}")
+	  @PutMapping("/admin/articles/moderation/{id}")
 	  public ResponseEntity<Article> modererArticle(@PathVariable("id") @Valid Long id) throws EntityNotFoundException, DeniedAccessException {
 		return new ResponseEntity<Article>(articleService.modererArticle(id), HttpStatus.OK);  
 	  }
 	  
-	  @ApiOperation(value = "Archivage d'un article", response = Document.class)  
+	  @ApiOperation(value = "Archivage d'un article", response = Article.class)  
 	  @ApiResponses(value = {
 		  @ApiResponse(code = 201, message =
 		  "L'article recherché a été trouvé"),
@@ -128,6 +137,7 @@ public class ArticleRestController {
 	  public ResponseEntity<Article> readArticleByTypeArticle(@PathVariable("id") @Valid Long typearticleId) throws EntityNotFoundException {
 		return new ResponseEntity<Article>(articleService.readArticleByTypeArticle(typearticleId), HttpStatus.OK);  
 	  }
- 
+	  
+	 
 	 
 }

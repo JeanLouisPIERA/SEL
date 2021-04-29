@@ -26,7 +26,7 @@
  <div class="panel panel-primary ">
  
   <div class="panel-heading">
-   <h5>Le nouveau type de document que vous avez créé a ete enregistré</h5>
+   <h5>Le nouveau type d'article que vous avez créé a ete enregistré</h5>
   </div>
   
   <div class="panel-body">
@@ -38,16 +38,16 @@
     </thead>
     <tbody>
          <tr>
-            <td>Type de Document:</td>
-            <td>${typeDocument.typeName}</td>
+            <td>Type d'Article:</td>
+            <td>${typeArticle.typeName}</td>
         </tr>
         <tr>
             <td>Description:</td>
-            <td>${typeDocument.description}</td>
+            <td>${typeArticle.description}</td>
         </tr>
         <tr>
             <td>Date de création :</td>
-            <td>${typeDocument.dateCreation}</td>
+            <td>${typeArticle.dateCreation}</td>
         </tr>
         
  		
@@ -57,7 +57,7 @@
  </div>
  </div>
  <div>
- <a type="button" class="btn btn-primary btn-md" href="/typedocuments">Retour au menu</a>
+ <a type="button" class="btn btn-primary btn-md" href="/typearticles">Retour au menu</a>
  </div>
  </div>
  

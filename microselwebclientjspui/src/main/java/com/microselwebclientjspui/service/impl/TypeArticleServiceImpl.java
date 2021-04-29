@@ -1,5 +1,6 @@
 package com.microselwebclientjspui.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -77,11 +79,15 @@ public class TypeArticleServiceImpl implements ITypeArticleService {
 	@Override
 	public List<TypeArticle> getAll() {
 
-		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLTypeArticleAdmin);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLTypeArticle);
 
 		ResponseEntity<List<TypeArticle>> typeArticles = restTemplate.exchange(builder.build().toUriString(),
 				HttpMethod.GET, entity, new ParameterizedTypeReference<List<TypeArticle>>() {

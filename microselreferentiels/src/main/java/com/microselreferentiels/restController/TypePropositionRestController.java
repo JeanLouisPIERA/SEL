@@ -51,7 +51,7 @@ public class TypePropositionRestController {
 	  @ApiResponse(code = 409, message = 
 			  "Un autre type de proposition existe déjà avec ces attributs"), })
 
-	@PostMapping("/typepropositions")
+	@PostMapping("/admin/typepropositions")
 	public ResponseEntity<TypeProposition> createTypeProposition(@Valid @RequestBody TypePropositionDTO typePropositionDTO) throws EntityAlreadyExistsException {
 	  return new ResponseEntity<TypeProposition>(typePropositionService.createTypeProposition(typePropositionDTO), HttpStatus.OK);
 	}
@@ -61,7 +61,7 @@ public class TypePropositionRestController {
 	  @ApiResponse(code = 200, message = 
 			  "La recherche a été réalisée avec succés"), })
 	  
-	  @GetMapping(value="/typepropositions/Page", produces="application/json") 
+	  @GetMapping(value="/admin/typepropositions/Page", produces="application/json") 
 	  public ResponseEntity<Page<TypeProposition>> getAllTypePropositionsByCriteria(
 			  @RequestParam(name = "page", defaultValue= "0") int page, @RequestParam(name="size", defaultValue= "10") int size) { 
 	  	  

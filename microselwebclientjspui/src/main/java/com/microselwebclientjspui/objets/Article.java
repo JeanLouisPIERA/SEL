@@ -9,7 +9,8 @@ public class Article {
 	private String auteurId;
 	private String auteurUsername;
 	private LocalDate dateCreation;
-	private LocalDate datePublication;
+	private LocalDate dateModeration;
+	private LocalDate datePublication; 
 	private LocalDate dateArchivage;
 	private String image;
 	private String contenu;
@@ -129,6 +130,16 @@ public class Article {
 	public void setIsModerated(Boolean isModerated) {
 		this.isModerated = isModerated;
 	}
+
+	public LocalDate getDateModeration() {
+		return dateModeration;
+	}
+
+	public void setDateModeration(LocalDate dateModeration) {
+		this.dateModeration = dateModeration;
+	}
+	
+	
 
 	
 }

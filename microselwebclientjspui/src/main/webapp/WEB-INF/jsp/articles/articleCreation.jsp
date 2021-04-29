@@ -34,7 +34,7 @@
        <br>
      <form:form class="form-inline d-flex bd-highlight" method="POST" modelAttribute="articleDTO">
         
-       <fieldset class="form-row">
+   <%--     <fieldset class="form-row">
        <fieldset class="form-group">
 	       <form:label path="auteurUsername" class="col-auto col-form-label"> Pseudo :</form:label>
 	       <form:input path="auteurUsername" type="text" class="form-control"
@@ -43,7 +43,7 @@
       	</fieldset>
       	</fieldset>
       
-      <br>
+      <br> --%>
        
        
        

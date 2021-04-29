@@ -5,6 +5,7 @@ public class ArticleCriteria {
 	
 	private String statutDocument;
 	private String typeArticle;
+	
 
 	public ArticleCriteria() {
 		super();
@@ -25,6 +26,8 @@ public class ArticleCriteria {
 	public void setTypeArticle(String typeArticle) {
 		this.typeArticle = typeArticle;
 	}
+
+	
 
 	
 
