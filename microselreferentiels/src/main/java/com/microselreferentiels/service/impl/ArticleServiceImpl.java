@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.microselreferentiels.beans.UserBean;
 import com.microselreferentiels.criteria.ArticleCriteria;
@@ -29,6 +30,7 @@ import com.microselreferentiels.proxies.IMicroselAdherentsProxy;
 import com.microselreferentiels.service.IArticleService;
 
 @Service
+@Transactional
 public class ArticleServiceImpl implements IArticleService {
 
 	@Autowired
@@ -105,7 +107,7 @@ public class ArticleServiceImpl implements IArticleService {
 
 		if (!articleToPublish.get().getStatutDocument().equals(EnumStatutDocument.ENCOURS))
 			throw new DeniedAccessException(
-					"Vous ne pouvez pas publié un article qui est déjà publié, modéré ou archivé");
+					"Vous ne pouvez pas publier un article qui est déjà publié, modéré ou archivé");
 
 		articleToPublish.get().setDatePublication(LocalDate.now());
 		articleToPublish.get().setStatutDocument(EnumStatutDocument.PUBLIE);
@@ -120,8 +122,8 @@ public class ArticleServiceImpl implements IArticleService {
 		if (!articleToModerate.isPresent())
 			throw new EntityNotFoundException("L'article que vous souhaitez modérer n'existe pas.");
 
-		if (!articleToModerate.get().getStatutDocument().equals(EnumStatutDocument.ENCOURS))
-			throw new DeniedAccessException("Vous ne pouvez pas modérer un article qui est déjà modéré ou archivé");
+		if (articleToModerate.get().getIsModerated().booleanValue())
+			throw new DeniedAccessException("Vous ne pouvez pas modérer un article qui est déjà modéré");
 
 		articleToModerate.get().setIsModerated(true);
 		articleToModerate.get().setDateModeration(LocalDate.now());

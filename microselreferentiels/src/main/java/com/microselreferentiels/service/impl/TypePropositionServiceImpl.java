@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.microselreferentiels.dao.ITypePropositionRepository;
 import com.microselreferentiels.dto.TypePropositionDTO;
@@ -19,6 +20,7 @@ import com.microselreferentiels.exceptions.EntityNotFoundException;
 import com.microselreferentiels.service.ITypePropositionService;
 
 @Service
+@Transactional
 public class TypePropositionServiceImpl implements ITypePropositionService {
 
 	@Autowired

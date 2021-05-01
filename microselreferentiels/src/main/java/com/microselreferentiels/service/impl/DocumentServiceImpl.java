@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.microselreferentiels.beans.UserBean;
 import com.microselreferentiels.criteria.DocumentCriteria;
@@ -29,6 +30,7 @@ import com.microselreferentiels.proxies.IMicroselAdherentsProxy;
 import com.microselreferentiels.service.IDocumentService;
 
 @Service
+@Transactional
 public class DocumentServiceImpl implements IDocumentService {
 
 	@Autowired
@@ -115,8 +117,8 @@ public class DocumentServiceImpl implements IDocumentService {
 		if (!documentToArchive.isPresent())
 			throw new EntityNotFoundException("Le document que vous souhaitez archiver n'existe pas.");
 
-		if (!documentToArchive.get().getStatutDocument().equals(EnumStatutDocument.ARCHIVE))
-			throw new DeniedAccessException("Vous ne pouvez pas archiver qu'un document qui est déjà archivé");
+		if (documentToArchive.get().getStatutDocument().equals(EnumStatutDocument.ARCHIVE))
+			throw new DeniedAccessException("Vous ne pouvez pas archiver un document qui est déjà archivé");
 
 		documentToArchive.get().setStatutDocument(EnumStatutDocument.ARCHIVE);
 		documentToArchive.get().setDateArchivage(LocalDate.now());

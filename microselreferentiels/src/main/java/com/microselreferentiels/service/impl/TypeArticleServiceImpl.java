@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.microselreferentiels.dao.ITypeArticleRepository;
 import com.microselreferentiels.dto.TypeArticleDTO;
@@ -18,6 +19,7 @@ import com.microselreferentiels.exceptions.EntityAlreadyExistsException;
 import com.microselreferentiels.service.ITypeArticleService;
 
 @Service
+@Transactional
 public class TypeArticleServiceImpl implements ITypeArticleService {
 
 	@Autowired
