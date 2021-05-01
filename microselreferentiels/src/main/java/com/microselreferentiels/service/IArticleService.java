@@ -35,6 +35,8 @@ public interface IArticleService {
 
 	Article publierArticle(@Valid Long id) throws EntityNotFoundException, DeniedAccessException;
 
+	Article modifierArticleStandard(ArticleDTO articleDTO);
+
 	
 
 	

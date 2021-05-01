@@ -1,0 +1,9 @@
+INSERT INTO typedocuments (TYPEDOCUMENT_ID, titre, description) VALUES 
+('1', 'defSEL', 'Ce document statique doit permettre de présenter ce qu\'est un Système Local d\'échanges. Ce type de document doit être accessible aux simples visiteurs et aux adhérents'),
+('2', 'defBourse', 'Ce type de document  permet d\'expliquer le fonctionnement en général d\'une Bourse d\'Echanges. Il explique aussi le fonctionnement de la bourse d\'échanges développée par ce site et définit les grandes notions sans rentrer dans le détail'),
+('3', 'defReseau', 'Ce type de document décrit le réseau des SEL et les relations de collaborations qui peuvent être mises en place entre eux. Il est accessible pour information aux visiteurs et aux adhérents'),
+('4', 'CGU', 'Conditions Générales d\'utilisation : ce document doit obligatoirement être présenté avant toute validation d\'adhésion . Il indique les conditions contractuelles qui lient le site et l\'utilisateur. Doit être accessible aux visiteurs et aux membres'),
+('5', 'InfosLegales', 'Ce document est obligatoire : il indique les références de l\'éditeur (N° SIREN, adresse du siège social), le nom de l\'éditeur et ses coordonnées mail painsi que les références d\'assurances, les autorisations nécessaires et les coordonnées d\'un médiateur'),
+('6', 'FAQ ', 'Foire Aux Questions. Ce document présente les questions les plus souvent posées et la réponse apportée par l\'éditeur du site. Ce document doit être accessible aux visiteurs et aux membres'),
+('7', 'infoBureau', 'Ce type d\'article figure en page d\'accueil : l\'article présente la dernière information TOPIC du SEL Plusieurs articles de ce type peuvent être créés mais un seul peut être publié Pour qu\'un article de ce type soit publié , il faut que le précédent article de ce type publié soit archivé Les date de création, de publication et d\'archivage sont enregistrées\r\nC\'est l\'administrateur qui créée, publie et archive ce type d\'article')
+;

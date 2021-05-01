@@ -30,6 +30,10 @@ public class ArticleSpecification implements Specification<Article>{
         
         predicates.getExpressions().add(builder.equal(root.get("isModerated"), Boolean.FALSE));	
     	System.out.println("typeArticleCriteria = " + articleCriteria.getTypeArticle().toString());
+    	
+    	 predicates.getExpressions().add(builder.notEqual(root.get("typeArticle").get("id"), 9));
+    			 //equal(root.get("typearticle_id"), Boolean.FALSE));	
+     	System.out.println("typeArticleCriteria = " + articleCriteria.getTypeArticle().toString());
 
 	        if (articleCriteria.getStatutDocument()!= null && !articleCriteria.getStatutDocument().isEmpty()) {
 	        	predicates.getExpressions().add(builder.equal(root.get("statutDocument"), EnumStatutDocument.fromValueCode(articleCriteria.getStatutDocument())));	

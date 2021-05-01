@@ -154,6 +154,15 @@ public class ArticleServiceImpl implements IArticleService {
 		return articleToRead.get();
 	}
 
+	@Override
+	public Article modifierArticleStandard(ArticleDTO articleDTO) {
+		
+		Article articleStandardUpdated = articleMapper.articleDTOToArticle(articleDTO);
+		articleStandardUpdated.setId((long) 1);
+		return articleRepository.save(articleStandardUpdated);
+		
+	}
+
 	
 	
 	

@@ -43,7 +43,6 @@ public class PropositionDTO {
 	private String description;
 
 	@ApiModelProperty(notes = "Image illustrant votre proposition")
-	@Size(min = 5, max = 30, message = "Le nom de votre fichier image ne doit pas dépasser 30 caractères")
 	private String image;
 
 	@ApiModelProperty(notes = "Ville de réalisation de l'échange que vous proposez")

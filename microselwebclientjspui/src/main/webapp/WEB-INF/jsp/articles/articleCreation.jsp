@@ -34,22 +34,10 @@
        <br>
      <form:form class="form-inline d-flex bd-highlight" method="POST" modelAttribute="articleDTO">
         
-   <%--     <fieldset class="form-row">
-       <fieldset class="form-group">
-	       <form:label path="auteurUsername" class="col-auto col-form-label"> Pseudo :</form:label>
-	       <form:input path="auteurUsername" type="text" class="form-control"
-	        placeholder="saisissez votre pseudo ici " required="required" />
-	       <form:errors path="auteurUsername" cssClass="text-warning" />
-      	</fieldset>
-      	</fieldset>
-      
-      <br> --%>
-       
-       
-       
+  
        <fieldset class="form-row">
        <fieldset class="form-group">
-	       <form:label path="titre" class="col-auto col-form-label"> Titre du document :</form:label>
+	       <form:label path="titre" class="col-auto col-form-label"> Titre de l'article :</form:label>
 	       <form:input path="titre" type="text" class="form-control"
 	        placeholder="e.g titre de mon article " required="required" />
 	       <form:errors path="titre" cssClass="text-warning" />
@@ -59,17 +47,6 @@
       <br>
 
 	 
-      	
-      	<fieldset class="form-row">
-       <fieldset class="form-group">
-	       <form:label path="image" class="col-auto col-form-label"> Illustration :</form:label>
-	       <form:input path="image" type="text" class="form-control"
-	        placeholder="e.g illustration du texte " required="required" />
-	       <form:errors path="image" cssClass="text-warning" />
-      	</fieldset>
-      	</fieldset>
-      
-      <br>
       
       	<fieldset class="form-row">
 	       <fieldset class="form-group">
@@ -98,7 +75,9 @@
        <form:label path="typeArticle" class="col-auto col-form-label">Type d'Article:</form:label>
       	<form:select path="typeArticle" class="form-control">
 	     	 <c:forEach var="typeArticle" items="${typeArticlesList}">
+	     	 <c:if test="${typeArticle.getTypeName() != 'Standard'}">
 			    <option value="${typeArticle.getTypeName()}">${typeArticle.getTypeName()}</option>
+			  </c:if>  
 			 </c:forEach>
         </form:select>
         </fieldset>

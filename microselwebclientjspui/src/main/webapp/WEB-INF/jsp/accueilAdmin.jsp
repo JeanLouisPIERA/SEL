@@ -46,11 +46,13 @@
 					<a type="button" class="btn btn-primary" href="/accounts">Consulter</a> Tous les comptes adhérents <br></br> 
 					<a type="button" class="btn btn-primary" href="/blocages"> Consulter </a> Tous les comptes adhérents bloqués<br></br>
 					<a type="button" class="btn btn-primary" href="/wallets">Consulter</a> Tous les portefeuilles, leur solde et le détail de toutes leurs transactions <br></br> 
+					<a type="button" class="btn btn-warning" href="/evaluations"> Modérer </a> les évaluations<br></br>
 					<a type="button" class="btn btn-warning" href="/typepropositions">   Gérer   </a> Les différents types de propositions <br></br> 
 					<a type="button" class="btn btn-warning" href="/typedocuments"> Gérer </a> Tous les types de document <br></br> 
 					<a type="button" class="btn btn-warning" href="/documents"> Gérer </a> Tous les documents<br></br> 
 					<a type="button" class="btn btn-warning" href="/typearticles"> Gérer </a> Tous les types d'article <br></br>
-					<a type="button" class="btn btn-danger" href="/articles"> Modérer </a> les articles
+					<a type="button" class="btn btn-danger" href="/articles"> Modérer </a> les articles<br></br>
+					<a type="button" class="btn btn-warning" href="/articles/standard"> Modifier </a> l'article standard
 					
 					
 				</div>

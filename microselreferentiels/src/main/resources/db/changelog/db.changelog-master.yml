@@ -238,4 +238,52 @@ databaseChangeLog:
             path: scripts/20_alter_table_articles.sql
             relativeToChangelogFile: true
             splitStatements: true
-            stripComments: true                                                                                                                                                                                                                                                                                                                                                         
+            stripComments: true    
+ - changeSet:
+        id: script21
+        author: JeanLouis PIERA
+        changes:
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            endDelimiter: \nGO
+            path: scripts/21_insert_table_typearticles.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true  
+ - changeSet:
+        id: script22
+        author: JeanLouis PIERA
+        changes:
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            endDelimiter: \nGO
+            path: scripts/22_insert_table_articles.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true  
+ - changeSet:
+        id: script23
+        author: JeanLouis PIERA
+        changes:
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            endDelimiter: \nGO
+            path: scripts/23_insert_table_typedocuments.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true     
+ - changeSet:
+        id: script24
+        author: JeanLouis PIERA
+        changes:
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            endDelimiter: \nGO
+            path: scripts/24_insert_table_documents.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true                                                                                                                                                                                                                                                                                                                                                                                                                                             

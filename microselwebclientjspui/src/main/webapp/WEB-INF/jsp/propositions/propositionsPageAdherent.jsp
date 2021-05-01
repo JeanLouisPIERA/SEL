@@ -79,12 +79,7 @@
 										</select>
 									</fieldset>
 
-									<%-- <form:select path="selectEnumCategorie">
-				    <form:option value="0" label="Choisissez votre rubrique" />
-				    <form:options items="${enumCategorieList}" />
-				</form:select> --%>
-
-
+	
 
 									<fieldset class="form-group">
 										<label>Type de Proposition : </label> <select
@@ -98,10 +93,7 @@
 										</select>
 									</fieldset>
 
-									<%-- <form:select path="selectEnumTRadeType">
-				    <form:option value="0" label="Choisissez votre type de proposition" />
-				    <form:options items="${enumTradeTypeList}" />
-				</form:select> --%>
+	
 
 									<fieldset class="form-group">
 										<label>Statut de la Proposition : </label> <select
@@ -118,10 +110,6 @@
 
 									
 
-									<%-- <form:select path="selectEnumStatutProposition">
-				    <form:option value="0" label="Choisissez la situation de la proposition" />
-				    <form:options items="${enumStatutPropositionList}" />
-				</form:select> --%>
 
 									<button class="btn-sm btn-primary">Valider</button>
 								</fieldset>

@@ -52,14 +52,6 @@ public class ReponseRestController {
 		return new ResponseEntity<Reponse>(reponseService.createReponse(id, reponseDTO), HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/reponses", produces = "application/json")
-	public ResponseEntity<Page<Reponse>> searchAllPropositionsByCriteria(
-			@PathParam("reponseCriteria") ReponseCriteria reponseCriteria,
-			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "6") int size) {
-		Page<Reponse> reponses = reponseService.searchAllReponsesByCriteria(reponseCriteria, PageRequest.of(0, 6));
-		return new ResponseEntity<Page<Reponse>>(reponses, HttpStatus.OK);
-	}
 
 	@ApiOperation(value = "Consultation d'une reponse par un adhérent", response = Proposition.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "La reponse recherchée a été trouvée"),

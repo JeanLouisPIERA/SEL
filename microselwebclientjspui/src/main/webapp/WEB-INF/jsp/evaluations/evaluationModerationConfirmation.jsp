@@ -8,7 +8,7 @@
 
 <head>
 
-<title>Document Confirmation Modération</title>
+<title>Evaluation Confirmation Modération</title>
 <%@ include file="/WEB-INF/jsp/common/header1.jspf"%>
 </head>
 
@@ -26,39 +26,30 @@
  <div class="panel panel-primary ">
  
   <div class="panel-heading">
-   <h5>Ce article a bien été modéré</h5>
+   <h5>Cette évaluation a bien été modérée</h5>
   </div>
   
   <div class="panel-body">
    <table class="table table-striped table-condensed table-bordered">
     <thead>
         <tr>
-            <th colspan="2"> Enregistrement N° : ${article.id.toString()}</th>
+            <th colspan="2"> Enregistrement N° : ${evaluation.id.toString()}</th>
         </tr>
     </thead>
     <tbody>
          <tr>
-            <td>Titre:</td>
-            <td>${article.titre}</td>
+            <td>Nom de l'adhérent:</td>
+            <td>${evaluation.adherentUsername}</td>
         </tr>
         <tr>
-            <td>Date de création:</td>
-            <td>${article.dateCreation}</td>
+            <td>Référence de l'échange évalué:</td>
+            <td>${evaluation.echange.getId()}</td>
         </tr>
         <tr>
-            <td>Entete :</td>
-            <td>${article.entete}</td>
+            <td>Commentaire modéré :</td>
+            <td>${evaluation.commentaire}</td>
         </tr>
-        <tr>
-            <td>Type :</td>
-            <td>${article.typeArticle.getTypeName()}</td>
-        </tr>
-        <tr>
-            <td>Statut :</td>
-            <td>${article.statutDocument.toString()}</td>
-        </tr>
-        
- 		
+      
  		
     </tbody>
 </table>
@@ -66,7 +57,7 @@
  </div>
  </div>
  <div>
- <a type="button" class="btn btn-primary btn-md" href="/articles">Retour au menu</a>
+ <a type="button" class="btn btn-primary btn-md" href="/evaluations">Retour au menu</a>
  </div>
  </div>
  

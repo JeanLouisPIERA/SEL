@@ -30,8 +30,7 @@
     <div class="panel-heading">Fiche de mise à jour de la proposition N° ${proposition.id} (Auteur ${proposition.emetteurUsername} )</div>
     
     <div class="panel-body">
-    <br>
-       <br>
+   
      <form:form class="form-inline d-flex bd-highlight" method="POST" modelAttribute="propositionUpdateDTO">
      <input type="hidden" name="id" value="${proposition.id}" />
         
@@ -44,6 +43,8 @@
 	       <form:errors path="titre" cssClass="text-warning" />
       	</fieldset>
       	
+      		<br><br>
+      	
       	 <fieldset class="form-group">
 	       <form:label path="description" class="col-auto col-form-label">Description :</form:label>
 	       <form:input path="description" type="text" class="form-control" value ="${proposition.description}"
@@ -51,15 +52,8 @@
 	       <form:errors path="description" cssClass="text-warning" />
       	</fieldset>
       	
-      	<fieldset class="form-group">
-	       <form:label path="image" class="col-auto col-form-label">Image :</form:label>
-	       <form:input path="image" type="text" class="form-control" value ="${proposition.image}"
-	        placeholder="e.g photo boitier electrique " required="required" />
-	       <form:errors path="image" cssClass="text-warning" />
-      	</fieldset>
-      	</fieldset>
       	
-      	<br>
+      	<br><br>
       	
       	<fieldset class="form-row">       	
       	<fieldset class="form-group">

@@ -15,6 +15,8 @@ public class Evaluation {
 	private EnumNoteEchange enumNoteEchange;
 
 	private LocalDate dateEvaluation;
+	
+	private Boolean isModerated;
 
 	private Echange echange;
 
@@ -77,5 +79,15 @@ public class Evaluation {
 	public void setEchange(Echange echange) {
 		this.echange = echange;
 	}
+
+	public Boolean getIsModerated() {
+		return isModerated;
+	}
+
+	public void setIsModerated(Boolean isModerated) {
+		this.isModerated = isModerated;
+	}
+	
+	
 
 }

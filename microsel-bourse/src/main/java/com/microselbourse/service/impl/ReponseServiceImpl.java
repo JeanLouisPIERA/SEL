@@ -13,9 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.microselbourse.beans.UserBean;
-import com.microselbourse.criteria.ReponseCriteria;
 import com.microselbourse.dao.IBlocageRepository;
 import com.microselbourse.dao.ICategorieRepository;
 import com.microselbourse.dao.IPropositionRepository;
@@ -42,6 +42,7 @@ import com.microselbourse.service.IReponseService;
 import com.microselbourse.service.IWalletService;
 
 @Service
+@Transactional
 public class ReponseServiceImpl implements IReponseService {
 
 	@Autowired
@@ -81,6 +82,7 @@ public class ReponseServiceImpl implements IReponseService {
 	private Integer dateTimezone;
 
 
+	
 	@Override
 	public Reponse createReponse(Long propositionId, ReponseDTO reponseDTO) throws EntityNotFoundException,
 			DeniedAccessException, UnsupportedEncodingException, MessagingException, EntityAlreadyExistsException {
@@ -203,16 +205,7 @@ public class ReponseServiceImpl implements IReponseService {
 		return reponseRepository.save(reponseCreated);
 	}
 
-	@Override
-	public Page<Reponse> searchAllReponsesByCriteria(ReponseCriteria reponseCriteria, Pageable pageable) {
-		return null;
-		/*
-		 * Specification<Reponse> reponseSpecification = new
-		 * ReponseSpecification(reponseCriteria); Page<Reponse> reponses =
-		 * propositionRepository.findAll(reponseSpecification, pageable); return
-		 * reponses; }
-		 */
-	}
+	
 
 	@Override
 	public Reponse readReponse(Long id) throws EntityNotFoundException {
@@ -239,5 +232,9 @@ public class ReponseServiceImpl implements IReponseService {
 
 		return reponses;
 	}
+
+
+
+	
 
 }

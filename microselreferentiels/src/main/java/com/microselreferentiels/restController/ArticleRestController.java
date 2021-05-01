@@ -138,6 +138,20 @@ public class ArticleRestController {
 		return new ResponseEntity<Article>(articleService.readArticleByTypeArticle(typearticleId), HttpStatus.OK);  
 	  }
 	  
+	  @ApiOperation(value = "Modification de l'article standard par l'administrateur", response = Article.class)  
+	  @ApiResponses(value = {
+		  @ApiResponse(code = 201, message =
+		  "L'article recherché a été trouvé"),
+		  @ApiResponse(code = 400, message =
+		  "Les informations fournies ne sont pas correctes"),
+		  @ApiResponse(code = 413, message = 
+		  "L'article que vous voulez consulter n'existe pas"), })
+	 
+	  @PutMapping("/admin/articles/standard")
+	  public ResponseEntity<Article> modifierArticleStandard( @RequestBody ArticleDTO articleDTO) throws EntityNotFoundException, DeniedAccessException {
+		return new ResponseEntity<Article>(articleService.modifierArticleStandard(articleDTO), HttpStatus.OK);  
+	  }
+	  
 	 
 	 
 }

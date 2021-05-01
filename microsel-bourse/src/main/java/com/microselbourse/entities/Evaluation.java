@@ -44,6 +44,9 @@ public class Evaluation implements Serializable{
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "date_evaluation", length = 25, nullable = false)
 	private LocalDate dateEvaluation;
+	
+	@Column(name = "is_moderated")
+	private Boolean isModerated;
 
 	@ManyToOne
 	@JoinColumn(name = "echange_id")
@@ -109,5 +112,16 @@ public class Evaluation implements Serializable{
 		this.echange = echange;
 	}
 
+	public Boolean getIsModerated() {
+		return isModerated;
+	}
+
+	public void setIsModerated(Boolean isModerated) {
+		this.isModerated = isModerated;
+	}
+
+	
+
+	
 	
 }

@@ -51,13 +51,26 @@
   
  </div>
  </div>
-	   <td>
-         	<a type="button"  class="btn btn-success" 
-        	href="/evaluations/echange/${echange.id}">Evaluer l'échange</a>
-        </td>
+	   
  
  </div>
  
+</div>
+</div>
+
+<div class="row d-flex justify-content-center">
+
+ <div class="container col-md-4 col-md-offset-4">
+ <div class="panel panel-primary ">
+ 
+  <div class="panel-heading">
+<div>
+<!-- <td> -->
+         	<a type="button"  class="btn btn-success" 
+        	href="/evaluations/echange/${echange.id}">Evaluer l'échange</a>
+       <!--  </td> -->
+</div>
+</div>
 </div>
 </div>
 

@@ -3,6 +3,7 @@ package com.microselwebclientjspui.controller;
 import java.util.EnumSet;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import com.microselwebclientjspui.criteria.ArticleCriteria;
 import com.microselwebclientjspui.criteria.DocumentCriteria;
 import com.microselwebclientjspui.dto.ArticleDTO;
 import com.microselwebclientjspui.dto.DocumentDTO;
+import com.microselwebclientjspui.dto.PropositionUpdateDTO;
 import com.microselwebclientjspui.errors.ConvertToExceptionMessage;
 import com.microselwebclientjspui.objets.Article;
 import com.microselwebclientjspui.objets.Document;
@@ -177,6 +179,41 @@ public class ArticleController {
 			return "/error";
 		}
 		return "articles/articleArchivageConfirmation";
+	}
+	
+	/**
+	 * Permet d'afficher le formulaire de modification de l'article standard
+	 */
+	@GetMapping("/articles/standard")
+	public String afficherArticleStandard(Model model) {
+
+		model.addAttribute("articleDTO", new ArticleDTO());
+		
+		Article article = articleService.searchById((long) 1);
+		model.addAttribute("article", article);
+
+		return "articles/articleEdit";
+	}
+	
+	
+	/**
+	 * Permet à l'administrateur de modifier le contenu de l'article standard
+	 */
+	@PostMapping("/articles/standard")
+	public String modifierArticleStandard(Model model, @Valid @ModelAttribute("articleDTO") ArticleDTO articleDTO  , BindingResult result) {
+		
+	
+		try {
+			Article articleStardUpdated = articleService.modifierArticleStandard(articleDTO);
+			model.addAttribute("article", articleStardUpdated);
+			
+
+		} catch (HttpClientErrorException e) {
+			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
+			model.addAttribute("error", errorMessage);
+			return "/error";
+		}
+		return "articles/articleConfirmation";
 	}
 
 

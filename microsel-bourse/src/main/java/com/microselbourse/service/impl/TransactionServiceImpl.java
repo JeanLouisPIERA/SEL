@@ -205,10 +205,10 @@ public class TransactionServiceImpl implements ITransactionService {
 		// 1 SEULE POSSIBILITE : EMETTEUR ET RECEPTEUR VALIDE (SCENARIO 2EV-RV)
 
 		else if (echangeToTransaction.get().getStatutEchange().equals(EnumStatutEchange.CLOTURE)) {
-			// UserBean emetteur =
-			// adherentsProxy.consulterCompteAdherent(echangeToTransaction.get().getEmetteurId());
-			// UserBean recepteur =
-			// adherentsProxy.consulterCompteAdherent(echangeToTransaction.get().getRecepteurId());
+			//UserBean emetteur =
+			//usersProxy.consulterCompteAdherent(echangeToTransaction.get().getEmetteurId());
+			//UserBean recepteur =
+			//usersProxy.consulterCompteAdherent(echangeToTransaction.get().getRecepteurId());
 
 			Optional<Wallet> walletEmetteur = walletRepository
 					.readByTitulaireId(echangeToTransaction.get().getEmetteurId());

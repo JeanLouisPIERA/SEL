@@ -94,15 +94,8 @@ public class PropositionServiceImpl implements IPropositionService {
 				.findByName(EnumCategorie.fromValueCode(propositionDTO.getCategorieName()));
 		if (!categorieFound.isPresent())
 			throw new EntityNotFoundException("La catégorie dans laquelle vous avez choisi de publier n'existe pas");
-
-		/*
-		 * CategorieBean categorieFound =
-		 * microselReferentielsProxy.consulterTypeProposition(propositionDTO.
-		 * getCategorieName());
-		 * if(!categorieFound.getTypeName().equals(propositionDTO.getCategorieName()))
-		 * throw new EntityNotFoundException( "Il n'existe aucune catégorie de ce nom");
-		 */
-
+		
+		
 		Proposition propositionToCreate = propositionMapper.propositionDTOToProposition(propositionDTO);
 
 		if (propositionToCreate.getDateEcheance().isBefore(LocalDate.now())
@@ -115,7 +108,8 @@ public class PropositionServiceImpl implements IPropositionService {
 		propositionToCreate.setDateDebut(LocalDate.now().plusDays(1));
 		propositionToCreate.setStatut(EnumStatutProposition.ENCOURS);
 
-		Optional<Wallet> walletEmetteur = walletRepository.readByTitulaireId(emetteurProposition.getId());
+		//Optional<Wallet> walletEmetteur = walletRepository.readByTitulaireId(emetteurProposition.getId());
+		Optional<Wallet> walletEmetteur = walletRepository.readByTitulaireId(propositionToCreate.getEmetteurId());
 		if (walletEmetteur.isEmpty()) {
 			// Wallet emetteurWalletCreated =
 			// walletService.createWallet(emetteurProposition.getId());
@@ -194,6 +188,7 @@ public class PropositionServiceImpl implements IPropositionService {
 
 		return propositionRepository.save(propositionUpdated);
 	}
+	
 
 	@Override
 	public Proposition closeProposition(Long id, String emetteurId) throws EntityNotFoundException, DeniedAccessException {

@@ -30,20 +30,10 @@
     <div class="panel-heading">Fiche d'enregistrement d'une proposition</div>
     
     <div class="panel-body">
-    <br>
-       <br>
+    
      <form:form class="form-inline d-flex bd-highlight" method="POST" modelAttribute="propositionDTO">
       <input type="hidden" name="id" value="${proposition.id}" />  
-       <%-- <fieldset class="form-row">
-       <fieldset class="form-group">
-	       <form:label path="emetteurId" class="col-auto col-form-label">Identifiant Adhérent :</form:label>
-	       <form:input path="emetteurId" type="text" class="form-control"
-	        placeholder="e.g 12" required="required" />
-	       <form:errors path="emetteurId" cssClass="text-warning" />
-      	</fieldset>
-      	</fieldset>
       
-      <br> --%>
       
       <fieldset class="form-row">
        <fieldset class="form-group">
@@ -79,6 +69,8 @@
 	       <form:errors path="titre" cssClass="text-warning" />
       	</fieldset>
       	
+      		<br> <br>
+      	
       	 <fieldset class="form-group">
 	       <form:label path="description" class="col-auto col-form-label">Description :</form:label>
 	       <form:input path="description" type="text" class="form-control"
@@ -86,15 +78,8 @@
 	       <form:errors path="description" cssClass="text-warning" />
       	</fieldset>
       	
-      	<fieldset class="form-group">
-	       <form:label path="image" class="col-auto col-form-label">Image :</form:label>
-	       <form:input path="image" type="text" class="form-control"
-	        placeholder="e.g photo boitier electrique " required="required" />
-	       <form:errors path="image" cssClass="text-warning" />
-      	</fieldset>
-      	</fieldset>
       	
-      	<br>
+      	<br><br>
       	
       	<fieldset class="form-row">       	
       	<fieldset class="form-group">

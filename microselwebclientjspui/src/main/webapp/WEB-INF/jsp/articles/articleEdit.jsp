@@ -7,11 +7,11 @@
 
 <!DOCTYPE html>
 <html>
-
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <head>
 
-<title>Creation Type d'Article</title>
+<title>Creation d'un Article</title>
 <%@ include file="/WEB-INF/jsp/common/header1.jspf"%>
 </head>
 
@@ -27,49 +27,51 @@
   <div class="col-md-6 col-md-offset-3 ">
   
    <div class="panel panel-primary">
-    <div class="panel-heading">Fiche d'enregistrement d'un type d'article</div>
+    <div class="panel-heading">Fiche de modification de l'article Standard</div>
     
     <div class="panel-body">
     <br>
        <br>
-     <form:form class="form-inline d-flex bd-highlight" method="POST" modelAttribute="typeArticleDTO">
-        
+     <form:form class="form-inline d-flex bd-highlight" method="POST" modelAttribute="articleDTO">
+       <input type="hidden" name="id" value="${article.id}" />
+    
        <fieldset class="form-row">
        <fieldset class="form-group">
-	       <form:label path="typeName" class="col-auto col-form-label"> Nom du type d'article:</form:label>
-	       <form:input path="typeName" type="text" class="form-control"
-	        placeholder="e.g CGU " required="required" />
-	       <form:errors path="typeName" cssClass="text-warning" />
+	       <form:label path="titre" class="col-auto col-form-label"> Titre de l'article :</form:label>
+	       <form:input path="titre" type="text" class="form-control" value ="${article.titre}"
+	        placeholder="e.g titre de mon article " required="required" />
+	       <form:errors path="titre" cssClass="text-warning" />
       	</fieldset>
       	</fieldset>
       
       <br>
 
-	
-      	
+	 
+      
       	<fieldset class="form-row">
 	       <fieldset class="form-group">
-		       <form:textarea path="description" rows="6" cols="100"
-		        placeholder="DESCRIPTION :Décrire ici le type de document à créer : ne pas dépasser 10000 caractères" required="required" maxlength="10000"/>
-		       <form:errors path="description" cssClass="text-warning" />
-	      	</fieldset>
-      	</fieldset> 
-      	
-      	<br>
-      	
-      	<fieldset class="form-row">
-	       <fieldset class="form-group">
-		       <form:textarea path="entete" rows="6" cols="100"
-		        placeholder="ENTETE : Décrire ici en résumé le type de document à créer : ne pas dépasser 255 caractères" required="required" maxlength="255"/>
+		       <form:textarea path="entete" rows="3" cols="100" 
+		        placeholder="Rédiger ici un résumé du texte à publier : ne pas dépasser 255 caractères" required="required" maxlength="255"/>
 		       <form:errors path="entete" cssClass="text-warning" />
 	      	</fieldset>
-      	</fieldset> 
-      	
-      	<br>
-      	
-      	
       	</fieldset>
       	
+      	
+      	
+      	<fieldset class="form-row">
+	       <fieldset class="form-group">
+		       <form:textarea path="contenu" rows="6" cols="100" value ="${proposition.entente}"
+		        placeholder="Rédiger ici le texte à publier : ne pas dépasser 1000 caractères" required="required" maxlength="10000"/>
+		       <form:errors path="contenu" cssClass="text-warning" />
+	      	</fieldset>
+      	</fieldset>
+      	
+   
+      	
+      	 <br>
+      	 
+      	
+      	 
       	
        <br>
        <br>	      	

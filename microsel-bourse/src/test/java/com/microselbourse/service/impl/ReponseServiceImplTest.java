@@ -194,27 +194,4 @@ public class ReponseServiceImplTest {
 
 	}
 
-	/*
-	 * @Test public void testCreateReponse_withoutException() throws Exception {
-	 * 
-	 * user.setId((long)1); reponseDTO.setRecepteurId((long)1);
-	 * proposition.setId((long)1);
-	 * proposition.setStatut(EnumStatutProposition.ENCOURS);
-	 * proposition.setEmetteurId((long)2);
-	 * 
-	 * proposition.setEnumTradeType(EnumTradeType.OFFRE);
-	 * 
-	 * reponseTest = reponseService.createReponse((long)1, reponseDTO);
-	 * verify(reponseRepository, times(1)).save(any(Reponse.class));
-	 * Assert.assertTrue(reponseTest.equals(reponse));
-	 * 
-	 * proposition.setEnumTradeType(EnumTradeType.DEMANDE);
-	 * 
-	 * reponseTest = reponseService.createReponse((long)1, reponseDTO);
-	 * verify(reponseRepository, times(2)).save(any(Reponse.class));
-	 * Assert.assertTrue(reponseTest.equals(reponse));
-	 * 
-	 * }
-	 */
-
-}
+	

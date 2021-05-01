@@ -1,6 +1,7 @@
 package com.microselwebclientjspui.service.impl;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -141,6 +142,12 @@ public class DocumentServiceImpl implements IDocumentService {
 		ResponseEntity<Document> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Document.class);
 
 		return response.getBody();
+	}
+
+	@Override
+	public List<Document> selectDocumentToCompleteArticles(Integer numberOfArticles) {
+		// FIXME Auto-generated method stub
+		return null;
 	}
 
 }

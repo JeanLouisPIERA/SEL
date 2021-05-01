@@ -47,10 +47,6 @@
             <td>${reponse.description}</td>
         </tr>
         <tr>
-            <td>Image de votre réponse :</td>
-            <td>${reponse.image}</td>
-        </tr>
-        <tr>
             <td>Type</td>
             <td>${reponse.enumTradeType.getCode()}</td>
         </tr>

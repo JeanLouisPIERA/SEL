@@ -255,4 +255,15 @@ databaseChangeLog:
           path: scripts/23_alter_table_blocages.sql
           relativeToChangelogFile: true
           splitStatements: true
-          stripComments: true                                                                                                                                                                                                                                                  
+          stripComments: true  
+ - changeSet:
+      id: script24
+      author: JeanLouis PIERA
+      changes:
+      - sqlFile:
+          dbms: mysql
+          encoding: utf8
+          path: scripts/24_alter_table_evaluations.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true                                                                                                                                                                                                                                                              

@@ -41,10 +41,7 @@
             <td>Titre:</td>
             <td>${proposition.titre}</td>
         </tr>
-        <tr>
-            <td>Illustration:</td>
-            <td>${proposition.image}</td>
-        </tr>
+   
         <tr>
             <td>Description :</td>
             <td>${proposition.description}</td>

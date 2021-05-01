@@ -74,11 +74,6 @@
 									</fieldset>
 
 
-									<%-- <fieldset class="form-group">
-				 <label>Objet de la proposition :</label>
-				 <input type="text" name="nomCategorie" value="${livreCriteria.nomCategorie}"/>
-				 </fieldset> --%>
-
 									<fieldset class="form-group">
 										<label> Rubrique : </label> <select name="enumCategorie"
 											class="form-control">
@@ -90,11 +85,6 @@
 											</c:forEach>
 										</select>
 									</fieldset>
-
-									<%-- <form:select path="selectEnumCategorie">
-				    <form:option value="0" label="Choisissez votre rubrique" />
-				    <form:options items="${enumCategorieList}" />
-				</form:select> --%>
 
 
 
@@ -110,10 +100,7 @@
 										</select>
 									</fieldset>
 
-									<%-- <form:select path="selectEnumTRadeType">
-				    <form:option value="0" label="Choisissez votre type de proposition" />
-				    <form:options items="${enumTradeTypeList}" />
-				</form:select> --%>
+
 
 									<fieldset class="form-group">
 										<label>Statut de la Proposition : </label> <select
@@ -130,13 +117,10 @@
 
 									<fieldset class="form-group">
 										<label>Pseudo de l'adhérent :</label> <input type="text"
-											name="emetteurUsername" value="${propositionCriteria.emetteurUsername}" />
+											name="emetteurUsername"
+											value="${propositionCriteria.emetteurUsername}" />
 									</fieldset>
 
-									<%-- <form:select path="selectEnumStatutProposition">
-				    <form:option value="0" label="Choisissez la situation de la proposition" />
-				    <form:options items="${enumStatutPropositionList}" />
-				</form:select> --%>
 
 									<button class="btn-sm btn-primary">Valider</button>
 								</fieldset>
@@ -193,15 +177,14 @@
 												<td><a type="button" class="btn btn-primary"
 													href="/propositions/reponses/${proposition.id}">Détails</a>
 												</td>
-												
-												<sec:authorize access="isAuthenticated()"> 
-												<td><a type="button" class="btn btn-warning"
-													href="/propositions/${proposition.id}">MaJ</a>
-												</td>
-												
-												<td><a type="button" class="btn btn-danger"
-													href="/propositions/close/${proposition.id}">Clôturer</a>
-												</td>
+
+												<sec:authorize access="isAuthenticated()">
+													<td><a type="button" class="btn btn-warning"
+														href="/propositions/${proposition.id}">MaJ</a></td>
+
+													<td><a type="button" class="btn btn-danger"
+														href="/propositions/close/${proposition.id}">Clôturer</a>
+													</td>
 												</sec:authorize>
 
 

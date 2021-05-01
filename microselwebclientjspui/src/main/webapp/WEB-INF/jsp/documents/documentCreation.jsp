@@ -46,17 +46,6 @@
       <br>
 
 	 
-      	
-      	<fieldset class="form-row">
-       <fieldset class="form-group">
-	       <form:label path="image" class="col-auto col-form-label"> Illustration :</form:label>
-	       <form:input path="image" type="text" class="form-control"
-	        placeholder="e.g illustration du texte " required="required" />
-	       <form:errors path="image" cssClass="text-warning" />
-      	</fieldset>
-      	</fieldset>
-      
-      <br>
       
       	<fieldset class="form-row">
 	       <fieldset class="form-group">

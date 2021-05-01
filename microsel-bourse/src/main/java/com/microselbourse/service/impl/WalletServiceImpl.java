@@ -182,6 +182,7 @@ public class WalletServiceImpl implements IWalletService {
 
 					// SCENARIO 2 : Récepteur Réponse a fait une demande face à une proposition
 					// d'offre, il est débiteur et emetteur est crediteur
+					
 					// HYPOTHESE 3 : le solde du wallet du récepteur débiteur est insuffisant pour
 					// régler la transaction sans passer sous le solde mini
 					// walletEmetteur = COUNTERPART pour LITIGE et walletRecepteur = COUNTERPART
@@ -190,7 +191,7 @@ public class WalletServiceImpl implements IWalletService {
 							- transactionToRegistrate.get().getMontant()) < soldeMini) {
 
 						echangeFromTransaction.get().setStatutEchange(EnumStatutEchange.CONFLIT);
-						blocageService.createBlocage(transactionToRegistrate.get().getId(), 
+						blocageService.createBlocage(transactionToRegistrate.get().getId(),
 								transactionToRegistrate.get().getRecepteurId(),
 								transactionToRegistrate.get().getRecepteurUsername());
 						/*
@@ -259,7 +260,7 @@ public class WalletServiceImpl implements IWalletService {
 					if ((walletEmetteurEchange.get().getSoldeWallet()
 							- transactionToRegistrate.get().getMontant()) < soldeMini) {
 						echangeFromTransaction.get().setStatutEchange(EnumStatutEchange.CONFLIT);
-						blocageService.createBlocage(transactionToRegistrate.get().getId(), 
+						blocageService.createBlocage(transactionToRegistrate.get().getId(),
 								transactionToRegistrate.get().getEmetteurId(),
 								transactionToRegistrate.get().getEmetteurUsername());
 						/*
@@ -340,8 +341,9 @@ public class WalletServiceImpl implements IWalletService {
 
 					if ((walletEmetteurEchange.get().getSoldeWallet()
 							- transactionToRegistrate.get().getMontant()) < soldeMini) {
+						
 						echangeFromTransaction.get().setStatutEchange(EnumStatutEchange.CONFLIT);
-						blocageService.createBlocage(transactionToRegistrate.get().getId(), 
+						blocageService.createBlocage(transactionToRegistrate.get().getId(),
 								transactionToRegistrate.get().getEmetteurId(),
 								transactionToRegistrate.get().getEmetteurUsername());
 						walletRecepteurEchange.get().setSoldeWallet(walletRecepteurEchange.get().getSoldeWallet()
@@ -357,6 +359,7 @@ public class WalletServiceImpl implements IWalletService {
 						walletCounterpart.get().setTransactions(walletCounterpartTransactions);
 						walletRepository.save(walletCounterpart.get());
 					} else {
+					
 						// HYPOTHDESE 2 : le solde du wallet de l'émetteur débiteur est suffisant pour
 						// régler la transaction sans passer sous le solde mini
 
@@ -379,10 +382,11 @@ public class WalletServiceImpl implements IWalletService {
 				// HYPOTHESE 3 : e solde du wallet du récepteur débiteur est insuffisant pour
 				// régler la transaction sans passer sous le solde mini
 
-				if ((walletRecepteurEchange.get().getSoldeWallet()
+				else if ((walletRecepteurEchange.get().getSoldeWallet()
 						- transactionToRegistrate.get().getMontant()) < soldeMini) {
+
 					echangeFromTransaction.get().setStatutEchange(EnumStatutEchange.CONFLIT);
-					blocageService.createBlocage(transactionToRegistrate.get().getId(), 
+					blocageService.createBlocage(transactionToRegistrate.get().getId(),
 							transactionToRegistrate.get().getRecepteurId(),
 							transactionToRegistrate.get().getRecepteurUsername());
 					walletEmetteurEchange.get().setSoldeWallet(
@@ -398,6 +402,7 @@ public class WalletServiceImpl implements IWalletService {
 					walletCounterpart.get().setTransactions(walletCounterpartTransactions);
 					walletRepository.save(walletCounterpart.get());
 				} else {
+
 					// HYPOTHDESE 4: le solde du wallet du récepteur débiteur est suffisant pour
 					// régler la transaction sans passer sous le solde mini
 

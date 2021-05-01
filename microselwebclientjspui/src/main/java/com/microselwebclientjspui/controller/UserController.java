@@ -44,46 +44,46 @@ public class UserController {
 	@Autowired
 	private IArticleService articleService;
 
-	@Value("${application.infoBureauId}")
-	private Long infoBureauId;
+	@Value("${application.document7Id}")
+	private Long document7Id;
 
-	@Value("${application.defSelId}")
-	private Long defSelId;
+	@Value("${application.document1Id}")
+	private Long document1Id;
 
-	@Value("${application.defBourseId}")
-	private Long defBourseId;
+	@Value("${application.document2Id}")
+	private Long document2Id;
 
-	@Value("${application.defReseauId}")
-	private Long defReseauId;
+	@Value("${application.document3Id}")
+	private Long document3Id;
 
-	@Value("${application.cguId}")
-	private Long cguId;
+	@Value("${application.document4Id}")
+	private Long document4Id;
 
-	@Value("${application.infosLegalesId}")
-	private Long infosLegalesId;
+	@Value("${application.document5Id}")
+	private Long document5Id;
 
-	@Value("${application.faqId}")
-	private Long faqId;
+	@Value("${application.document6Id}")
+	private Long document6Id;
 
 	@GetMapping("/accueil")
 	public String accueil(Model model) {
 
 		try {
 
-			Document infoBureau = documentService.searchByTypeDocumentId(infoBureauId);
-			model.addAttribute("infoBureau", infoBureau);
-			Document defSel = documentService.searchByTypeDocumentId(defSelId);
-			model.addAttribute("defSel", defSel);
-			Document defBourse = documentService.searchByTypeDocumentId(defBourseId);
-			model.addAttribute("defBourse", defBourse);
-			Document defReseau = documentService.searchByTypeDocumentId(defReseauId);
-			model.addAttribute("defReseau", defReseau);
-			Document cgu = documentService.searchByTypeDocumentId(cguId);
-			model.addAttribute("cgu", cgu);
-			Document infosLegales = documentService.searchByTypeDocumentId(infosLegalesId);
-			model.addAttribute("infosLegales", infosLegales);
-			Document faq = documentService.searchByTypeDocumentId(faqId);
-			model.addAttribute("faq", faq);
+			Document document7 = documentService.searchByTypeDocumentId(document7Id);
+			model.addAttribute("document7", document7);
+			Document document1 = documentService.searchByTypeDocumentId(document1Id);
+			model.addAttribute("document1", document1);
+			Document document2 = documentService.searchByTypeDocumentId(document2Id);
+			model.addAttribute("document2", document2);
+			Document document3 = documentService.searchByTypeDocumentId(document3Id);
+			model.addAttribute("document3", document3);
+			Document document4 = documentService.searchByTypeDocumentId(document4Id);
+			model.addAttribute("document4", document4);
+			Document document5 = documentService.searchByTypeDocumentId(document5Id);
+			model.addAttribute("document5", document5);
+			Document document6 = documentService.searchByTypeDocumentId(document6Id);
+			model.addAttribute("document6", document6);
 			
 			Integer numberOfArticles=0;
 
@@ -103,6 +103,7 @@ public class UserController {
 				 * if(numberOfArticles==1) { model.addAttribute("article4", documents.get(0)); }
 				 * } catch (Exception e1) { }
 				 */
+				
 			}
 
 		} catch (HttpClientErrorException e) {

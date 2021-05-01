@@ -49,15 +49,15 @@
 						<div class="panel-heading">
 							<h2>Le Bureau vous informe :</h2>
 						</div>
-						<p>Le ${infoBureau.dateCreation} par
-							${infoBureau.auteurUsername}</p>
+						<p>Le ${document7.dateCreation} par
+							${document7.auteurUsername}</p>
 							</div>
 						<article>
 							<p>
-								<a href="/documents/static/${infoBureau.typeDocument.id}">Lire
+								<a href="/documents/static/${document7.typeDocument.id}">Lire
 									tout l'article</a>
 							</p>
-							<p>${infoBureau.entete}</p>
+							<p>${document7.entete}</p>
 
 						</article>
 					</section>
@@ -143,18 +143,18 @@
 
 				<ul>
 					<h4>Renseignez-vous</h4>
-					<a href="/documents/static/${defSel.typeDocument.id}">${defSel.titre}
+					<a href="/documents/static/${document1.typeDocument.id}">${document1.titre}
 					</a>
 					<br></br>
-					<a href="/documents/static/${defBourse.typeDocument.id}">${defBourse.titre}</a>
+					<a href="/documents/static/${document2.typeDocument.id}">${document2.titre}</a>
 					<br></br>
-					<a href="/documents/static/${defReseau.typeDocument.id}">${defReseau.titre}</a>
+					<a href="/documents/static/${document3.typeDocument.id}">${document3.titre}</a>
 					<br></br>
-					<a href="/documents/static/${cgu.typeDocument.id}">${cgu.titre}</a>
+					<a href="/documents/static/${document4.typeDocument.id}">${document4.titre}</a>
 					<br></br>
-					<a href="/documents/static/${infosLegales.typeDocument.id}">${infosLegales.titre}</a>
+					<a href="/documents/static/${document5.typeDocument.id}">${document5.titre}</a>
 					<br></br>
-					<a href="/documents/static/${faq.typeDocument.id}">${faq.titre}</a>
+					<a href="/documents/static/${document6.typeDocument.id}">${document6.titre}</a>
 					<br></br>
 				</ul>
 				<ul>

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.microselbourse.beans.UserBean;
 import com.microselbourse.criteria.BlocageCriteria;
@@ -28,6 +29,7 @@ import com.microselbourse.proxies.IMicroselUsersProxy;
 import com.microselbourse.service.IBlocageService;
 
 @Service
+@Transactional
 public class BlocageServiceImpl implements IBlocageService {
 
 	@Autowired
