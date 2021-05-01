@@ -1,9 +1,11 @@
 package com.microselbourse.criteria;
 
-import java.util.List;
-
-import com.microselbourse.entities.Transaction;
-
+/**
+ *  Classe permettant le requêtage de la classe Wallet = portefeuille attribué à chaque adhérent pour enregistrer ses transactions 
+ *  et leur solde en monnaie SEL
+ * @author jeanl
+ *
+ */
 public class WalletCriteria {
 
 	private Long id;

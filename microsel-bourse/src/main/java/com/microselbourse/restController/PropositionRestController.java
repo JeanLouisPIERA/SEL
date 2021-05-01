@@ -6,9 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
-/*import org.keycloak.KeycloakPrincipal;
-import org.keycloak.KeycloakSecurityContext;
-import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;*/
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Page;
@@ -77,8 +74,7 @@ public class PropositionRestController {
 				PageRequest.of(page, size));
 		return new ResponseEntity<Page<Proposition>>(propositions, HttpStatus.OK);
 	}
-	
-	
+
 	@ApiOperation(value = "Consultation d'une proposition par un adhérent", response = Proposition.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "La proposition recherchée a été trouvée"),
 			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
@@ -96,9 +92,11 @@ public class PropositionRestController {
 			@ApiResponse(code = 413, message = "Cette proposition n'existe pas"), })
 
 	@PutMapping(value = "/user/propositions/proposition/{propositionId}/adherent/{emetteurId}")
-	public ResponseEntity<Proposition> updateProposition(@PathVariable @Valid Long propositionId, @PathVariable String emetteurId, @Valid @RequestBody PropositionUpdateDTO propositionUpdateDTO)
+	public ResponseEntity<Proposition> updateProposition(@PathVariable @Valid Long propositionId,
+			@PathVariable String emetteurId, @Valid @RequestBody PropositionUpdateDTO propositionUpdateDTO)
 			throws EntityNotFoundException, DeniedAccessException, EntityAlreadyExistsException {
-		return new ResponseEntity<Proposition>(propositionService.updateProposition(propositionId, emetteurId, propositionUpdateDTO), HttpStatus.OK);
+		return new ResponseEntity<Proposition>(
+				propositionService.updateProposition(propositionId, emetteurId, propositionUpdateDTO), HttpStatus.OK);
 
 	}
 

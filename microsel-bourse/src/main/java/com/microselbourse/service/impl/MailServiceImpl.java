@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
-import com.microselbourse.entities.MessageMailReponse;
 import com.microselbourse.entities.MessageMailScheduler;
 import com.microselbourse.service.IMailService;
 
@@ -27,7 +26,7 @@ public class MailServiceImpl implements IMailService {
 
 	@Autowired
 	private SpringTemplateEngine thymeleafTemplateEngine;
-	
+
 	@Autowired
 	private RabbitMQSender rabbitMQSender;
 
@@ -63,17 +62,16 @@ public class MailServiceImpl implements IMailService {
 		thymeleafContext.setVariables(templateModel);
 
 		String htmlBody = thymeleafTemplateEngine.process(microselBourseMailTemplate, thymeleafContext);
-		
-		//sendHtmlMessage(to, name, subject, htmlBody);
-		
+
 		MessageMailScheduler messageMailScheduler = new MessageMailScheduler();
 		messageMailScheduler.setTo(to);
 		messageMailScheduler.setSubject(subject);
 		messageMailScheduler.setName(name);
 		messageMailScheduler.setHtmlBody(htmlBody);
-		rabbitMQSender.sendMessageMailScheduler(messageMailScheduler);;//--------------------------------------------------------->RMQ
+		rabbitMQSender.sendMessageMailScheduler(messageMailScheduler);
+		;// --------------------------------------------------------->RMQ
 	}
-	
+
 	@Override
 	public void sendMessageUsingThymeleafTemplateSuppress(String to, String name, String subject,
 			Map<String, Object> templateModel) throws MessagingException, UnsupportedEncodingException {
@@ -82,17 +80,16 @@ public class MailServiceImpl implements IMailService {
 		thymeleafContext.setVariables(templateModel);
 
 		String htmlBody = thymeleafTemplateEngine.process(templateSuppress, thymeleafContext);
-		
-		//sendHtmlMessage(to, name, subject, htmlBody);
-		
+
 		MessageMailScheduler messageMailScheduler = new MessageMailScheduler();
 		messageMailScheduler.setTo(to);
 		messageMailScheduler.setSubject(subject);
 		messageMailScheduler.setName(name);
 		messageMailScheduler.setHtmlBody(htmlBody);
-		rabbitMQSender.sendMessageMailScheduler(messageMailScheduler);;//--------------------------------------------------------->RMQ
+		rabbitMQSender.sendMessageMailScheduler(messageMailScheduler);
+		;// --------------------------------------------------------->RMQ
 	}
-	
+
 	@Override
 	public void sendMessageUsingThymeleafTemplateForceValid(String to, String name, String subject,
 			Map<String, Object> templateModel) throws MessagingException, UnsupportedEncodingException {
@@ -102,17 +99,15 @@ public class MailServiceImpl implements IMailService {
 
 		String htmlBody = thymeleafTemplateEngine.process(templateForceValid, thymeleafContext);
 
-		//sendHtmlMessage(to, name, subject, htmlBody);
-		
 		MessageMailScheduler messageMailScheduler = new MessageMailScheduler();
 		messageMailScheduler.setTo(to);
 		messageMailScheduler.setSubject(subject);
 		messageMailScheduler.setName(name);
 		messageMailScheduler.setHtmlBody(htmlBody);
-		rabbitMQSender.sendMessageMailScheduler(messageMailScheduler);;//--------------------------------------------------------->RMQ
+		rabbitMQSender.sendMessageMailScheduler(messageMailScheduler);
+		;// --------------------------------------------------------->RMQ
 	}
-	
-	
+
 	@Override
 	public void sendMessageUsingThymeleafTemplateForceRefus(String to, String name, String subject,
 			Map<String, Object> templateModel) throws MessagingException, UnsupportedEncodingException {
@@ -121,15 +116,14 @@ public class MailServiceImpl implements IMailService {
 		thymeleafContext.setVariables(templateModel);
 
 		String htmlBody = thymeleafTemplateEngine.process(templateForceRefus, thymeleafContext);
-		
-		//sendHtmlMessage(to, name, subject, htmlBody);
-		
+
 		MessageMailScheduler messageMailScheduler = new MessageMailScheduler();
 		messageMailScheduler.setTo(to);
 		messageMailScheduler.setSubject(subject);
 		messageMailScheduler.setName(name);
 		messageMailScheduler.setHtmlBody(htmlBody);
-		rabbitMQSender.sendMessageMailScheduler(messageMailScheduler);;//--------------------------------------------------------->RMQ
+		rabbitMQSender.sendMessageMailScheduler(messageMailScheduler);
+		;// --------------------------------------------------------->RMQ
 	}
 
 	/**
@@ -157,7 +151,7 @@ public class MailServiceImpl implements IMailService {
 		helper.setText(htmlBody, true);
 
 		eMailSender.send(message);
-		
+
 	}
 
 }

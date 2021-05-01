@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class BourseExceptionHandler {
-	
+
 	/**
-	 * Cette méthode permet de gérer l'exception métier personnalisée "Entity Not Found"
-	 * Https Status NOT FOUND 413
+	 * Cette méthode permet de gérer l'exception métier personnalisée "Entity Not
+	 * Found" Https Status NOT FOUND 413
+	 * 
 	 * @param ex
 	 * @return
 	 */
@@ -27,16 +28,16 @@ public class BourseExceptionHandler {
 		exceptionReponse.setStatusCode(HttpStatus.NOT_FOUND.value());
 		return exceptionReponse;
 	}
-	
-		
+
 	/**
-	 * Cette méthode permet de gérer l'exception personnalisée " Entity Already Exists "
-	 *HttpStatus CONFLICT 409
+	 * Cette méthode permet de gérer l'exception personnalisée " Entity Already
+	 * Exists " HttpStatus CONFLICT 409
+	 * 
 	 * @param ex2
 	 * @return
 	 */
-	
-	@ExceptionHandler (EntityAlreadyExistsException.class)
+
+	@ExceptionHandler(EntityAlreadyExistsException.class)
 	@ResponseBody
 	@ResponseStatus(code = HttpStatus.CONFLICT)
 	public BourseExceptionReponse handleCustomException(EntityAlreadyExistsException ex4) {
@@ -45,18 +46,19 @@ public class BourseExceptionHandler {
 		exceptionReponse.setMessageErreur(ex4.getMessage());
 		exceptionReponse.setStatusCode(HttpStatus.CONFLICT.value());
 		return exceptionReponse;
-		
+
 	}
-	
+
 	/**
-	 * Cette méthode permet de gérer l'exception personnalisée " Entity Already Exists"
-	 * Http Status LOCKED CODE 423
-	 * L’opération ne peut avoir lieu, car la ressource est verrouillée
+	 * Cette méthode permet de gérer l'exception personnalisée " Entity Already
+	 * Exists" Http Status LOCKED CODE 423 L’opération ne peut avoir lieu, car la
+	 * ressource est verrouillée
+	 * 
 	 * @param ex2
 	 * @return
 	 */
-	
-	@ExceptionHandler (DeniedAccessException.class)
+
+	@ExceptionHandler(DeniedAccessException.class)
 	@ResponseBody
 	@ResponseStatus(code = HttpStatus.LOCKED)
 	public BourseExceptionReponse handleCustomException(DeniedAccessException ex5) {
@@ -65,8 +67,7 @@ public class BourseExceptionHandler {
 		exceptionReponse.setMessageErreur(ex5.getMessage());
 		exceptionReponse.setStatusCode(HttpStatus.LOCKED.value());
 		return exceptionReponse;
-		
+
 	}
-	
 
 }

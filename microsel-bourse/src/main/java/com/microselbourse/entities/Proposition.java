@@ -2,7 +2,6 @@ package com.microselbourse.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -18,9 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -46,7 +43,7 @@ public class Proposition implements Serializable {
 
 	private String emetteurId;
 
-	@Column(name = "emetteur_username", length = 255, nullable=false)
+	@Column(name = "emetteur_username", length = 255, nullable = false)
 	private String emetteurUsername;
 
 	/*
@@ -265,7 +262,4 @@ public class Proposition implements Serializable {
 		this.reponses = reponses;
 	}
 
-	
-
-	
 }

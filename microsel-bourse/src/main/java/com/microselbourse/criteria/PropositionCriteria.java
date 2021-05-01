@@ -1,7 +1,10 @@
 package com.microselbourse.criteria;
 
-import java.time.LocalDate;
-
+/**
+ *  Classe permettant le requêtage de la classe Proposition : ce sont les offres ou les demandes déposées dans la Bourse d'échanges
+ * @author jeanl
+ *
+ */
 public class PropositionCriteria {
 
 	private String emetteurId;

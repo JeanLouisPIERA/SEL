@@ -25,7 +25,7 @@ public class RabbitMQSender {
 
 	@Autowired
 	private AmqpTemplate rabbitTemplate;
-	
+
 	@Autowired
 	private IEchangeService echangeService;
 
@@ -37,16 +37,15 @@ public class RabbitMQSender {
 
 	@Value("${microselbourse.rabbitmq.queue3}")
 	String queueName3;
-	
+
 	@Value("${microselbourse.rabbitmq.queue4}")
 	String queueName4;
-	
+
 	@Value("${microselbourse.rabbitmq.queue5}")
 	String queueName5;
-	
+
 	@Value("${microselbourse.rabbitmq.queue6}")
 	String queueName6;
-
 
 	@Value("${microselbourse.rabbitmq.exchange}")
 	private String exchange;
@@ -68,7 +67,7 @@ public class RabbitMQSender {
 		System.out.println("Send msg Create Wallet = " + emetteur);
 
 	}
-	
+
 	public void sendMessageMailEchangeEvaluation(MessageMailEchangeEvaluation messageMailEchangeEvaluation) {
 		rabbitTemplate.convertAndSend(exchange, queueName4, messageMailEchangeEvaluation);
 		System.out.println("Send msg Create Evaluation = " + messageMailEchangeEvaluation);
@@ -77,15 +76,13 @@ public class RabbitMQSender {
 	public void sendMessageMailScheduler(MessageMailScheduler messageMailScheduler) {
 		rabbitTemplate.convertAndSend(exchange, queueName5, messageMailScheduler);
 		System.out.println("Send msg Mail Scheduler = " + messageMailScheduler);
-		
+
 	}
 
 	public void sendMessageMailDeblocage(MessageMailDeblocage messageMailDeblocage) {
 		rabbitTemplate.convertAndSend(exchange, queueName6, messageMailDeblocage);
 		System.out.println("Send msg Mail Deblocage = " + messageMailDeblocage);
-		
+
 	}
-	
-	
 
 }

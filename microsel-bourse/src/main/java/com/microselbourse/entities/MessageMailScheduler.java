@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id2", scope = MessageMailReponse.class)
 public class MessageMailScheduler {
-	
-	String to ; 
-	String name ;
-	String subject ;
+
+	String to;
+	String name;
+	String subject;
 	String htmlBody;
-	
+
 	public MessageMailScheduler() {
 		super();
 	}
@@ -46,11 +46,5 @@ public class MessageMailScheduler {
 	public void setHtmlBody(String htmlBody) {
 		this.htmlBody = htmlBody;
 	}
-	
-	
-	
-	
-	
-	
 
 }

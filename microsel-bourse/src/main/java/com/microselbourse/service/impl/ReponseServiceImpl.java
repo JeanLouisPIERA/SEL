@@ -77,12 +77,10 @@ public class ReponseServiceImpl implements IReponseService {
 
 	@Autowired
 	RabbitMQSender rabbitMQSender;
-	
+
 	@Value("${application.dateTimezone}")
 	private Integer dateTimezone;
 
-
-	
 	@Override
 	public Reponse createReponse(Long propositionId, ReponseDTO reponseDTO) throws EntityNotFoundException,
 			DeniedAccessException, UnsupportedEncodingException, MessagingException, EntityAlreadyExistsException {
@@ -90,7 +88,7 @@ public class ReponseServiceImpl implements IReponseService {
 		UserBean recepteurProposition = microselUsersProxy.consulterCompteAdherent(reponseDTO.getRecepteurId());
 		if (!recepteurProposition.getId().equals(reponseDTO.getRecepteurId()))
 			throw new EntityNotFoundException("Vous n'êtes pas identifié comme adhérent de l'association");
-		
+
 		Optional<Blocage> blocageRecepteurId = blocageRepository
 				.findByAdherentIdAndStatutBlocage(recepteurProposition.getId(), EnumStatutBlocage.ENCOURS);
 		if (blocageRecepteurId.isPresent())
@@ -116,7 +114,6 @@ public class ReponseServiceImpl implements IReponseService {
 			Reponse reponseCreated = reponseRepository.save(reponseToCreate);
 
 			Echange echange = echangeService.createEchange(reponseCreated.getId());
-			
 
 			List<Reponse> reponses = propositionToRespond.get().getReponses();
 			reponses.add(reponseCreated);
@@ -126,33 +123,23 @@ public class ReponseServiceImpl implements IReponseService {
 			UserBean emetteurProposition = microselUsersProxy
 					.consulterCompteAdherent(propositionToRespond.get().getEmetteurId());
 
-			// mailSender.sendMailEchangeCreation(reponseToCreate, recepteurProposition,
-			// "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
-			// mailSender.sendMailEchangeCreation(reponseToCreate, emetteurProposition,
-			// "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
-
 			MessageMailReponse messageToRecepteur = new MessageMailReponse();
 			messageToRecepteur.setReponse(reponseToCreate);
 			messageToRecepteur.setDestinataire(recepteurProposition);
 			messageToRecepteur.setSubject("Creation d'un nouvel échange");
 			messageToRecepteur.setMicroselBourseMailTemplate("01_RecepteurReponse_EchangeCreation");
-			rabbitMQSender.sendMessageMailReponse(messageToRecepteur);//--------------------------------------------------------->RMQ
+			rabbitMQSender.sendMessageMailReponse(messageToRecepteur);// --------------------------------------------------------->RMQ
 
 			MessageMailReponse messageToEmetteur = new MessageMailReponse();
 			messageToEmetteur.setReponse(reponseToCreate);
 			messageToEmetteur.setDestinataire(emetteurProposition);
 			messageToEmetteur.setSubject("Reponse a votre Proposition");
 			messageToEmetteur.setMicroselBourseMailTemplate("02_EmetteurProposition_EchangeCreation");
-			rabbitMQSender.sendMessageMailReponse(messageToEmetteur);//---------------------------------------------------------->RMQ
+			rabbitMQSender.sendMessageMailReponse(messageToEmetteur);// ---------------------------------------------------------->RMQ
 
 			Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId(recepteurProposition.getId());
 			if (walletRecepteur.isEmpty()) {
-				/*
-				 * Wallet recepteurWalletCreated =
-				 * walletService.createWallet(recepteurProposition.getId());
-				 * walletRepository.save(recepteurWalletCreated);
-				 */
-				rabbitMQSender.sendMessageCreateWallet(recepteurProposition);//-------------------------------------------------->RMQ
+				rabbitMQSender.sendMessageCreateWallet(recepteurProposition);// -------------------------------------------------->RMQ
 				return reponseCreated;
 			}
 			return reponseCreated;
@@ -172,40 +159,30 @@ public class ReponseServiceImpl implements IReponseService {
 		UserBean emetteurProposition = microselUsersProxy
 				.consulterCompteAdherent(propositionToRespond.get().getEmetteurId());
 
-		// mailSender.sendMailEchangeCreation(reponseToCreate, recepteurProposition,
-		// "Creation d'un nouvel échange", "01_RecepteurReponse_EchangeCreation");
-		// mailSender.sendMailEchangeCreation(reponseToCreate, emetteurProposition,
-		// "Reponse a votre Proposition", "02_EmetteurProposition_EchangeCreation");
-
 		MessageMailReponse messageToRecepteur = new MessageMailReponse();
 		messageToRecepteur.setReponse(reponseToCreate);
 		messageToRecepteur.setDestinataire(recepteurProposition);
 		messageToRecepteur.setSubject("Creation d'un nouvel échange");
 		messageToRecepteur.setMicroselBourseMailTemplate("01_RecepteurReponse_EchangeCreation");
-		rabbitMQSender.sendMessageMailReponse(messageToRecepteur);//--------------------------------------------------------------------->RMQ
+		rabbitMQSender.sendMessageMailReponse(messageToRecepteur);// --------------------------------------------------------------------->RMQ
 
 		MessageMailReponse messageToEmetteur = new MessageMailReponse();
 		messageToEmetteur.setReponse(reponseToCreate);
 		messageToEmetteur.setDestinataire(emetteurProposition);
 		messageToEmetteur.setSubject("Reponse a votre Proposition");
-		messageToEmetteur.setMicroselBourseMailTemplate("02_EmetteurProposition_EchangeCreation");//------------------------------------->RMQ
+		messageToEmetteur.setMicroselBourseMailTemplate("02_EmetteurProposition_EchangeCreation");// ------------------------------------->RMQ
 		rabbitMQSender.sendMessageMailReponse(messageToEmetteur);
 
 		Optional<Wallet> walletRecepteur = walletRepository.readByTitulaireId(recepteurProposition.getId());
 		if (walletRecepteur.isEmpty()) {
-			/*
-			 * Wallet recepteurWalletCreated =
-			 * walletService.createWallet(recepteurProposition.getId());
-			 * walletRepository.save(recepteurWalletCreated);
-			 */
-			rabbitMQSender.sendMessageCreateWallet(recepteurProposition);//-------------------------------------------------------> RMQ
+
+			rabbitMQSender.sendMessageCreateWallet(recepteurProposition);// ------------------------------------------------------->
+																			// RMQ
 			return reponseRepository.save(reponseCreated);
 		}
 
 		return reponseRepository.save(reponseCreated);
 	}
-
-	
 
 	@Override
 	public Reponse readReponse(Long id) throws EntityNotFoundException {
@@ -232,9 +209,5 @@ public class ReponseServiceImpl implements IReponseService {
 
 		return reponses;
 	}
-
-
-
-	
 
 }

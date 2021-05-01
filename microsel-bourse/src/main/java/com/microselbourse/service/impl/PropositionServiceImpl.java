@@ -51,9 +51,6 @@ public class PropositionServiceImpl implements IPropositionService {
 	private IPropositionUpdateMapper propositionUpdateMapper;
 	@Autowired
 	private IMicroselUsersProxy microselUsersProxy;
-	/*
-	 * @Autowired private IMicroselReferentielsProxy microselReferentielsProxy;
-	 */
 	@Autowired
 	private IWalletRepository walletRepository;
 	@Autowired
@@ -94,8 +91,7 @@ public class PropositionServiceImpl implements IPropositionService {
 				.findByName(EnumCategorie.fromValueCode(propositionDTO.getCategorieName()));
 		if (!categorieFound.isPresent())
 			throw new EntityNotFoundException("La catégorie dans laquelle vous avez choisi de publier n'existe pas");
-		
-		
+
 		Proposition propositionToCreate = propositionMapper.propositionDTOToProposition(propositionDTO);
 
 		if (propositionToCreate.getDateEcheance().isBefore(LocalDate.now())
@@ -108,11 +104,8 @@ public class PropositionServiceImpl implements IPropositionService {
 		propositionToCreate.setDateDebut(LocalDate.now().plusDays(1));
 		propositionToCreate.setStatut(EnumStatutProposition.ENCOURS);
 
-		//Optional<Wallet> walletEmetteur = walletRepository.readByTitulaireId(emetteurProposition.getId());
 		Optional<Wallet> walletEmetteur = walletRepository.readByTitulaireId(propositionToCreate.getEmetteurId());
 		if (walletEmetteur.isEmpty()) {
-			// Wallet emetteurWalletCreated =
-			// walletService.createWallet(emetteurProposition.getId());
 			rabbitMQSender.sendMessageCreateWallet(emetteurProposition);// ------------------------------------------------------->
 																		// RMQ
 			return propositionRepository.save(propositionToCreate);
@@ -125,9 +118,9 @@ public class PropositionServiceImpl implements IPropositionService {
 	@Override
 	public Page<Proposition> searchAllPropositionsByCriteria(PropositionCriteria propositionCriteria,
 			Pageable pageable) {
-		
+
 		Specification<Proposition> propositionSpecification = new PropositionSpecification(propositionCriteria);
-		
+
 		Page<Proposition> propositions = propositionRepository.findAll(propositionSpecification, pageable);
 		return propositions;
 	}
@@ -188,15 +181,15 @@ public class PropositionServiceImpl implements IPropositionService {
 
 		return propositionRepository.save(propositionUpdated);
 	}
-	
 
 	@Override
-	public Proposition closeProposition(Long id, String emetteurId) throws EntityNotFoundException, DeniedAccessException {
+	public Proposition closeProposition(Long id, String emetteurId)
+			throws EntityNotFoundException, DeniedAccessException {
 
 		Optional<Proposition> propositionToClose = propositionRepository.findById(id);
 		if (!propositionToClose.isPresent())
 			throw new EntityNotFoundException("L'Offre ou la Demande que vous souhaitez clôturer n'existe pas.");
-		
+
 		if (!propositionToClose.get().getEmetteurId().equals(emetteurId))
 			throw new DeniedAccessException("Vous ne pouvez pas clôturer la proposition d'un autre adhérent");
 
@@ -211,7 +204,7 @@ public class PropositionServiceImpl implements IPropositionService {
 
 		propositionToClose.get().setStatut(EnumStatutProposition.CLOTUREE);
 		propositionToClose.get().setDateFin(LocalDate.now());
-		
+
 		return propositionRepository.save(propositionToClose.get());
 	}
 

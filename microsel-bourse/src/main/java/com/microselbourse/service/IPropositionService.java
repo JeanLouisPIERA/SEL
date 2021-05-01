@@ -1,7 +1,6 @@
 package com.microselbourse.service;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.microselbourse.criteria.PropositionCriteria;
@@ -25,7 +24,5 @@ public interface IPropositionService {
 			throws EntityNotFoundException, DeniedAccessException, EntityAlreadyExistsException;
 
 	Proposition closeProposition(Long id, String emetteurId) throws EntityNotFoundException, DeniedAccessException;
-
-	
 
 }

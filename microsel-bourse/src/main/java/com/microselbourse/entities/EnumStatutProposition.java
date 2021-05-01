@@ -1,25 +1,21 @@
 package com.microselbourse.entities;
 
-
 public enum EnumStatutProposition {
-	
-	ENCOURS ("ENCOURS", "ENCOURS"),
-	ECHUE ("ECHUE", "ECHUE"),  
-	CLOTUREE ("CLOTUREE", "CLOTUREE"), 
-	INCONNUE ("INCONNUE", "INCONNUE")
-	;
-	
-	 private String code;
-	  private String text;
-	  
+
+	ENCOURS("ENCOURS", "ENCOURS"), ECHUE("ECHUE", "ECHUE"), CLOTUREE("CLOTUREE", "CLOTUREE"),
+	INCONNUE("INCONNUE", "INCONNUE");
+
+	private String code;
+	private String text;
+
 	private EnumStatutProposition(String code, String text) {
 		this.code = code;
 		this.text = text;
 	}
-	
+
 	public static EnumStatutProposition getEnumStatutPropositionByCode(String code) {
 		for (EnumStatutProposition enumStatutProposition : EnumStatutProposition.values()) {
-			if(enumStatutProposition.code.equals(code)){
+			if (enumStatutProposition.code.equals(code)) {
 				return enumStatutProposition;
 			}
 		}
@@ -44,22 +40,22 @@ public enum EnumStatutProposition {
 
 	@Override
 	public String toString() {
-		if(this==ENCOURS) {
-			return"Proposition en-cours";
-		}else if (this==ECHUE) {
-			return"Proposition échue";
-		}else if (this==CLOTUREE) {
-			return"Proposition clôturée";
+		if (this == ENCOURS) {
+			return "Proposition en-cours";
+		} else if (this == ECHUE) {
+			return "Proposition échue";
+		} else if (this == CLOTUREE) {
+			return "Proposition clôturée";
 		}
 		return super.toString();
-	}   
-	
+	}
+
 	public static EnumStatutProposition fromValueCode(String code) {
 		try {
-	        return valueOf(code);
-	    } catch (IllegalArgumentException e) {
-	        return EnumStatutProposition.INCONNUE;
-	    }
+			return valueOf(code);
+		} catch (IllegalArgumentException e) {
+			return EnumStatutProposition.INCONNUE;
+		}
 	}
 
 }

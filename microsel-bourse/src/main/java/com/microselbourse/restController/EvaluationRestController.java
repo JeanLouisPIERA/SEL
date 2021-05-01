@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.microselbourse.criteria.EvaluationCriteria;
-import com.microselbourse.criteria.PropositionCriteria;
 import com.microselbourse.dto.EvaluationDTO;
 import com.microselbourse.entities.Evaluation;
 import com.microselbourse.entities.Proposition;
@@ -65,35 +64,30 @@ public class EvaluationRestController {
 		List<Evaluation> evaluations = evaluationService.findAllByEchangeIdAndNotModerated(id);
 		return new ResponseEntity<List<Evaluation>>(evaluations, HttpStatus.OK);
 	}
-	
-	
-	 @ApiOperation(value = "Modération d'une évaluation", response = Evaluation.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "L'évaluation recherchée a été trouvée"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "L'évaluatione que vous voulez consulter n'existe pas"), })
-	 
-	  @PutMapping("/admin/evaluations/moderation/{id}")
-	  public ResponseEntity<Evaluation> modererEvaluation(@PathVariable("id") @Valid Long id) throws EntityNotFoundException, DeniedAccessException {
-		return new ResponseEntity<Evaluation>(evaluationService.modererEvaluation(id), HttpStatus.OK);  
-	  }
-	 
-	 @ApiOperation(value = "Recherche multi-critères d'une ou plusieurs evaluations", response = Proposition.class)
-		@ApiResponses(value = { @ApiResponse(code = 200, message = "La recherche a été réalisée avec succés"), })
 
-		@GetMapping(value = "/admin/evaluations", produces = "application/json")
-		public ResponseEntity<Page<Evaluation>> searchAllEvaluationsByCriteria(
-				@PathParam("evaluationCriteria") EvaluationCriteria evaluationCriteria,
-				@RequestParam(name = "page", defaultValue = "0") int page,
-				@RequestParam(name = "size", defaultValue = "10") int size) {
+	@ApiOperation(value = "Modération d'une évaluation", response = Evaluation.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "L'évaluation recherchée a été trouvée"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "L'évaluatione que vous voulez consulter n'existe pas"), })
 
-			Page<Evaluation> evaluations = evaluationService.searchAllEvaluationsByCriteria(evaluationCriteria,
-					PageRequest.of(page, size));
-			return new ResponseEntity<Page<Evaluation>>(evaluations, HttpStatus.OK);
-		}
-		
+	@PutMapping("/admin/evaluations/moderation/{id}")
+	public ResponseEntity<Evaluation> modererEvaluation(@PathVariable("id") @Valid Long id)
+			throws EntityNotFoundException, DeniedAccessException {
+		return new ResponseEntity<Evaluation>(evaluationService.modererEvaluation(id), HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "Recherche multi-critères d'une ou plusieurs evaluations", response = Proposition.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "La recherche a été réalisée avec succés"), })
+
+	@GetMapping(value = "/admin/evaluations", produces = "application/json")
+	public ResponseEntity<Page<Evaluation>> searchAllEvaluationsByCriteria(
+			@PathParam("evaluationCriteria") EvaluationCriteria evaluationCriteria,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "10") int size) {
+
+		Page<Evaluation> evaluations = evaluationService.searchAllEvaluationsByCriteria(evaluationCriteria,
+				PageRequest.of(page, size));
+		return new ResponseEntity<Page<Evaluation>>(evaluations, HttpStatus.OK);
+	}
 
 }

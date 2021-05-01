@@ -13,46 +13,46 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="documents")
-public class Document implements Serializable{
-	
+@Table(name = "documents")
+public class Document implements Serializable {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "document_id", length=5)
+	@Column(name = "document_id", length = 5)
 	private Long id;
-	
-	@Column(name = "titre", length = 25, nullable=false)
+
+	@Column(name = "titre", length = 25, nullable = false)
 	private String titre;
-	
-	@Column(name = "auteur_id", length = 255, nullable=false)
-	private String auteurId; 
-	
-	@Column(name = "auteur_username", length = 25, nullable=false)
+
+	@Column(name = "auteur_id", length = 255, nullable = false)
+	private String auteurId;
+
+	@Column(name = "auteur_username", length = 25, nullable = false)
 	private String auteurUsername;
-	
+
 	@Column(name = "date_creation")
-	private LocalDate dateCreation; 
-	
+	private LocalDate dateCreation;
+
 	@Column(name = "date_publication")
 	private LocalDate datePublication;
-	
+
 	@Column(name = "date_archivage")
 	private LocalDate dateArchivage;
-	
+
 	@Column(name = "image", length = 25)
 	private String image;
-	
-	@Column(name = "contenu", length = 255, nullable=false)
+
+	@Column(name = "contenu", length = 255, nullable = false)
 	private String contenu;
-	
-	@Column(name="entete", length = 50, nullable=false)
+
+	@Column(name = "entete", length = 50, nullable = false)
 	private String entete;
-	
+
 	@Column(name = "statut_document", length = 3)
 	private EnumStatutDocument statutDocument;
-	
-	@ManyToOne 
-	@JoinColumn(name="typedocument_id")
+
+	@ManyToOne
+	@JoinColumn(name = "typedocument_id")
 	private TypeDocument typeDocument;
 
 	public Document() {
@@ -74,8 +74,6 @@ public class Document implements Serializable{
 	public void setTitre(String titre) {
 		this.titre = titre;
 	}
-
-	
 
 	public String getAuteurId() {
 		return auteurId;
@@ -156,7 +154,5 @@ public class Document implements Serializable{
 	public void setTypeDocument(TypeDocument typeDocument) {
 		this.typeDocument = typeDocument;
 	}
-
-	
 
 }

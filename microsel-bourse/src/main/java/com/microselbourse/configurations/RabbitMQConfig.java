@@ -13,6 +13,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Classe de créations des Beans des queues et binding de RabbitMQ
+ * @author jeanl
+ *
+ */
+
 @Configuration
 public class RabbitMQConfig {
 
@@ -24,26 +30,28 @@ public class RabbitMQConfig {
 
 	@Value("${microselbourse.rabbitmq.queue3}")
 	String queueName3;
-	
+
 	@Value("${microselbourse.rabbitmq.queue4}")
 	String queueName4;
-	
+
 	@Value("${microselbourse.rabbitmq.queue5}")
 	String queueName5;
-	
+
 	@Value("${microselbourse.rabbitmq.queue6}")
 	String queueName6;
 
 	@Value("${microselbourse.rabbitmq.exchange}")
 	String exchange;
-	
+
 	@Bean
 	TopicExchange exchange() {
 		return new TopicExchange(exchange);
 	}
-	
+
 	/**
-	 * Bean de Queue & Binding pour gérer l'envoi des mails de création d'une réponse à une proposition
+	 * Bean de Queue & Binding pour gérer l'envoi des mails de création d'une
+	 * réponse à une proposition
+	 * 
 	 * @return
 	 */
 
@@ -51,14 +59,16 @@ public class RabbitMQConfig {
 	Queue queue1() {
 		return new Queue(queueName1, false);
 	}
-	
+
 	@Bean
 	Binding binding1(TopicExchange exchange) {
 		return BindingBuilder.bind(queue1()).to(exchange).with(queueName1);
 	}
-	
+
 	/**
-	 * Bean de Queue & Binding pour gérer l'envoi des mails de création d'un échange suite à la réponse à une proposition
+	 * Bean de Queue & Binding pour gérer l'envoi des mails de création d'un échange
+	 * suite à la réponse à une proposition
+	 * 
 	 * @return
 	 */
 
@@ -66,14 +76,16 @@ public class RabbitMQConfig {
 	Queue queue2() {
 		return new Queue(queueName2, false);
 	}
-	
+
 	@Bean
 	Binding binding2(TopicExchange exchange) {
 		return BindingBuilder.bind(queue2()).to(exchange).with(queueName2);
 	}
-	
+
 	/**
-	 * Bean de Queue et Binding pour la gestion en arrière plan de la création du portefeuille d'un adhérent lorsqu'il n'existe pas 
+	 * Bean de Queue et Binding pour la gestion en arrière plan de la création du
+	 * portefeuille d'un adhérent lorsqu'il n'existe pas
+	 * 
 	 * @return
 	 */
 
@@ -81,14 +93,16 @@ public class RabbitMQConfig {
 	Queue queue3() {
 		return new Queue(queueName3, false);
 	}
-	
+
 	@Bean
 	Binding binding3(TopicExchange exchange) {
 		return BindingBuilder.bind(queue3()).to(exchange).with(queueName3);
 	}
-	
+
 	/**
-	 * Bean de Queue et Binding pour la création en arrière plan de l'évaluation d'un échange
+	 * Bean de Queue et Binding pour la création en arrière plan de l'évaluation
+	 * d'un échange
+	 * 
 	 * @return
 	 */
 
@@ -101,9 +115,11 @@ public class RabbitMQConfig {
 	Binding binding4(TopicExchange exchange) {
 		return BindingBuilder.bind(queue4()).to(exchange).with(queueName4);
 	}
-	
+
 	/**
-	 * Bean de Queue et Binding pour la création en arrière plan des mails envoyés par le MailScheduler 
+	 * Bean de Queue et Binding pour la création en arrière plan des mails envoyés
+	 * par le MailScheduler
+	 * 
 	 * @return
 	 */
 
@@ -116,9 +132,11 @@ public class RabbitMQConfig {
 	Binding binding5(TopicExchange exchange) {
 		return BindingBuilder.bind(queue5()).to(exchange).with(queueName5);
 	}
-	
+
 	/**
-	 * Bean de Queue et Binding pour gérer l'envoi des mails de déblocage du compte d'un adhérent bloqué 
+	 * Bean de Queue et Binding pour gérer l'envoi des mails de déblocage du compte
+	 * d'un adhérent bloqué
+	 * 
 	 * @return
 	 */
 
@@ -131,8 +149,6 @@ public class RabbitMQConfig {
 	Binding binding6(TopicExchange exchange) {
 		return BindingBuilder.bind(queue6()).to(exchange).with(queueName6);
 	}
-	
-	
 
 	@Bean
 	public MessageConverter jsonMessageConverter() {

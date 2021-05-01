@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -49,7 +48,6 @@ public class Blocage implements Serializable {
 	@Column(name = "statut_blocage")
 	private EnumStatutBlocage statutBlocage;
 
-	
 	@ManyToOne
 	@JoinColumn(name = "echange_id")
 	private Echange echange;
@@ -113,9 +111,5 @@ public class Blocage implements Serializable {
 	public void setEchange(Echange echange) {
 		this.echange = echange;
 	}
-
-
-	
-	
 
 }

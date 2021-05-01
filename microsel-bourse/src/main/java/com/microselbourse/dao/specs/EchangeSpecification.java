@@ -11,6 +11,12 @@ import com.microselbourse.criteria.EchangeCriteria;
 import com.microselbourse.entities.Echange;
 import com.microselbourse.entities.EnumStatutEchange;
 
+
+/**
+ * * Classe qui implémentate la JPA Spécification pour le requêtage de la classe Echange
+ * @author jeanl
+ *
+ */
 public class EchangeSpecification implements Specification<Echange> {
 
 	private EchangeCriteria echangeCriteria;
@@ -27,13 +33,15 @@ public class EchangeSpecification implements Specification<Echange> {
 		if (echangeCriteria.getId() != null) {
 			predicates.getExpressions().add(builder.equal(root.get("id"), echangeCriteria.getId()));
 		}
-		
+
 		if (echangeCriteria.getEmetteurId() != null) {
-			predicates.getExpressions().add(builder.like(root.get("emetteurId"), "%" + echangeCriteria.getEmetteurId() + "%"));
+			predicates.getExpressions()
+					.add(builder.like(root.get("emetteurId"), "%" + echangeCriteria.getEmetteurId() + "%"));
 		}
-		
+
 		if (echangeCriteria.getRecepteurId() != null) {
-			predicates.getExpressions().add(builder.like(root.get("recepteurId"), "%" + echangeCriteria.getRecepteurId() + "%"));
+			predicates.getExpressions()
+					.add(builder.like(root.get("recepteurId"), "%" + echangeCriteria.getRecepteurId() + "%"));
 		}
 
 		if (echangeCriteria.getStatutEchange() != null && !echangeCriteria.getStatutEchange().isEmpty()) {

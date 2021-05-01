@@ -23,8 +23,6 @@ public class MessageMailDeblocage {
 	public void setBlocage(Blocage blocage) {
 		this.blocage = blocage;
 	}
-	
-	
 
 	public UserBean getAdherent() {
 		return adherent;
@@ -49,11 +47,5 @@ public class MessageMailDeblocage {
 	public void setMicroselBourseMailTemplate(String microselBourseMailTemplate) {
 		this.microselBourseMailTemplate = microselBourseMailTemplate;
 	}
-
-	
-
-	
-
-	
 
 }

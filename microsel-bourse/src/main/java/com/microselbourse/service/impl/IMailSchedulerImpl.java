@@ -43,17 +43,19 @@ public class IMailSchedulerImpl implements IMailScheduler {
 	@Value("${application.subject.echange.forcerefus}")
 	private String subjectForceRefus;
 
-	
 	/**
-	 * Si la réalisation de l’échange n’est pas établie par au moins 1 avis (c’est-à-dire que le statut de l’échange est toujours en CONFIRME 
-	 * et que l’avis des 2 adhérents n’est pas renseigné), le système : 
-	 * • Passe le statut de l’échange en SUPPRIME 
-	 * • Passe le statut de l’avis des 2 adhérents en ANOMALIE mais ne bloque pas leur accès à la bourse d’échange 
-	 * • Aucun enregistrement de la transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur 
-	 * Pour éviter cette situation à cause d’un « oubli», le système envoie un mail de rappel 48 heures avant la date d’échéance.
+	 * Si la réalisation de l’échange n’est pas établie par au moins 1 avis
+	 * (c’est-à-dire que le statut de l’échange est toujours en CONFIRME et que
+	 * l’avis des 2 adhérents n’est pas renseigné), le système : • Passe le statut
+	 * de l’échange en SUPPRIME • Passe le statut de l’avis des 2 adhérents en
+	 * ANOMALIE mais ne bloque pas leur accès à la bourse d’échange • Aucun
+	 * enregistrement de la transaction en unités de compte au débit ou au crédit de
+	 * l’émetteur et du récepteur Pour éviter cette situation à cause d’un « oubli»,
+	 * le système envoie un mail de rappel 48 heures avant la date d’échéance.
+	 * 
 	 * @return
 	 */
-	
+
 	@Scheduled(cron = "${application.cron}")
 	@Override
 	public void sendMailsEchangesASupprimer() throws MessagingException, UnsupportedEncodingException {
@@ -68,7 +70,7 @@ public class IMailSchedulerImpl implements IMailScheduler {
 			this.populateModel("nomUser", echangeASupprimer.getEmetteurUsername());
 
 			mailService.sendMessageUsingThymeleafTemplateSuppress(mailTo, nomEmetteur, subjectSuppress, model);
-			
+
 			String nomRecepteur = echangeASupprimer.getRecepteurUsername();
 			this.populateModel("nomUser", echangeASupprimer.getRecepteurUsername());
 
@@ -78,43 +80,25 @@ public class IMailSchedulerImpl implements IMailScheduler {
 
 	}
 
-	/*
-	 * @Scheduled(cron = "${application.cron}")
-	 * 
-	 * @Override public void sendMailsEchangesASupprimerToRecepteurList() throws
-	 * MessagingException, UnsupportedEncodingException { List<Echange>
-	 * echangesASupprimerList = echangeService.searchAndUpdateEchangesASupprimer();
-	 * 
-	 * for (Echange echangeASupprimer : echangesASupprimerList) { String mailTo =
-	 * echangeASupprimer.getRecepteurMail(); String nomRecepteur =
-	 * echangeASupprimer.getRecepteurUsername();
-	 * 
-	 * this.populateModel("Référence de l'échange à supprimer",
-	 * echangeASupprimer.getId());
-	 * 
-	 * mailService.sendMessageUsingThymeleafTemplateSuppress(mailTo, nomRecepteur,
-	 * subjectSuppress, model);
-	 * 
-	 * }
-	 * 
-	 * }
-	 */
-	
 	/**
-	  * Si seul le récepteur ou seul l’émetteur a renseigné un avis VALIDE sur l’échange, le système : 
-	 * • Considère que l’échange est réputé « validé » et  passe son statut en FORCEVALID 
-	 * • Enregistre la transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur qui a validé l’échange. 
-	 * La contrepartie est le compte interne COUNTERPART 
-	 * • Bloque l’accès à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (= silencieux) et lui envoie un mail 
-	 * Lorsque le système bloque l’accès d’un adhérent à son espace personnel, il passe toutes les PROPOSITIONS et toutes
+	 * Si seul le récepteur ou seul l’émetteur a renseigné un avis VALIDE sur
+	 * l’échange, le système : • Considère que l’échange est réputé « validé » et
+	 * passe son statut en FORCEVALID • Enregistre la transaction en unités de
+	 * compte au débit ou au crédit de l’émetteur et du récepteur qui a validé
+	 * l’échange. La contrepartie est le compte interne COUNTERPART • Bloque l’accès
+	 * à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (=
+	 * silencieux) et lui envoie un mail Lorsque le système bloque l’accès d’un
+	 * adhérent à son espace personnel, il passe toutes les PROPOSITIONS et toutes
 	 * les REPONSES de cet adhérent dans la bourse d’échanges en statut BLOQUE
+	 * 
 	 * @return
-	 * @throws EntityAlreadyExistsException 
-	 * @throws EntityNotFoundException 
+	 * @throws EntityAlreadyExistsException
+	 * @throws EntityNotFoundException
 	 */
 	@Override
 	@Scheduled(cron = "${application.cron}")
-	public void sendMailsEchangesAForceValiderList() throws MessagingException, UnsupportedEncodingException, EntityNotFoundException, EntityAlreadyExistsException {
+	public void sendMailsEchangesAForceValiderList() throws MessagingException, UnsupportedEncodingException,
+			EntityNotFoundException, EntityAlreadyExistsException {
 		List<Echange> echangesAForceValiderListEmetteur = echangeService.searchAndUpdateEchangesAForceValiderEmetteur();
 
 		for (Echange echangeAForceValider : echangesAForceValiderListEmetteur) {
@@ -125,11 +109,11 @@ public class IMailSchedulerImpl implements IMailScheduler {
 			this.populateModel("nomUser", echangeAForceValider.getEmetteurUsername());
 
 			mailService.sendMessageUsingThymeleafTemplateForceValid(mailTo, nomEmetteur, subjectForceValid, model);
-			
+
 		}
-		
-		
-		List<Echange> echangesAForceValiderListRecepteur = echangeService.searchAndUpdateEchangesAForceValiderRecepteur();
+
+		List<Echange> echangesAForceValiderListRecepteur = echangeService
+				.searchAndUpdateEchangesAForceValiderRecepteur();
 
 		for (Echange echangeAForceValider : echangesAForceValiderListRecepteur) {
 			String mailTo = echangeAForceValider.getEmetteurMail();
@@ -144,16 +128,20 @@ public class IMailSchedulerImpl implements IMailScheduler {
 	}
 
 	/**
-	 * Si seul le récepteur ou seul l’émetteur a renseigné un avis REFUSE sur * l’échange, le système : 
-	 * • Considère que l’échange est réputé « refusé » et passe son statut en FORCEREFUS 
-	 * • N’enregistre aucune transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur qui a refusé l’échange. 
-	 * • Bloque l’accès à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (= silencieux) et lui envoie un mail
+	 * Si seul le récepteur ou seul l’émetteur a renseigné un avis REFUSE sur *
+	 * l’échange, le système : • Considère que l’échange est réputé « refusé » et
+	 * passe son statut en FORCEREFUS • N’enregistre aucune transaction en unités de
+	 * compte au débit ou au crédit de l’émetteur et du récepteur qui a refusé
+	 * l’échange. • Bloque l’accès à l’espace personnel de l’autre adhérent, passe
+	 * son avis en ANOMALIE (= silencieux) et lui envoie un mail
+	 * 
 	 * @return
-	 * @throws EntityNotFoundException 
+	 * @throws EntityNotFoundException
 	 */
 	@Override
 	@Scheduled(cron = "${application.cron}")
-	public void sendMailsEchangesAForceRefuserList() throws MessagingException, UnsupportedEncodingException, EntityNotFoundException {
+	public void sendMailsEchangesAForceRefuserList()
+			throws MessagingException, UnsupportedEncodingException, EntityNotFoundException {
 		List<Echange> echangesAForceRefuserListEmetteur = echangeService.searchAndUpdateEchangesAForceRefuserEmetteur();
 
 		for (Echange echangeAForceRefuser : echangesAForceRefuserListEmetteur) {
@@ -164,11 +152,11 @@ public class IMailSchedulerImpl implements IMailScheduler {
 			this.populateModel("nomUser", echangeAForceRefuser.getEmetteurUsername());
 
 			mailService.sendMessageUsingThymeleafTemplateForceRefus(mailTo, nomEmetteur, subjectForceValid, model);
-			
+
 		}
-		
-		
-		List<Echange> echangesAForceRefuserListRecepteur = echangeService.searchAndUpdateEchangesAForceRefuserRecepteur();
+
+		List<Echange> echangesAForceRefuserListRecepteur = echangeService
+				.searchAndUpdateEchangesAForceRefuserRecepteur();
 
 		for (Echange echangeAForceRefuser : echangesAForceRefuserListRecepteur) {
 			String mailTo = echangeAForceRefuser.getEmetteurMail();
@@ -182,7 +170,5 @@ public class IMailSchedulerImpl implements IMailScheduler {
 		}
 
 	}
-
-	
 
 }

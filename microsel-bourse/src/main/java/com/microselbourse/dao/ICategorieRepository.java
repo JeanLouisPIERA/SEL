@@ -7,8 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import com.microselbourse.entities.Categorie;
 import com.microselbourse.entities.EnumCategorie;
-import com.microselbourse.entities.Proposition;
 
+/**
+ * * Classe permettant d'implémenter l'interface JPA pour les relations ORM de la classe Catégorie
+ * @author jeanl
+ *
+ */
 @Repository
 public interface ICategorieRepository extends JpaRepository<Categorie, Long> {
 

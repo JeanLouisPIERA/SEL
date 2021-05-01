@@ -1,6 +1,6 @@
 package com.microselbourse.exceptions;
 
-public class BourseException extends Exception{
+public class BourseException extends Exception {
 
 	private String message;
 
@@ -11,5 +11,5 @@ public class BourseException extends Exception{
 	public BourseException(String message) {
 		super(message);
 	}
-	
+
 }

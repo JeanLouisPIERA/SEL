@@ -7,7 +7,6 @@ import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.microselbourse.criteria.EvaluationCriteria;
@@ -22,13 +21,9 @@ public interface IEvaluationService {
 	Evaluation createEvaluation(Long echangeId, @Valid EvaluationDTO evaluationDTO) throws EntityNotFoundException,
 			EntityAlreadyExistsException, UnsupportedEncodingException, MessagingException;
 
-	
-
 	Evaluation modererEvaluation(@Valid Long id) throws EntityNotFoundException, DeniedAccessException;
 
 	List<Evaluation> findAllByEchangeIdAndNotModerated(Long id);
-
-
 
 	Page<Evaluation> searchAllEvaluationsByCriteria(EvaluationCriteria evaluationCriteria, Pageable pageable);
 

@@ -2,10 +2,15 @@ package com.microselbourse.dto;
 
 import com.microselbourse.entities.EnumNoteEchange;
 
+/**
+ * Wrapper pour le transfert des données dans les opérations de création de la classe Evaluation
+ * @author jeanl
+ *
+ */
 public class EvaluationDTO {
 
 	private String adherentId;
-	
+
 	private String adherentUsername;
 
 	private String commentaire;
@@ -23,8 +28,6 @@ public class EvaluationDTO {
 	public void setAdherentId(String adherentId) {
 		this.adherentId = adherentId;
 	}
-	
-	
 
 	public String getAdherentUsername() {
 		return adherentUsername;

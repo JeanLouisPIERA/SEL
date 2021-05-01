@@ -68,19 +68,18 @@ public class EchangeServiceImpl implements IEchangeService {
 
 	@Autowired
 	RabbitMQSender rabbitMQSender;
-	
+
 	@Autowired
 	private IBlocageService blocageService;
-	
+
 	@Value("${application.dateTimezone}")
 	private Integer dateTimezone;
-	
+
 	@Value("${application.delaiMin}")
 	private Integer delaiMin;
-	
+
 	@Value("${application.delaiMax}")
 	private Integer delaiMax;
-
 
 	@Override
 	public Echange createEchange(long id) throws EntityAlreadyExistsException, EntityNotFoundException {
@@ -156,9 +155,9 @@ public class EchangeServiceImpl implements IEchangeService {
 		if (!intervenantId.equals(echangeToRefuse.getEmetteurId())
 				&& !intervenantId.equals(echangeToRefuse.getRecepteurId()))
 			throw new DeniedAccessException("Seul un participant à l'échange peut le refuser");
-		
-		Optional<Blocage> blocageIntervenantId = blocageRepository
-				.findByAdherentIdAndStatutBlocage(intervenantId, EnumStatutBlocage.ENCOURS);
+
+		Optional<Blocage> blocageIntervenantId = blocageRepository.findByAdherentIdAndStatutBlocage(intervenantId,
+				EnumStatutBlocage.ENCOURS);
 		if (blocageIntervenantId.isPresent())
 			throw new DeniedAccessException(
 					"La réponse ne peut pas être créée : il existe un blocage encours concernant l'adherent récepteur.");
@@ -170,38 +169,20 @@ public class EchangeServiceImpl implements IEchangeService {
 
 		if (intervenantId.equals(echangeToRefuse.getEmetteurId())) {
 
-			/*
-			 * Optional<Blocage> blocageEmetteurId =
-			 * blocageRepository.findByAdherentIdAndStatutBlocage(emetteur.getId(),
-			 * EnumStatutBlocage.ENCOURS); if (blocageEmetteurId.isPresent()) throw new
-			 * DeniedAccessException(
-			 * "L'échange ne peut pas être refusé par l'émetteur : il existe un blocage encours concernant l'émetteur de la proposition."
-			 * );
-			 */
-
-			if(echangeToRefuse.getAvisEmetteur().ordinal()!=2)
+			if (echangeToRefuse.getAvisEmetteur().ordinal() != 2)
 				throw new DeniedAccessException(
 						"Votre refus ne peut pas être enregistré = vous avez déjà refusé cet échange");
-			
+
 			echangeRefused = this.refuserEchangeEmetteur(id, echangeToRefuse, emetteur, recepteur);
 
 		}
 
 		if (intervenantId.equals(echangeToRefuse.getRecepteurId())) {
 
-			/*
-			 * Optional<Blocage> blocageRecepteurId =
-			 * blocageRepository.findByAdherentIdAndStatutBlocage(recepteur.getId(),
-			 * EnumStatutBlocage.ENCOURS); if (blocageRecepteurId.isPresent()) throw new
-			 * DeniedAccessException(
-			 * "L'échange ne peut pas être validé par le récepteur : il existe un blocage encours concernant le récepteur de la proposition."
-			 * );
-			 */
-
-			if(echangeToRefuse.getAvisRecepteur().ordinal()!=2)
+			if (echangeToRefuse.getAvisRecepteur().ordinal() != 2)
 				throw new DeniedAccessException(
 						"Votre refus ne peut pas être enregistré = vous avez déjà refusé cet échange");
-			
+
 			echangeRefused = this.refuserEchangeRecepteur(id, echangeToRefuse, emetteur, recepteur);
 
 		}
@@ -211,46 +192,20 @@ public class EchangeServiceImpl implements IEchangeService {
 	}
 
 	@Override
-	public Echange refuserEchangeEmetteur(@Valid Long id, Echange echangeToRefuse, UserBean emetteur, UserBean recepteur) throws EntityNotFoundException, DeniedAccessException,
-			UnsupportedEncodingException, MessagingException, EntityAlreadyExistsException {
-
-		/*
-		 * Echange echangeToValidate = this.readEchange(id);
-		 * 
-		 * if (!echangeToValidate.getStatutEchange().equals(EnumStatutEchange.CONFIRME))
-		 * throw new
-		 * DeniedAccessException("Le statut de cet échange ne vous permet pas de donner votre validation"
-		 * );
-		 * 
-		 * UserBean recepteur =
-		 * usersProxy.consulterCompteAdherent(echangeToValidate.getRecepteurId());
-		 * UserBean emetteur =
-		 * usersProxy.consulterCompteAdherent(echangeToValidate.getEmetteurId());
-		 * 
-		 * Optional<Blocage> blocageEmetteurId =
-		 * blocageRepository.findByAdherentIdAndStatutBlocage(emetteur.getId(),
-		 * EnumStatutBlocage.ENCOURS); if (blocageEmetteurId.isPresent()) throw new
-		 * DeniedAccessException(
-		 * "L'échange ne peut pas être refusé par l'émetteur : il existe un blocage encours concernant l'émetteur de la proposition."
-		 * );
-		 */
+	public Echange refuserEchangeEmetteur(@Valid Long id, Echange echangeToRefuse, UserBean emetteur,
+			UserBean recepteur) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException,
+			MessagingException, EntityAlreadyExistsException {
 
 		// HYPOTHESE 3 : REFUS VALIDATION EMETTEUR
 		echangeToRefuse.setAvisEmetteur(EnumEchangeAvis.REFUSE);
-		
-		/*
-		 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur,
-		 * "Refus de valider l'echange par l'emetteur",
-		 * "07_EmetteurProposition_EchangeRefus");
-		 */
-		
+
 		MessageMailEchange messageToRecepteurH3 = new MessageMailEchange();
 		messageToRecepteurH3.setEchange(echangeToRefuse);
 		messageToRecepteurH3.setDestinataire(recepteur);
 		messageToRecepteurH3.setSubject("Refus de valider l'echange par l'emetteur");
 		messageToRecepteurH3.setMicroselBourseMailTemplate("07_EmetteurProposition_EchangeRefus");
-		rabbitMQSender.sendMessageMailEchange(messageToRecepteurH3);//---------------------------------------------------------->RMQ
-		
+		rabbitMQSender.sendMessageMailEchange(messageToRecepteurH3);// ---------------------------------------------------------->RMQ
+
 		// On vérifie si le récepteur a déjà donné un avis et si OUI lequel pour faire
 		// évoluer le statut de l'échange
 
@@ -258,42 +213,32 @@ public class EchangeServiceImpl implements IEchangeService {
 		if (echangeToRefuse.getAvisRecepteur().equals(EnumEchangeAvis.VALIDE)) {
 			echangeToRefuse.setStatutEchange(EnumStatutEchange.LITIGE);
 			echangeToRefuse.setDateFin(LocalDate.now().plusDays(dateTimezone));
-			// mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur, "Cloture
-			// de l'echange", "05B_EmetteurProposition_EchangeValidation_Litige");
-			// mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur, "Cloture
-			// de l'echange", "05B_RecepteurReponse_EchangeValidation_Litige");
 
 			MessageMailEchange messageToRecepteur = new MessageMailEchange();
 			messageToRecepteur.setEchange(echangeToRefuse);
 			messageToRecepteur.setDestinataire(recepteur);
 			messageToRecepteur.setSubject("Echange en litige");
 			messageToRecepteur.setMicroselBourseMailTemplate("05B_EmetteurProposition_EchangeValidation_Litige");
-			rabbitMQSender.sendMessageMailEchange(messageToRecepteur);//------------------------------------------------------------->RmQ
+			rabbitMQSender.sendMessageMailEchange(messageToRecepteur);// ------------------------------------------------------------->RmQ
 
 			MessageMailEchange messageToEmetteur = new MessageMailEchange();
 			messageToEmetteur.setEchange(echangeToRefuse);
 			messageToEmetteur.setDestinataire(emetteur);
 			messageToEmetteur.setSubject("Echange en litige");
 			messageToEmetteur.setMicroselBourseMailTemplate("05B_RecepteurReponse_EchangeValidation_Litige");
-			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);//--------------------------------------------------------------->RMQ
-					
+			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);// --------------------------------------------------------------->RMQ
+
 			Transaction transactionCreated = transactionService.createTransaction(id);
 			echangeToRefuse.setTransaction(transactionCreated);
-	
+
 			return echangeRepository.save(echangeToRefuse);
-			
+
 		} else if (echangeToRefuse.getAvisRecepteur().equals(EnumEchangeAvis.REFUSE)) {
 
 			// HYPOTHESE 3B : REFUS EMETTEUR / RECEPTEUR DEJA REFUSE
 			echangeToRefuse.setStatutEchange(EnumStatutEchange.LITIGE);
 			echangeToRefuse.setDateFin(LocalDate.now().plusDays(dateTimezone));
-			/*
-			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur,
-			 * "Echange en litige", "05B_EmetteurProposition_EchangeValidation_Litige");
-			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, emetteur,
-			 * "Echange en litige", "05B_RecepteurReponse_EchangeValidation_Litige");
-			 */
-			
+
 			MessageMailEchange messageToRecepteur = new MessageMailEchange();
 			messageToRecepteur.setEchange(echangeToRefuse);
 			messageToRecepteur.setDestinataire(recepteur);
@@ -307,7 +252,7 @@ public class EchangeServiceImpl implements IEchangeService {
 			messageToEmetteur.setSubject("Echange en litige");
 			messageToEmetteur.setMicroselBourseMailTemplate("05B_RecepteurReponse_EchangeValidation_Litige");
 			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
-			
+
 			Transaction transactionCreated = transactionService.createTransaction(id);
 			echangeToRefuse.setTransaction(transactionCreated);
 			return echangeRepository.save(echangeToRefuse);
@@ -315,64 +260,33 @@ public class EchangeServiceImpl implements IEchangeService {
 
 			// HYPOTHESE 3C : REFUS EMETTEUR / RECEPTEUR SANS AVIS = le STATUT DE L'ECHANGE
 			// reste CONFIRME
-			
-			/*
-			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur,
-			 * "Echange relance pour avis", "09_Relance_pour_avis");
-			 */
-			
+
 			MessageMailEchange messageToRecepteur = new MessageMailEchange();
 			messageToRecepteur.setEchange(echangeToRefuse);
 			messageToRecepteur.setDestinataire(recepteur);
 			messageToRecepteur.setSubject("Echange relance pour avis");
 			messageToRecepteur.setMicroselBourseMailTemplate("09_Relance_pour_avis");
 			rabbitMQSender.sendMessageMailEchange(messageToRecepteur);
-			
+
 			return echangeRepository.save(echangeToRefuse);
 		}
 	}
 
 	@Override
-	public Echange refuserEchangeRecepteur(@Valid Long id, Echange echangeToRefuse, UserBean emetteur, UserBean recepteur) throws EntityNotFoundException, DeniedAccessException,
-			UnsupportedEncodingException, MessagingException, EntityAlreadyExistsException {
-
-		/*
-		 * Echange echangeToValidate = this.readEchange(id);
-		 * 
-		 * if (!echangeToValidate.getStatutEchange().equals(EnumStatutEchange.CONFIRME))
-		 * throw new
-		 * DeniedAccessException("Le statut de cet échange ne vous permet pas de donner votre validation"
-		 * );
-		 * 
-		 * UserBean recepteur =
-		 * usersProxy.consulterCompteAdherent(echangeToValidate.getRecepteurId());
-		 * UserBean emetteur =
-		 * usersProxy.consulterCompteAdherent(echangeToValidate.getEmetteurId());
-		 * 
-		 * Optional<Blocage> blocageRecepteurId =
-		 * blocageRepository.findByAdherentIdAndStatutBlocage(recepteur.getId(),
-		 * EnumStatutBlocage.ENCOURS); if (blocageRecepteurId.isPresent()) throw new
-		 * DeniedAccessException(
-		 * "L'échange ne peut pas être refusé par le récepteur : il existe un blocage encours concernant le récepteur de la proposition."
-		 * );
-		 */
+	public Echange refuserEchangeRecepteur(@Valid Long id, Echange echangeToRefuse, UserBean emetteur,
+			UserBean recepteur) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException,
+			MessagingException, EntityAlreadyExistsException {
 
 		// HYPOTHESE 4 : REFUS VALIDATION RECEPTEUR
 		echangeToRefuse.setAvisRecepteur(EnumEchangeAvis.REFUSE);
-		
-		/*
-		 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, emetteur,
-		 * "Refus de valider l'echange par le Recepteur",
-		 * "08_RecepteurReponse_EchangeRefus");
-		 */
-		
+
 		MessageMailEchange messageToEmetteurH4 = new MessageMailEchange();
 		messageToEmetteurH4.setEchange(echangeToRefuse);
 		messageToEmetteurH4.setDestinataire(emetteur);
 		messageToEmetteurH4.setSubject("Refus de valider l'echange par le Recepteur");
 		messageToEmetteurH4.setMicroselBourseMailTemplate("08_RecepteurReponse_EchangeRefus");
 		rabbitMQSender.sendMessageMailEchange(messageToEmetteurH4);
-		
+
 		// On vérifie si l'émetteur a déjà donné un avis et si OUI lequel pour faire
 		// évoluer le statut de l'échange
 
@@ -380,13 +294,7 @@ public class EchangeServiceImpl implements IEchangeService {
 		if (echangeToRefuse.getAvisEmetteur().equals(EnumEchangeAvis.VALIDE)) {
 			echangeToRefuse.setStatutEchange(EnumStatutEchange.LITIGE);
 			echangeToRefuse.setDateFin(LocalDate.now().plusDays(dateTimezone));
-			/*
-			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur,
-			 * "Cloture de l'echange", "05B_EmetteurProposition_EchangeValidation_Litige");
-			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, emetteur,
-			 * "Cloture de l'echange", "05B_RecepteurReponse_EchangeValidation_Litige");
-			 */
-			
+
 			MessageMailEchange messageToRecepteur = new MessageMailEchange();
 			messageToRecepteur.setEchange(echangeToRefuse);
 			messageToRecepteur.setDestinataire(recepteur);
@@ -400,7 +308,7 @@ public class EchangeServiceImpl implements IEchangeService {
 			messageToEmetteur.setSubject("Cloture de l'echange");
 			messageToEmetteur.setMicroselBourseMailTemplate("05B_RecepteurReponse_EchangeValidation_Litige");
 			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
-			
+
 			Transaction transactionCreated = transactionService.createTransaction(id);
 			echangeToRefuse.setTransaction(transactionCreated);
 			return echangeRepository.save(echangeToRefuse);
@@ -409,13 +317,7 @@ public class EchangeServiceImpl implements IEchangeService {
 			// HYPOTHESE 4B : REFUS RECEPTEUR / EMETTEUR DEJA REFUSE
 			echangeToRefuse.setStatutEchange(EnumStatutEchange.LITIGE);
 			echangeToRefuse.setDateFin(LocalDate.now());
-			/*
-			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, recepteur,
-			 * "Echange en litige", "05B_EmetteurProposition_EchangeValidation_Litige");
-			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, emetteur,
-			 * "Echange en litige", "05B_RecepteurReponse_EchangeValidation_Litige");
-			 */
-			
+
 			MessageMailEchange messageToRecepteur = new MessageMailEchange();
 			messageToRecepteur.setEchange(echangeToRefuse);
 			messageToRecepteur.setDestinataire(recepteur);
@@ -429,7 +331,7 @@ public class EchangeServiceImpl implements IEchangeService {
 			messageToEmetteur.setSubject("Echange en litige");
 			messageToEmetteur.setMicroselBourseMailTemplate("05B_RecepteurReponse_EchangeValidation_Litige");
 			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
-			
+
 			Transaction transactionCreated = transactionService.createTransaction(id);
 			echangeToRefuse.setTransaction(transactionCreated);
 			return echangeRepository.save(echangeToRefuse);
@@ -437,20 +339,15 @@ public class EchangeServiceImpl implements IEchangeService {
 
 			// HYPOTHESE 4C : REFUS RECEPTEUR / EMETTEUR SANS AVIS = le STATUT DE L'ECHANGE
 			// reste CONFIRME
-			
-			/*
-			 * mailSender.sendMailEchangeConfirmation(echangeToRefuse, emetteur,
-			 * "Echange relance pour avis", "09_Relance_pour_avis");
-			 */
-			
+
 			MessageMailEchange messageToEmetteur = new MessageMailEchange();
 			messageToEmetteur.setEchange(echangeToRefuse);
 			messageToEmetteur.setDestinataire(emetteur);
 			messageToEmetteur.setSubject("Echange relance pour avis");
 			messageToEmetteur.setMicroselBourseMailTemplate("09_Relance_pour_avis");
 			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
-			
-			return echangeRepository.save(echangeToRefuse);	
+
+			return echangeRepository.save(echangeToRefuse);
 
 		}
 	}
@@ -466,9 +363,9 @@ public class EchangeServiceImpl implements IEchangeService {
 		if (!intervenantId.equals(echangeToValidate.getEmetteurId())
 				&& !intervenantId.equals(echangeToValidate.getRecepteurId()))
 			throw new DeniedAccessException("Seul un participant à l'échange peut le valider");
-		
-		Optional<Blocage> blocageIntervenantId = blocageRepository
-				.findByAdherentIdAndStatutBlocage(intervenantId, EnumStatutBlocage.ENCOURS);
+
+		Optional<Blocage> blocageIntervenantId = blocageRepository.findByAdherentIdAndStatutBlocage(intervenantId,
+				EnumStatutBlocage.ENCOURS);
 		if (blocageIntervenantId.isPresent())
 			throw new DeniedAccessException(
 					"La réponse ne peut pas être créée : il existe un blocage encours concernant l'adherent récepteur.");
@@ -480,39 +377,22 @@ public class EchangeServiceImpl implements IEchangeService {
 
 		if (intervenantId.equals(echangeToValidate.getEmetteurId())) {
 
-			/*
-			 * Optional<Blocage> blocageEmetteurId =
-			 * blocageRepository.findByAdherentIdAndStatutBlocage(emetteur.getId(),
-			 * EnumStatutBlocage.ENCOURS); if (blocageEmetteurId.isPresent()) throw new
-			 * DeniedAccessException(
-			 * "L'échange ne peut pas être validé par l'émetteur : il existe un blocage encours concernant l'émetteur de la proposition."
-			 * );
-			 */
-			if(echangeToValidate.getAvisEmetteur().ordinal()!=2)
+			if (echangeToValidate.getAvisEmetteur().ordinal() != 2)
 				throw new DeniedAccessException(
 						"Votre validation ne peut pas être enregistrée = vous avez déjà validé cet échange");
-			
+
 			echangeValidated = this.validerEchangeEmetteur(id, echangeToValidate, emetteur, recepteur);
 
 		}
 
 		if (intervenantId.equals(echangeToValidate.getRecepteurId())) {
 
-			/*
-			 * Optional<Blocage> blocageRecepteurId =
-			 * blocageRepository.findByAdherentIdAndStatutBlocage(recepteur.getId(),
-			 * EnumStatutBlocage.ENCOURS); if (blocageRecepteurId.isPresent()) throw new
-			 * DeniedAccessException(
-			 * "L'échange ne peut pas être validé par le récepteur : il existe un blocage encours concernant le récepteur de la proposition."
-			 * );
-			 */
-			if(echangeToValidate.getAvisRecepteur().ordinal()!=2)
+			if (echangeToValidate.getAvisRecepteur().ordinal() != 2)
 				throw new DeniedAccessException(
 						"Votre validation ne peut pas être enregistrée = vous avez déjà validé cet échange");
-			
+
 			echangeValidated = this.validerEchangeRecepteur(id, echangeToValidate, emetteur, recepteur);
 
-			
 		}
 
 		return echangeValidated;
@@ -524,42 +404,16 @@ public class EchangeServiceImpl implements IEchangeService {
 			UserBean recepteur) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException,
 			MessagingException, EntityAlreadyExistsException {
 
-		/*
-		 * Echange echangeToValidate = this.readEchange(id);
-		 * 
-		 * if (!echangeToValidate.getStatutEchange().equals(EnumStatutEchange.CONFIRME))
-		 * throw new
-		 * DeniedAccessException("Le statut de cet échange ne vous permet pas de donner votre validation"
-		 * );
-		 * 
-		 * UserBean recepteur =
-		 * usersProxy.consulterCompteAdherent(echangeToValidate.getRecepteurId());
-		 * UserBean emetteur =
-		 * usersProxy.consulterCompteAdherent(echangeToValidate.getEmetteurId());
-		 * 
-		 * Optional<Blocage> blocageEmetteurId =
-		 * blocageRepository.findByAdherentIdAndStatutBlocage(emetteur.getId(),
-		 * EnumStatutBlocage.ENCOURS); if (blocageEmetteurId.isPresent()) throw new
-		 * DeniedAccessException(
-		 * "L'échange ne peut pas être accepté par l'émetteur : il existe un blocage encours concernant l'émetteur de la proposition."
-		 * );
-		 */
 		// HYPOTHESE 1 : AVIS VALIDATION EMETTEUR
 		echangeToValidate.setAvisEmetteur(EnumEchangeAvis.VALIDE);
-		
-		/*
-		 * mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur,
-		 * "Validation de l'echange par l'emetteur",
-		 * "05_EmetteurProposition_EchangeValidation");
-		 */
-		
+
 		MessageMailEchange messageToRecepteurH1 = new MessageMailEchange();
 		messageToRecepteurH1.setEchange(echangeToValidate);
 		messageToRecepteurH1.setDestinataire(recepteur);
 		messageToRecepteurH1.setSubject("Validation de l'echange par l'emetteur");
 		messageToRecepteurH1.setMicroselBourseMailTemplate("05_EmetteurProposition_EchangeValidation");
 		rabbitMQSender.sendMessageMailEchange(messageToRecepteurH1);
-		
+
 		// On vérifie si le récepteur a déjà donné un avis et si OUI lequel pour faire
 		// évoluer le statut de l'échange
 
@@ -567,14 +421,7 @@ public class EchangeServiceImpl implements IEchangeService {
 		if (echangeToValidate.getAvisRecepteur().equals(EnumEchangeAvis.VALIDE)) {
 			echangeToValidate.setStatutEchange(EnumStatutEchange.CLOTURE);
 			echangeToValidate.setDateFin(LocalDate.now().plusDays(dateTimezone));
-			
-			/*
-			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur,
-			 * "Cloture de l'echange", "05A_EmetteurProposition_EchangeValidation_Cloture");
-			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur,
-			 * "Cloture de l'echange", "05A_RecepteurReponse_EchangeValidation_Cloture");
-			 */
-			
+
 			MessageMailEchange messageToRecepteur = new MessageMailEchange();
 			messageToRecepteur.setEchange(echangeToValidate);
 			messageToRecepteur.setDestinataire(recepteur);
@@ -588,7 +435,7 @@ public class EchangeServiceImpl implements IEchangeService {
 			messageToEmetteur.setSubject("Cloture de l'echange");
 			messageToEmetteur.setMicroselBourseMailTemplate("05A_RecepteurReponse_EchangeValidation_Cloture");
 			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
-			
+
 			Transaction transactionCreated = transactionService.createTransaction(id);
 			echangeToValidate.setTransaction(transactionCreated);
 			return echangeRepository.save(echangeToValidate);
@@ -597,14 +444,7 @@ public class EchangeServiceImpl implements IEchangeService {
 			// HYPOTHESE 1B : VALIDATION EMETTEUR / RECEPTEUR DEJA REFUSE
 			echangeToValidate.setStatutEchange(EnumStatutEchange.LITIGE);
 			echangeToValidate.setDateFin(LocalDate.now().plusDays(dateTimezone));
-			
-			/*
-			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur,
-			 * "Echange en litige", "05B_EmetteurProposition_EchangeValidation_Litige");
-			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur,
-			 * "Echange en litige", "05B_RecepteurReponse_EchangeValidation_Litige");
-			 */
-			
+
 			MessageMailEchange messageToRecepteur = new MessageMailEchange();
 			messageToRecepteur.setEchange(echangeToValidate);
 			messageToRecepteur.setDestinataire(recepteur);
@@ -618,7 +458,7 @@ public class EchangeServiceImpl implements IEchangeService {
 			messageToEmetteur.setSubject("Echange en litige");
 			messageToEmetteur.setMicroselBourseMailTemplate("05B_RecepteurReponse_EchangeValidation_Litige");
 			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
-			
+
 			Transaction transactionCreated = transactionService.createTransaction(id);
 			echangeToValidate.setTransaction(transactionCreated);
 			return echangeRepository.save(echangeToValidate);
@@ -626,19 +466,14 @@ public class EchangeServiceImpl implements IEchangeService {
 
 			// HYPOTHESE 1C : VALIDATION EMETTEUR / RECEPTEUR SANS AVIS = le STATUT DE
 			// L'ECHANGE reste CONFIRME
-			
-			/*
-			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur,
-			 * "Echange relance pour avis", "09_Relance_pour_avis");
-			 */
-			
+
 			MessageMailEchange messageToRecepteur = new MessageMailEchange();
 			messageToRecepteur.setEchange(echangeToValidate);
 			messageToRecepteur.setDestinataire(recepteur);
 			messageToRecepteur.setSubject("Echange relance pour avis");
 			messageToRecepteur.setMicroselBourseMailTemplate("09_Relance_pour_avis");
 			rabbitMQSender.sendMessageMailEchange(messageToRecepteur);
-			
+
 			return echangeRepository.save(echangeToValidate);
 		}
 
@@ -649,43 +484,16 @@ public class EchangeServiceImpl implements IEchangeService {
 			UserBean recepteur) throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException,
 			MessagingException, EntityAlreadyExistsException {
 
-		/*
-		 * Echange echangeToValidate = this.readEchange(id);
-		 * 
-		 * if (!echangeToValidate.getStatutEchange().equals(EnumStatutEchange.CONFIRME))
-		 * throw new
-		 * DeniedAccessException("Le statut de cet échange ne vous permet pas de donner votre validation"
-		 * );
-		 * 
-		 * UserBean recepteur =
-		 * usersProxy.consulterCompteAdherent(echangeToValidate.getRecepteurId());
-		 * UserBean emetteur =
-		 * usersProxy.consulterCompteAdherent(echangeToValidate.getEmetteurId());
-		 * 
-		 * Optional<Blocage> blocageRecepteurId =
-		 * blocageRepository.findByAdherentIdAndStatutBlocage(recepteur.getId(),
-		 * EnumStatutBlocage.ENCOURS); if (blocageRecepteurId.isPresent()) throw new
-		 * DeniedAccessException(
-		 * "L'échange ne peut pas être validé par le récepteur : il existe un blocage encours concernant le récepteur de la proposition."
-		 * );
-		 */
-
 		// HYPOTHESE 2 : ACCORD VALIDATION RECEPTEUR
 		echangeToValidate.setAvisRecepteur(EnumEchangeAvis.VALIDE);
-		
-		/*
-		 * mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur,
-		 * "Validation de l'echange par le Recepteur",
-		 * "06_RecepteurReponse_EchangeValidation");
-		 */
-		
+
 		MessageMailEchange messageToEmetteurH2 = new MessageMailEchange();
 		messageToEmetteurH2.setEchange(echangeToValidate);
 		messageToEmetteurH2.setDestinataire(emetteur);
 		messageToEmetteurH2.setSubject("Validation de l'echange par le Recepteur");
 		messageToEmetteurH2.setMicroselBourseMailTemplate("06_RecepteurReponse_EchangeValidation");
 		rabbitMQSender.sendMessageMailEchange(messageToEmetteurH2);
-		
+
 		// On vérifie si l'émetteur a déjà donné un avis et si OUI lequel pour faire
 		// évoluer le statut de l'échange
 
@@ -693,14 +501,7 @@ public class EchangeServiceImpl implements IEchangeService {
 		if (echangeToValidate.getAvisEmetteur().equals(EnumEchangeAvis.VALIDE)) {
 			echangeToValidate.setStatutEchange(EnumStatutEchange.CLOTURE);
 			echangeToValidate.setDateFin(LocalDate.now().plusDays(dateTimezone));
-			
-			/*
-			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur,
-			 * "Cloture de l'echange", "05A_EmetteurProposition_EchangeValidation_Cloture");
-			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur,
-			 * "Cloture de l'echange", "05A_RecepteurReponse_EchangeValidation_Cloture");
-			 */
-			
+
 			MessageMailEchange messageToRecepteur = new MessageMailEchange();
 			messageToRecepteur.setEchange(echangeToValidate);
 			messageToRecepteur.setDestinataire(recepteur);
@@ -714,24 +515,17 @@ public class EchangeServiceImpl implements IEchangeService {
 			messageToEmetteur.setSubject("Cloture de l'echange");
 			messageToEmetteur.setMicroselBourseMailTemplate("05A_EmetteurProposition_EchangeValidation_Cloture");
 			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
-			
+
 			Transaction transactionCreated = transactionService.createTransaction(id);
 			echangeToValidate.setTransaction(transactionCreated);
 			return echangeRepository.save(echangeToValidate);
-			
+
 		} else if (echangeToValidate.getAvisEmetteur().equals(EnumEchangeAvis.REFUSE)) {
 
 			// HYPOTHESE 1B : VALIDATION RECEPTEUR / RECEPTEUR DEJA REFUSE
 			echangeToValidate.setStatutEchange(EnumStatutEchange.LITIGE);
 			echangeToValidate.setDateFin(LocalDate.now().plusDays(dateTimezone));
-			
-			/*
-			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, recepteur,
-			 * "Echange en litige", "05B_EmetteurProposition_EchangeValidation_Litige");
-			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur,
-			 * "Echange en litige", "05B_RecepteurReponse_EchangeValidation_Litige");
-			 */
-			
+
 			MessageMailEchange messageToRecepteur = new MessageMailEchange();
 			messageToRecepteur.setEchange(echangeToValidate);
 			messageToRecepteur.setDestinataire(recepteur);
@@ -745,7 +539,7 @@ public class EchangeServiceImpl implements IEchangeService {
 			messageToEmetteur.setSubject("Echange en litige");
 			messageToEmetteur.setMicroselBourseMailTemplate("05B_RecepteurReponse_EchangeValidation_Litige");
 			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
-			
+
 			Transaction transactionCreated = transactionService.createTransaction(id);
 			echangeToValidate.setTransaction(transactionCreated);
 			return echangeRepository.save(echangeToValidate);
@@ -753,19 +547,14 @@ public class EchangeServiceImpl implements IEchangeService {
 
 			// HYPOTHESE 1C : VALIDATION RECEPTEUR / EMETTEUR SANS AVIS = le STATUT DE
 			// L'ECHANGE reste CONFIRME
-			
-			/*
-			 * mailSender.sendMailEchangeConfirmation(echangeToValidate, emetteur,
-			 * "Echange relance pour avis", "09_Relance_pour_avis");
-			 */
-			
+
 			MessageMailEchange messageToEmetteur = new MessageMailEchange();
 			messageToEmetteur.setEchange(echangeToValidate);
 			messageToEmetteur.setDestinataire(emetteur);
 			messageToEmetteur.setSubject("Echange relance pour avis");
 			messageToEmetteur.setMicroselBourseMailTemplate("09_Relance_pour_avis");
 			rabbitMQSender.sendMessageMailEchange(messageToEmetteur);
-			
+
 			return echangeRepository.save(echangeToValidate);
 		}
 	}
@@ -792,9 +581,6 @@ public class EchangeServiceImpl implements IEchangeService {
 
 		echangeToAnnuler.setStatutEchange(EnumStatutEchange.ANNULE);
 		echangeToAnnuler.setDateAnnulation(LocalDate.now().plusDays(dateTimezone));
-		
-		// mailSender.sendMailEchangeConfirmation(echangeToAnnuler, recepteur,
-		// "Annulation de l'echange", "04_RecepteurReponse_EchangeAnnulation");
 
 		MessageMailEchange messageToRecepteur = new MessageMailEchange();
 		messageToRecepteur.setEchange(echangeToAnnuler);
@@ -828,10 +614,7 @@ public class EchangeServiceImpl implements IEchangeService {
 
 		echangeToConfirm.setStatutEchange(EnumStatutEchange.CONFIRME);
 		echangeToConfirm.setDateConfirmation(LocalDate.now().plusDays(dateTimezone));
-		
-		// mailSender.sendMailEchangeConfirmation(echangeToConfirm, recepteur,
-		// "Confirmation de l'echange", "03_RecepteurReponse_EchangeConfirmation");
-		
+
 		MessageMailEchange messageToRecepteur = new MessageMailEchange();
 		messageToRecepteur.setEchange(echangeToConfirm);
 		messageToRecepteur.setDestinataire(recepteur);
@@ -842,34 +625,39 @@ public class EchangeServiceImpl implements IEchangeService {
 		return echangeRepository.save(echangeToConfirm);
 
 	}
-	
+
 	/**
-	 * Si la réalisation de l’échange n’est pas établie par au moins 1 avis (c’est-à-dire que le statut de l’échange est toujours en CONFIRME 
-	 * et que l’avis des 2 adhérents n’est pas renseigné), le système : 
-	 * • Passe le statut de l’échange en SUPPRIME 
-	 * • Passe le statut de l’avis des 2 adhérents en ANOMALIE mais ne bloque pas leur accès à la bourse d’échange 
-	 * • Aucun enregistrement de la transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur 
-	 * Pour éviter cette situation à cause d’un « oubli», le système envoie un mail de rappel 48 heures avant la date d’échéance.
+	 * Si la réalisation de l’échange n’est pas établie par au moins 1 avis
+	 * (c’est-à-dire que le statut de l’échange est toujours en CONFIRME et que
+	 * l’avis des 2 adhérents n’est pas renseigné), le système : • Passe le statut
+	 * de l’échange en SUPPRIME • Passe le statut de l’avis des 2 adhérents en
+	 * ANOMALIE mais ne bloque pas leur accès à la bourse d’échange • Aucun
+	 * enregistrement de la transaction en unités de compte au débit ou au crédit de
+	 * l’émetteur et du récepteur Pour éviter cette situation à cause d’un « oubli»,
+	 * le système envoie un mail de rappel 48 heures avant la date d’échéance.
+	 * 
 	 * @return
 	 */
 	@Override
 	public List<Echange> searchAndUpdateEchangesASupprimer() {
 		List<Echange> echangesASupprimerList = new ArrayList<Echange>();
-		
+
 		LocalDate dateNow = LocalDate.now();
 
-		Optional<List<Echange>> echangesDateEcheanceBetween2DatesAndStatutConfirmeAnd2AvisEchangeSans = echangeRepository.findByDateEcheanceBetween2DatesAndStatutEchangeConfirmeAnd2AvisEchange(dateNow.minusDays(delaiMin), dateNow.plusDays(delaiMax), 
-						EnumStatutEchange.CONFIRME, EnumEchangeAvis.SANS, EnumEchangeAvis.SANS);
-		
+		Optional<List<Echange>> echangesDateEcheanceBetween2DatesAndStatutConfirmeAnd2AvisEchangeSans = echangeRepository
+				.findByDateEcheanceBetween2DatesAndStatutEchangeConfirmeAnd2AvisEchange(dateNow.minusDays(delaiMin),
+						dateNow.plusDays(delaiMax), EnumStatutEchange.CONFIRME, EnumEchangeAvis.SANS,
+						EnumEchangeAvis.SANS);
 
 		if (echangesDateEcheanceBetween2DatesAndStatutConfirmeAnd2AvisEchangeSans.isPresent()) {
-			for (Echange echangeASupprimer : echangesDateEcheanceBetween2DatesAndStatutConfirmeAnd2AvisEchangeSans.get()) {
-				if(echangeASupprimer.getDateEcheance().isBefore(LocalDate.now())) {
-				echangeASupprimer.setStatutEchange(EnumStatutEchange.SUPPRIME);
-				echangeASupprimer.setAvisEmetteur(EnumEchangeAvis.ANOMALIE);
-				echangeASupprimer.setAvisRecepteur(EnumEchangeAvis.ANOMALIE);
-				echangesASupprimerList.add(echangeASupprimer);
-				echangeRepository.save(echangeASupprimer);
+			for (Echange echangeASupprimer : echangesDateEcheanceBetween2DatesAndStatutConfirmeAnd2AvisEchangeSans
+					.get()) {
+				if (echangeASupprimer.getDateEcheance().isBefore(LocalDate.now())) {
+					echangeASupprimer.setStatutEchange(EnumStatutEchange.SUPPRIME);
+					echangeASupprimer.setAvisEmetteur(EnumEchangeAvis.ANOMALIE);
+					echangeASupprimer.setAvisRecepteur(EnumEchangeAvis.ANOMALIE);
+					echangesASupprimerList.add(echangeASupprimer);
+					echangeRepository.save(echangeASupprimer);
 				}
 			}
 		}
@@ -877,33 +665,39 @@ public class EchangeServiceImpl implements IEchangeService {
 	}
 
 	/**
-	  * Si seul le récepteur ou seul l’émetteur a renseigné un avis VALIDE sur l’échange, le système : 
-	 * • Considère que l’échange est réputé « validé » et  passe son statut en FORCEVALID 
-	 * • Enregistre la transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur qui a validé l’échange. 
-	 * La contrepartie est le compte interne COUNTERPART 
-	 * • Bloque l’accès à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (= silencieux) et lui envoie un mail 
-	 * Lorsque le système bloque l’accès d’un adhérent à son espace personnel, il passe toutes les PROPOSITIONS et toutes
+	 * Si seul le récepteur ou seul l’émetteur a renseigné un avis VALIDE sur
+	 * l’échange, le système : • Considère que l’échange est réputé « validé » et
+	 * passe son statut en FORCEVALID • Enregistre la transaction en unités de
+	 * compte au débit ou au crédit de l’émetteur et du récepteur qui a validé
+	 * l’échange. La contrepartie est le compte interne COUNTERPART • Bloque l’accès
+	 * à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (=
+	 * silencieux) et lui envoie un mail Lorsque le système bloque l’accès d’un
+	 * adhérent à son espace personnel, il passe toutes les PROPOSITIONS et toutes
 	 * les REPONSES de cet adhérent dans la bourse d’échanges en statut BLOQUE
+	 * 
 	 * @return
-	 * @throws EntityAlreadyExistsException 
-	 * @throws EntityNotFoundException 
+	 * @throws EntityAlreadyExistsException
+	 * @throws EntityNotFoundException
 	 */
 	@Override
-	public List<Echange> searchAndUpdateEchangesAForceValiderRecepteur() throws EntityNotFoundException, EntityAlreadyExistsException {
+	public List<Echange> searchAndUpdateEchangesAForceValiderRecepteur()
+			throws EntityNotFoundException, EntityAlreadyExistsException {
 		List<Echange> echangesAForceValiderList = new ArrayList<Echange>();
-		
+
 		LocalDate dateNow = LocalDate.now();
 
 		Optional<List<Echange>> echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisEmetteurValide = echangeRepository
-				.findByDateEcheanceBetween2DatesAndStatutEchangeConfirmeAnd2AvisEchange(dateNow.minusDays(delaiMin), dateNow.plusDays(delaiMax),
-						EnumStatutEchange.CONFIRME, EnumEchangeAvis.VALIDE, EnumEchangeAvis.SANS);
+				.findByDateEcheanceBetween2DatesAndStatutEchangeConfirmeAnd2AvisEchange(dateNow.minusDays(delaiMin),
+						dateNow.plusDays(delaiMax), EnumStatutEchange.CONFIRME, EnumEchangeAvis.VALIDE,
+						EnumEchangeAvis.SANS);
 
 		if (echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisEmetteurValide.isPresent()) {
 			for (Echange echangeAForceValider : echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisEmetteurValide
 					.get()) {
 				echangeAForceValider.setStatutEchange(EnumStatutEchange.FORCEVALID);
 				echangeAForceValider.setAvisRecepteur(EnumEchangeAvis.ANOMALIE);
-				Blocage blocageCreated = blocageService.createBlocage(echangeAForceValider.getId(), echangeAForceValider.getRecepteurId(), echangeAForceValider.getRecepteurUsername());
+				Blocage blocageCreated = blocageService.createBlocage(echangeAForceValider.getId(),
+						echangeAForceValider.getRecepteurId(), echangeAForceValider.getRecepteurUsername());
 				Echange echangeSaved = echangeRepository.save(echangeAForceValider);
 				Transaction transactionCreated = transactionService.createTransaction(echangeSaved.getId());
 				echangeSaved.setTransaction(transactionCreated);
@@ -912,37 +706,43 @@ public class EchangeServiceImpl implements IEchangeService {
 			}
 		}
 		return echangesAForceValiderList;
-		}
-	
+	}
+
 	/**
-	  * Si seul le récepteur ou seul l’émetteur a renseigné un avis VALIDE sur l’échange, le système : 
-	 * • Considère que l’échange est réputé « validé » et  passe son statut en FORCEVALID 
-	 * • Enregistre la transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur qui a validé l’échange. 
-	 * La contrepartie est le compte interne COUNTERPART 
-	 * • Bloque l’accès à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (= silencieux) et lui envoie un mail 
-	 * Lorsque le système bloque l’accès d’un adhérent à son espace personnel, il passe toutes les PROPOSITIONS et toutes
+	 * Si seul le récepteur ou seul l’émetteur a renseigné un avis VALIDE sur
+	 * l’échange, le système : • Considère que l’échange est réputé « validé » et
+	 * passe son statut en FORCEVALID • Enregistre la transaction en unités de
+	 * compte au débit ou au crédit de l’émetteur et du récepteur qui a validé
+	 * l’échange. La contrepartie est le compte interne COUNTERPART • Bloque l’accès
+	 * à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (=
+	 * silencieux) et lui envoie un mail Lorsque le système bloque l’accès d’un
+	 * adhérent à son espace personnel, il passe toutes les PROPOSITIONS et toutes
 	 * les REPONSES de cet adhérent dans la bourse d’échanges en statut BLOQUE
+	 * 
 	 * @return
-	 * @throws EntityAlreadyExistsException 
-	 * @throws EntityNotFoundException 
+	 * @throws EntityAlreadyExistsException
+	 * @throws EntityNotFoundException
 	 */
 	@Override
-	public List<Echange> searchAndUpdateEchangesAForceValiderEmetteur() throws EntityNotFoundException, EntityAlreadyExistsException {
+	public List<Echange> searchAndUpdateEchangesAForceValiderEmetteur()
+			throws EntityNotFoundException, EntityAlreadyExistsException {
 		List<Echange> echangesAForceValiderList = new ArrayList<Echange>();
-		
+
 		LocalDate dateNow = LocalDate.now();
 
 		Optional<List<Echange>> echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisRecepteurValide = echangeRepository
-				.findByDateEcheanceBetween2DatesAndStatutEchangeConfirmeAnd2AvisEchange(dateNow.minusDays(delaiMin), dateNow.plusDays(delaiMax),
-						EnumStatutEchange.CONFIRME, EnumEchangeAvis.SANS, EnumEchangeAvis.VALIDE);
+				.findByDateEcheanceBetween2DatesAndStatutEchangeConfirmeAnd2AvisEchange(dateNow.minusDays(delaiMin),
+						dateNow.plusDays(delaiMax), EnumStatutEchange.CONFIRME, EnumEchangeAvis.SANS,
+						EnumEchangeAvis.VALIDE);
 
 		if (echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisRecepteurValide.isPresent()) {
 			for (Echange echangeAForceValider : echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisRecepteurValide
 					.get()) {
 				echangeAForceValider.setStatutEchange(EnumStatutEchange.FORCEVALID);
 				echangeAForceValider.setAvisEmetteur(EnumEchangeAvis.ANOMALIE);
-				Blocage blocageCreated = blocageService.createBlocage(echangeAForceValider.getId(), echangeAForceValider.getEmetteurId(), echangeAForceValider.getEmetteurUsername());
-				Echange echangeSaved =echangeRepository.save(echangeAForceValider);
+				Blocage blocageCreated = blocageService.createBlocage(echangeAForceValider.getId(),
+						echangeAForceValider.getEmetteurId(), echangeAForceValider.getEmetteurUsername());
+				Echange echangeSaved = echangeRepository.save(echangeAForceValider);
 				Transaction transactionCreated = transactionService.createTransaction(echangeSaved.getId());
 				echangeSaved.setTransaction(transactionCreated);
 				echangeRepository.save(echangeSaved);
@@ -954,62 +754,34 @@ public class EchangeServiceImpl implements IEchangeService {
 	}
 
 	/**
-	 * Si seul le récepteur ou seul l’émetteur a renseigné un avis REFUSE sur l’échange, le système : 
-	 * • Considère que l’échange est réputé « refusé » et passe son statut en FORCEREFUS 
-	 * • N’enregistre aucune transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur qui a refusé l’échange. 
-	 * • Bloque l’accès à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (= silencieux) et lui envoie un mail
+	 * Si seul le récepteur ou seul l’émetteur a renseigné un avis REFUSE sur
+	 * l’échange, le système : • Considère que l’échange est réputé « refusé » et
+	 * passe son statut en FORCEREFUS • N’enregistre aucune transaction en unités de
+	 * compte au débit ou au crédit de l’émetteur et du récepteur qui a refusé
+	 * l’échange. • Bloque l’accès à l’espace personnel de l’autre adhérent, passe
+	 * son avis en ANOMALIE (= silencieux) et lui envoie un mail
+	 * 
 	 * @return
-	 * @throws EntityNotFoundException 
+	 * @throws EntityNotFoundException
 	 */
 	@Override
 	public List<Echange> searchAndUpdateEchangesAForceRefuserRecepteur() throws EntityNotFoundException {
 		List<Echange> echangesAForceRefuserList = new ArrayList<Echange>();
-		
+
 		LocalDate dateNow = LocalDate.now();
 
 		Optional<List<Echange>> echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisEmetteurRefuse = echangeRepository
-				.findByDateEcheanceBetween2DatesAndStatutEchangeConfirmeAnd2AvisEchange(dateNow.minusDays(delaiMin), dateNow.plusDays(delaiMax), 
-						EnumStatutEchange.CONFIRME, EnumEchangeAvis.REFUSE, EnumEchangeAvis.SANS);
+				.findByDateEcheanceBetween2DatesAndStatutEchangeConfirmeAnd2AvisEchange(dateNow.minusDays(delaiMin),
+						dateNow.plusDays(delaiMax), EnumStatutEchange.CONFIRME, EnumEchangeAvis.REFUSE,
+						EnumEchangeAvis.SANS);
 
 		if (echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisEmetteurRefuse.isPresent()) {
 			for (Echange echangeAForceRefuser : echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisEmetteurRefuse
 					.get()) {
 				echangeAForceRefuser.setStatutEchange(EnumStatutEchange.FORCEREFUS);
 				echangeAForceRefuser.setAvisRecepteur(EnumEchangeAvis.ANOMALIE);
-				Blocage blocageCreated = blocageService.createBlocage(echangeAForceRefuser.getId(), echangeAForceRefuser.getRecepteurId(), echangeAForceRefuser.getRecepteurUsername());
-				echangeRepository.save(echangeAForceRefuser);
-				echangesAForceRefuserList.add(echangeAForceRefuser);
-			}
-		}
-		
-		return echangesAForceRefuserList;
-		}
-	
-	
-	/**
-	 * Si seul le récepteur ou seul l’émetteur a renseigné un avis REFUSE sur l’échange, le système : 
-	 * • Considère que l’échange est réputé « refusé » et passe son statut en FORCEREFUS 
-	 * • N’enregistre aucune transaction en unités de compte au débit ou au crédit de l’émetteur et du récepteur qui a refusé l’échange. 
-	 * • Bloque l’accès à l’espace personnel de l’autre adhérent, passe son avis en ANOMALIE (= silencieux) et lui envoie un mail
-	 * @return
-	 * @throws EntityNotFoundException 
-	 */
-	@Override
-	public List<Echange> searchAndUpdateEchangesAForceRefuserEmetteur() throws EntityNotFoundException {
-		List<Echange> echangesAForceRefuserList = new ArrayList<Echange>();
-		
-		LocalDate dateNow = LocalDate.now();
-
-		Optional<List<Echange>> echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisRecepteurRefuse = echangeRepository
-				.findByDateEcheanceBetween2DatesAndStatutEchangeConfirmeAnd2AvisEchange(dateNow.minusDays(delaiMin), dateNow.plusDays(delaiMax),
-						EnumStatutEchange.CONFIRME, EnumEchangeAvis.SANS, EnumEchangeAvis.REFUSE);
-
-		if (echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisRecepteurRefuse.isPresent()) {
-			for (Echange echangeAForceRefuser : echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisRecepteurRefuse
-					.get()) {
-				echangeAForceRefuser.setStatutEchange(EnumStatutEchange.FORCEREFUS);
-				echangeAForceRefuser.setAvisEmetteur(EnumEchangeAvis.ANOMALIE);
-				Blocage blocageCreated = blocageService.createBlocage(echangeAForceRefuser.getId(), echangeAForceRefuser.getEmetteurId(), echangeAForceRefuser.getEmetteurUsername());
+				Blocage blocageCreated = blocageService.createBlocage(echangeAForceRefuser.getId(),
+						echangeAForceRefuser.getRecepteurId(), echangeAForceRefuser.getRecepteurUsername());
 				echangeRepository.save(echangeAForceRefuser);
 				echangesAForceRefuserList.add(echangeAForceRefuser);
 			}
@@ -1018,6 +790,41 @@ public class EchangeServiceImpl implements IEchangeService {
 		return echangesAForceRefuserList;
 	}
 
-	
+	/**
+	 * Si seul le récepteur ou seul l’émetteur a renseigné un avis REFUSE sur
+	 * l’échange, le système : • Considère que l’échange est réputé « refusé » et
+	 * passe son statut en FORCEREFUS • N’enregistre aucune transaction en unités de
+	 * compte au débit ou au crédit de l’émetteur et du récepteur qui a refusé
+	 * l’échange. • Bloque l’accès à l’espace personnel de l’autre adhérent, passe
+	 * son avis en ANOMALIE (= silencieux) et lui envoie un mail
+	 * 
+	 * @return
+	 * @throws EntityNotFoundException
+	 */
+	@Override
+	public List<Echange> searchAndUpdateEchangesAForceRefuserEmetteur() throws EntityNotFoundException {
+		List<Echange> echangesAForceRefuserList = new ArrayList<Echange>();
+
+		LocalDate dateNow = LocalDate.now();
+
+		Optional<List<Echange>> echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisRecepteurRefuse = echangeRepository
+				.findByDateEcheanceBetween2DatesAndStatutEchangeConfirmeAnd2AvisEchange(dateNow.minusDays(delaiMin),
+						dateNow.plusDays(delaiMax), EnumStatutEchange.CONFIRME, EnumEchangeAvis.SANS,
+						EnumEchangeAvis.REFUSE);
+
+		if (echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisRecepteurRefuse.isPresent()) {
+			for (Echange echangeAForceRefuser : echangesDateEcheanceBeforeNowAndStatutConfirmeAndAvisRecepteurRefuse
+					.get()) {
+				echangeAForceRefuser.setStatutEchange(EnumStatutEchange.FORCEREFUS);
+				echangeAForceRefuser.setAvisEmetteur(EnumEchangeAvis.ANOMALIE);
+				Blocage blocageCreated = blocageService.createBlocage(echangeAForceRefuser.getId(),
+						echangeAForceRefuser.getEmetteurId(), echangeAForceRefuser.getEmetteurUsername());
+				echangeRepository.save(echangeAForceRefuser);
+				echangesAForceRefuserList.add(echangeAForceRefuser);
+			}
+		}
+
+		return echangesAForceRefuserList;
+	}
 
 }

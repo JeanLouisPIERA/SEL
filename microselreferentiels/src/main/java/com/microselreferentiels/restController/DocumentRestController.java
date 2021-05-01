@@ -1,7 +1,5 @@
 package com.microselreferentiels.restController;
 
-import java.util.List;
-
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.microselreferentiels.criteria.DocumentCriteria;
 import com.microselreferentiels.dto.DocumentDTO;
 import com.microselreferentiels.entities.Document;
-import com.microselreferentiels.entities.TypeDocument;
 import com.microselreferentiels.exceptions.DeniedAccessException;
 import com.microselreferentiels.exceptions.EntityAlreadyExistsException;
 import com.microselreferentiels.exceptions.EntityNotFoundException;
@@ -37,93 +34,76 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/sel/referentiels")
 @Validated
 public class DocumentRestController {
-	
+
 	@Autowired
 	private IDocumentService documentService;
-	
-	@ApiOperation(value = "Enregistrement d'un document statique par un admin",  response = Document.class)
-	  @ApiResponses(value = {
-	  @ApiResponse(code = 201, message = 
-			  "Le document a été créée"),
-	  @ApiResponse(code = 400, message = 
-			  "Les informations fournies ne sont pas correctes"),
-	  @ApiResponse(code = 409, message = 
-			  "Un autre document existe déjà avec ces attributs"), })
+
+	@ApiOperation(value = "Enregistrement d'un document statique par un admin", response = Document.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le document a été créée"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 409, message = "Un autre document existe déjà avec ces attributs"), })
 
 	@PostMapping("/admin/documents")
-	public ResponseEntity<Document> createStaticDocument(@Valid @RequestBody DocumentDTO documentDTO) throws EntityAlreadyExistsException, EntityNotFoundException {
-	  return new ResponseEntity<Document>(documentService.createStaticDocument(documentDTO), HttpStatus.OK);
+	public ResponseEntity<Document> createStaticDocument(@Valid @RequestBody DocumentDTO documentDTO)
+			throws EntityAlreadyExistsException, EntityNotFoundException {
+		return new ResponseEntity<Document>(documentService.createStaticDocument(documentDTO), HttpStatus.OK);
 	}
-	
-	 @ApiOperation(value = "Recherche multi-critères d'un ou plusieurs documents", response = Document.class)  
-	  @ApiResponses(value = {
-	  @ApiResponse(code = 200, message = 
-			  "La recherche a été réalisée avec succés"), })
-	  
-	  @GetMapping(value="/admin/documents", produces="application/json") 
-	  public ResponseEntity<Page<Document>> searchAllDocumentsByCriteria(
-			  @PathParam("documentCriteria") DocumentCriteria documentCriteria,
-			  @RequestParam(name = "page", defaultValue= "0") int page, @RequestParam(name="size", defaultValue= "10") int size) { 
-	  	  
-	  	  Page<Document> documents = documentService.searchAllDocumentsByCriteria(documentCriteria, PageRequest.of(page, size)); 	
-		  return new ResponseEntity<Page<Document>>(documents, HttpStatus.OK); 
-	  }
- 
-	  @ApiOperation(value = "Consultation du contenu d'un document", response = Document.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Le document recherché a été trouvé"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "Le document que vous voulez consulter n'existe pas"), })
-	 
-	  @GetMapping("/admin/documents/{id}")
-	  public ResponseEntity<Document> readDocument(@PathVariable("id") @Valid Long id) throws EntityNotFoundException {
-		return new ResponseEntity<Document>(documentService.readDocument(id), HttpStatus.OK);  
-	  }
-	  
-	  @ApiOperation(value = "Publication du contenu d'un document", response = Document.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Le document recherché a été trouvé"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "Le document que vous voulez consulter n'existe pas"), })
-	 
-	  @PutMapping("/admin/documents/publication/{id}")
-	  public ResponseEntity<Document> publishDocument(@PathVariable("id") @Valid Long id) throws EntityNotFoundException, DeniedAccessException {
-		return new ResponseEntity<Document>(documentService.publierDocument(id), HttpStatus.OK);  
-	  }
-	  
-	  @ApiOperation(value = "Archivage du contenu d'un document", response = Document.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Le document recherché a été trouvé"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "Le document que vous voulez consulter n'existe pas"), })
-	 
-	  @PutMapping("/admin/documents/archivage/{id}")
-	  public ResponseEntity<Document> archiverDocument(@PathVariable("id") @Valid Long id) throws EntityNotFoundException, DeniedAccessException {
-		return new ResponseEntity<Document>(documentService.archiverDocument(id), HttpStatus.OK);  
-	  }
-	  
-	  @ApiOperation(value = "Consultation du contenu d'un document", response = Document.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Le document recherché a été trouvé"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "Le document que vous voulez consulter n'existe pas"), })
-	 
-	  @GetMapping("/documents/{id}")
-	  public ResponseEntity<Document> readDocumentByTypeDocument(@PathVariable("id") @Valid Long typedocumentId) throws EntityNotFoundException {
-		return new ResponseEntity<Document>(documentService.readDocumentByTypeDocument(typedocumentId), HttpStatus.OK);  
-	  }
- 
-	 
+
+	@ApiOperation(value = "Recherche multi-critères d'un ou plusieurs documents", response = Document.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "La recherche a été réalisée avec succés"), })
+
+	@GetMapping(value = "/admin/documents", produces = "application/json")
+	public ResponseEntity<Page<Document>> searchAllDocumentsByCriteria(
+			@PathParam("documentCriteria") DocumentCriteria documentCriteria,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "10") int size) {
+
+		Page<Document> documents = documentService.searchAllDocumentsByCriteria(documentCriteria,
+				PageRequest.of(page, size));
+		return new ResponseEntity<Page<Document>>(documents, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "Consultation du contenu d'un document", response = Document.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le document recherché a été trouvé"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "Le document que vous voulez consulter n'existe pas"), })
+
+	@GetMapping("/admin/documents/{id}")
+	public ResponseEntity<Document> readDocument(@PathVariable("id") @Valid Long id) throws EntityNotFoundException {
+		return new ResponseEntity<Document>(documentService.readDocument(id), HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "Publication du contenu d'un document", response = Document.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le document recherché a été trouvé"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "Le document que vous voulez consulter n'existe pas"), })
+
+	@PutMapping("/admin/documents/publication/{id}")
+	public ResponseEntity<Document> publishDocument(@PathVariable("id") @Valid Long id)
+			throws EntityNotFoundException, DeniedAccessException {
+		return new ResponseEntity<Document>(documentService.publierDocument(id), HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "Archivage du contenu d'un document", response = Document.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le document recherché a été trouvé"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "Le document que vous voulez consulter n'existe pas"), })
+
+	@PutMapping("/admin/documents/archivage/{id}")
+	public ResponseEntity<Document> archiverDocument(@PathVariable("id") @Valid Long id)
+			throws EntityNotFoundException, DeniedAccessException {
+		return new ResponseEntity<Document>(documentService.archiverDocument(id), HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "Consultation du contenu d'un document", response = Document.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le document recherché a été trouvé"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "Le document que vous voulez consulter n'existe pas"), })
+
+	@GetMapping("/documents/{id}")
+	public ResponseEntity<Document> readDocumentByTypeDocument(@PathVariable("id") @Valid Long typedocumentId)
+			throws EntityNotFoundException {
+		return new ResponseEntity<Document>(documentService.readDocumentByTypeDocument(typedocumentId), HttpStatus.OK);
+	}
+
 }

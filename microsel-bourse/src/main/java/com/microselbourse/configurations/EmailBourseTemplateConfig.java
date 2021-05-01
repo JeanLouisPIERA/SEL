@@ -1,5 +1,8 @@
 package com.microselbourse.configurations;
 
+/**
+ * Classe permettant la configuration des templates de mail
+ */
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -12,25 +15,24 @@ import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 
-
 @Configuration
 public class EmailBourseTemplateConfig implements ApplicationContextAware, EnvironmentAware {
-	
+
 	public static final String EMAIL_TEMPLATE_ENCODING = "UTF-8";
-	
-	
-	  @Value("${application.prefix}") private String prefix;
-	 
+
+	@Value("${application.prefix}")
+	private String prefix;
+
 	private ApplicationContext applicationContext;
-    private Environment environment;
-	
+	private Environment environment;
+
 	/**
 	 * @param environment
 	 */
 	@Override
 	public void setEnvironment(final Environment environment) {
 		this.environment = environment;
-		
+
 	}
 
 	/**
@@ -40,33 +42,37 @@ public class EmailBourseTemplateConfig implements ApplicationContextAware, Envir
 	@Override
 	public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
-		
+
 	}
-	
+
 	/**
-	 * Ce bean permet de générer le template spécialement configuré pour envoyer des mails
+	 * Ce bean permet de générer le template spécialement configuré pour envoyer des
+	 * mails
+	 * 
 	 * @return
 	 */
-	
+
 	@Bean
 	public SpringTemplateEngine thymeleafTemplateEngine() {
-	    SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-	    templateEngine.addDialect(new Java8TimeDialect());
-	    templateEngine.setTemplateResolver(thymeleafTemplateResolver());
-	    return templateEngine;
+		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+		templateEngine.addDialect(new Java8TimeDialect());
+		templateEngine.setTemplateResolver(thymeleafTemplateResolver());
+		return templateEngine;
 	}
-    
-    /**
-     * Ce bean permet d'indiquer à la dépendance Thymeleaf où se trouve le template HTML 
-     * @return
-     */
-    @Bean
-    public SpringResourceTemplateResolver thymeleafTemplateResolver() {
-        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setPrefix(prefix);
-        templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode("HTML");
-        templateResolver.setCharacterEncoding("UTF-8");
-        return templateResolver;
-    }
+
+	/**
+	 * Ce bean permet d'indiquer à la dépendance Thymeleaf où se trouve le template
+	 * HTML
+	 * 
+	 * @return
+	 */
+	@Bean
+	public SpringResourceTemplateResolver thymeleafTemplateResolver() {
+		SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
+		templateResolver.setPrefix(prefix);
+		templateResolver.setSuffix(".html");
+		templateResolver.setTemplateMode("HTML");
+		templateResolver.setCharacterEncoding("UTF-8");
+		return templateResolver;
+	}
 }

@@ -9,8 +9,12 @@ import org.springframework.stereotype.Repository;
 
 import com.microselbourse.entities.Blocage;
 import com.microselbourse.entities.EnumStatutBlocage;
-import com.microselbourse.entities.Proposition;
 
+/**
+ * Classe permettant d'implémenter l'interface JPA pour les relations ORM de la classe Blocage
+ * @author jeanl
+ *
+ */
 @Repository
 public interface IBlocageRepository extends JpaRepository<Blocage, Long>, JpaSpecificationExecutor<Blocage>{
 

@@ -15,36 +15,34 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 @Entity
-@Table(name="typedocuments")
+@Table(name = "typedocuments")
 public class TypeDocument {
-	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "typedocument_id", length=5)
+	@Column(name = "typedocument_id", length = 5)
 	private Long id;
-	
-	@Column(name = "titre", length = 25, nullable=false)
+
+	@Column(name = "titre", length = 25, nullable = false)
 	private String typeName;
-	
+
 	@Column(name = "description", length = 150)
 	private String description;
-	
+
 	@Column(name = "date_creation")
-	private LocalDate dateCreation; 
-	
+	private LocalDate dateCreation;
+
 	@Column(name = "date_archivage")
 	private LocalDate dateArchivage;
-	
+
 	@JsonIgnore
-	@OneToMany(mappedBy="typeDocument", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "typeDocument", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Document> documents;
 
 	public TypeDocument() {
 		super();
-		
+
 	}
 
 	public Long getId() {
@@ -79,8 +77,6 @@ public class TypeDocument {
 		this.dateCreation = dateCreation;
 	}
 
-	
-
 	public LocalDate getDateArchivage() {
 		return dateArchivage;
 	}
@@ -96,7 +92,5 @@ public class TypeDocument {
 	public void setDocuments(List<Document> documents) {
 		this.documents = documents;
 	}
-	
-	
 
 }

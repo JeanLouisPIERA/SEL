@@ -1,10 +1,10 @@
 package com.microselreferentiels.dto;
 
 public class TypeArticleDTO {
-	
+
 	private String typeName;
 	private String description;
-	
+
 	public TypeArticleDTO() {
 		super();
 	}
@@ -24,7 +24,5 @@ public class TypeArticleDTO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
 
 }

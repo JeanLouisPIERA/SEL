@@ -1,12 +1,16 @@
 package com.microselbourse.dto;
 
-import javax.validation.constraints.Future;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Range;
 
+/**
+ *  * Wrapper pour le transfert des données dans les opérations update de la classe Evaluation
+ * @author jeanl
+ *
+ */
 public class PropositionUpdateDTO {
 
 	@NotEmpty(message = "Merci de saisir le titre de votre proposition")
@@ -17,7 +21,6 @@ public class PropositionUpdateDTO {
 	@Size(min = 5, max = 100, message = "La taille de votre titre doit être comprise entre 5 et 255 caractères")
 	private String description;
 
-	
 	private String image;
 
 	@NotEmpty(message = "Merci de saisir la ville de réalisation de l'échange de votre proposition")
@@ -33,20 +36,16 @@ public class PropositionUpdateDTO {
 	private Integer valeur;
 
 	
-	//@Future(message = "Merci de saisir une date de fin de publication de votre proposition postérieure à la date du jour")
 	@NotNull(message = "Merci de saisir la date de fin de la publication de votre proposition")
 	private String dateFin;
 
 	
-	//@Future(message = "Merci de saisir la date d'échance pour la réalisation de l'échange que vous proposez postérieure à la date du jour")
 	@NotNull(message = "Merci de saisir la date d'échance pour la réalisation de l'échange que vous proposez")
 	private String dateEcheance;
 
 	public PropositionUpdateDTO() {
 		super();
 	}
-
-	
 
 	public String getTitre() {
 		return titre;
@@ -112,15 +111,11 @@ public class PropositionUpdateDTO {
 		this.dateEcheance = dateEcheance;
 	}
 
-
-
 	@Override
 	public String toString() {
 		return "PropositionUpdateDTO [titre=" + titre + ", description=" + description + ", image=" + image + ", ville="
 				+ ville + ", codePostal=" + codePostal + ", valeur=" + valeur + ", dateFin=" + dateFin
 				+ ", dateEcheance=" + dateEcheance + "]";
 	}
-
-	
 
 }

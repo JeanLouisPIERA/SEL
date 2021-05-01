@@ -20,7 +20,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 @Entity
 @Table(name = "evaluations")
-public class Evaluation implements Serializable{
+public class Evaluation implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +44,7 @@ public class Evaluation implements Serializable{
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "date_evaluation", length = 25, nullable = false)
 	private LocalDate dateEvaluation;
-	
+
 	@Column(name = "is_moderated")
 	private Boolean isModerated;
 
@@ -120,8 +120,4 @@ public class Evaluation implements Serializable{
 		this.isModerated = isModerated;
 	}
 
-	
-
-	
-	
 }

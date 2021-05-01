@@ -15,15 +15,11 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
-//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id", scope = Reponse.class)
 @Entity
 @Table(name = "reponses")
 public class Reponse {
@@ -121,8 +117,7 @@ public class Reponse {
 	 * *****************************************************************************
 	 * ***********************************************
 	 */
-	
-	
+
 	@ManyToOne
 	@JoinColumn(name = "proposition_id")
 	private Proposition proposition;
@@ -247,8 +242,5 @@ public class Reponse {
 	public void setEchange(Echange echange) {
 		this.echange = echange;
 	}
-
-	
-	
 
 }

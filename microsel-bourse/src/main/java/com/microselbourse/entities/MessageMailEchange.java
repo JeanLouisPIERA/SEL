@@ -48,8 +48,4 @@ public class MessageMailEchange {
 		this.microselBourseMailTemplate = microselBourseMailTemplate;
 	}
 
-	
-
-	
-
 }

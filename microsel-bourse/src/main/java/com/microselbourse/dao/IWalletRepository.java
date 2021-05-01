@@ -8,6 +8,11 @@ import org.springframework.stereotype.Repository;
 
 import com.microselbourse.entities.Wallet;
 
+/**
+ * * Classe permettant d'implémenter l'interface JPA pour les relations ORM de la classe Wallet = Portefeuilles
+ * @author jeanl
+ *
+ */
 @Repository
 public interface IWalletRepository extends JpaRepository<Wallet, Long>, JpaSpecificationExecutor<Wallet> {
 

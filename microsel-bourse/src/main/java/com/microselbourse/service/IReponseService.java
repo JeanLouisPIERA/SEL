@@ -7,7 +7,6 @@ import javax.mail.MessagingException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.microselbourse.criteria.ReponseCriteria;
 import com.microselbourse.dto.ReponseDTO;
 import com.microselbourse.entities.Reponse;
 import com.microselbourse.exceptions.DeniedAccessException;

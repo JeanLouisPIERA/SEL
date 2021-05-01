@@ -26,7 +26,4 @@ public interface IArticleRepository extends JpaRepository<Article, Long>, JpaSpe
 	@Query("select article from Article article where article.typeArticle.id = ?1 AND article.statutDocument like ?2")
 	Optional<Article> findByTypeArticleIdAndStatutDocument(@Valid Long typearticleId, EnumStatutDocument publie);
 
-	
-	
-
 }

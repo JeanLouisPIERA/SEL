@@ -1,5 +1,10 @@
 package com.microselbourse.criteria;
 
+/**
+ *  Classe permettant le requêtage de la classe Echange (généré automatiquement à la création d'une réponse à une proposition)
+ * @author jeanl
+ *
+ */
 public class EchangeCriteria {
 
 	private Long id;

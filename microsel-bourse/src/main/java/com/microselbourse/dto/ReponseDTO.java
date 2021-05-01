@@ -1,15 +1,14 @@
 package com.microselbourse.dto;
 
-import java.time.LocalDate;
-
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import com.microselbourse.entities.EnumTradeType;
 
 import io.swagger.annotations.ApiModelProperty;
 
+/**
+ *  * Wrapper pour le transfert des données dans les opérations de création de la classe Reponse
+ * @author jeanl
+ *
+ */
 public class ReponseDTO {
 
 	@ApiModelProperty(notes = "indique l'identifiant de l'adhérent récepteur - saisie obligatoire")

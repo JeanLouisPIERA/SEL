@@ -101,92 +101,6 @@ public class EchangeRestController {
 		return new ResponseEntity<Echange>(echangeService.annulerEchange(id, intervenantId), HttpStatus.OK);
 	}
 
-	/*
-	 * @ApiOperation(value =
-	 * "Validation d'un echange par l'adhérent émetteur de la proposition initiale "
-	 * , response = Echange.class)
-	 * 
-	 * @ApiResponses(value = { @ApiResponse(code = 201, message =
-	 * "Léchange recherché a été validé"),
-	 * 
-	 * @ApiResponse(code = 400, message =
-	 * "Les informations fournies ne sont pas correctes"),
-	 * 
-	 * @ApiResponse(code = 413, message =
-	 * "L'échange que vous voulez valider n'existe pas"), })
-	 * 
-	 * @PutMapping("/user/echanges/emetteurValider/{id}") public
-	 * ResponseEntity<Echange> emetteurValiderEchange(@PathVariable @Valid Long id)
-	 * throws UnsupportedEncodingException, EntityNotFoundException,
-	 * DeniedAccessException, MessagingException, EntityAlreadyExistsException {
-	 * return new ResponseEntity<Echange>(echangeService.validerEchangeEmetteur(id),
-	 * HttpStatus.OK); }
-	 * 
-	 * @ApiOperation(value =
-	 * "Validation d'un echange par l'adhérent récepteur de la proposition initiale"
-	 * , response = Echange.class)
-	 * 
-	 * @ApiResponses(value = { @ApiResponse(code = 201, message =
-	 * "Léchange recherché a été validé"),
-	 * 
-	 * @ApiResponse(code = 400, message =
-	 * "Les informations fournies ne sont pas correctes"),
-	 * 
-	 * @ApiResponse(code = 413, message =
-	 * "L'échange que vous voulez valider n'existe pas"), })
-	 * 
-	 * @PutMapping("/user/echanges/recepteurValider/{id}") public
-	 * ResponseEntity<Echange> recepteurValiderEchange(@PathVariable @Valid Long id)
-	 * throws UnsupportedEncodingException, EntityNotFoundException,
-	 * DeniedAccessException, MessagingException, EntityAlreadyExistsException {
-	 * return new
-	 * ResponseEntity<Echange>(echangeService.validerEchangeRecepteur(id),
-	 * HttpStatus.OK); }
-	 */
-
-	/*
-	 * @ApiOperation(value =
-	 * "Refus de valider un echange par l'adhérent émetteur de la proposition initiale"
-	 * , response = Echange.class)
-	 * 
-	 * @ApiResponses(value = { @ApiResponse(code = 201, message =
-	 * "Léchange recherché a été refusé"),
-	 * 
-	 * @ApiResponse(code = 400, message =
-	 * "Les informations fournies ne sont pas correctes"),
-	 * 
-	 * @ApiResponse(code = 413, message =
-	 * "L'échange que vous voulez refuser n'existe pas"), })
-	 * 
-	 * @PutMapping("/user/echanges/emetteurRefuser/{id}") public
-	 * ResponseEntity<Echange> emetteurRefuserEchange(@PathVariable @Valid Long id)
-	 * throws UnsupportedEncodingException, EntityNotFoundException,
-	 * DeniedAccessException, MessagingException, EntityAlreadyExistsException {
-	 * return new ResponseEntity<Echange>(echangeService.refuserEchangeEmetteur(id),
-	 * HttpStatus.OK); }
-	 * 
-	 * @ApiOperation(value =
-	 * "Refus de valider un echange par l'adhérent récepteur de la proposition initiale"
-	 * , response = Echange.class)
-	 * 
-	 * @ApiResponses(value = { @ApiResponse(code = 201, message =
-	 * "Léchange recherché a été validé"),
-	 * 
-	 * @ApiResponse(code = 400, message =
-	 * "Les informations fournies ne sont pas correctes"),
-	 * 
-	 * @ApiResponse(code = 413, message =
-	 * "L'échange que vous voulez valider n'existe pas"), })
-	 * 
-	 * @PutMapping("/user/echanges/recepteurRefuser/{id}") public
-	 * ResponseEntity<Echange> recepteurRefuserEchange(@PathVariable @Valid Long id)
-	 * throws UnsupportedEncodingException, EntityNotFoundException,
-	 * DeniedAccessException, MessagingException, EntityAlreadyExistsException {
-	 * return new
-	 * ResponseEntity<Echange>(echangeService.refuserEchangeRecepteur(id),
-	 * HttpStatus.OK); }
-	 */
-
 	@ApiOperation(value = "Validation d'un echange par l'adhérent émetteur de la proposition initiale ou l'adhérent récepteur", response = Echange.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Léchange recherché a été validé"),
 			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
@@ -208,6 +122,5 @@ public class EchangeRestController {
 			EntityAlreadyExistsException {
 		return new ResponseEntity<Echange>(echangeService.refuserEchange(id, intervenantId), HttpStatus.OK);
 	}
-	
 
 }

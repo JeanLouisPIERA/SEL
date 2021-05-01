@@ -11,6 +11,9 @@ import com.microselbourse.criteria.BlocageCriteria;
 import com.microselbourse.entities.Blocage;
 import com.microselbourse.entities.EnumStatutBlocage;
 
+/**
+ * Classe qui implémentate la JPA Spécification pour le requêtage de la classe Blocage
+ */
 public class BlocageSpecification implements Specification<Blocage> {
 
 	private BlocageCriteria blocageCriteria;
@@ -33,7 +36,7 @@ public class BlocageSpecification implements Specification<Blocage> {
 					.add(builder.like(root.get("adherentId"), "%" + blocageCriteria.getAdherentId() + "%"));
 		}
 
-		if (blocageCriteria.getAdherentUsername() != null ) {
+		if (blocageCriteria.getAdherentUsername() != null) {
 			predicates.getExpressions()
 					.add(builder.like(root.get("adherentUsername"), "%" + blocageCriteria.getAdherentUsername() + "%"));
 		}

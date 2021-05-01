@@ -10,8 +10,12 @@ import org.springframework.stereotype.Repository;
 
 import com.microselbourse.entities.Echange;
 import com.microselbourse.entities.Evaluation;
-import com.microselbourse.entities.Proposition;
 
+/**
+ * * Classe permettant d'implémenter l'interface JPA pour les relations ORM de la classe Evaluation
+ * @author jeanl
+ *
+ */
 @Repository
 public interface IEvaluationRepository extends JpaRepository<Evaluation, Long>, JpaSpecificationExecutor<Evaluation> {
 

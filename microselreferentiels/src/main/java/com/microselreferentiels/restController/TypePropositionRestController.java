@@ -38,74 +38,65 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/sel/referentiels")
 @Validated
 public class TypePropositionRestController {
-	
+
 	@Autowired
 	private ITypePropositionService typePropositionService;
-	
-	@ApiOperation(value = "Enregistrement d'un type de proposition par un admin",  response = TypeProposition.class)
-	  @ApiResponses(value = {
-	  @ApiResponse(code = 201, message = 
-			  "Le type de proposition a été créé"),
-	  @ApiResponse(code = 400, message = 
-			  "Les informations fournies ne sont pas correctes"),
-	  @ApiResponse(code = 409, message = 
-			  "Un autre type de proposition existe déjà avec ces attributs"), })
+
+	@ApiOperation(value = "Enregistrement d'un type de proposition par un admin", response = TypeProposition.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le type de proposition a été créé"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 409, message = "Un autre type de proposition existe déjà avec ces attributs"), })
 
 	@PostMapping("/admin/typepropositions")
-	public ResponseEntity<TypeProposition> createTypeProposition(@Valid @RequestBody TypePropositionDTO typePropositionDTO) throws EntityAlreadyExistsException {
-	  return new ResponseEntity<TypeProposition>(typePropositionService.createTypeProposition(typePropositionDTO), HttpStatus.OK);
+	public ResponseEntity<TypeProposition> createTypeProposition(
+			@Valid @RequestBody TypePropositionDTO typePropositionDTO) throws EntityAlreadyExistsException {
+		return new ResponseEntity<TypeProposition>(typePropositionService.createTypeProposition(typePropositionDTO),
+				HttpStatus.OK);
 	}
-	
-	 @ApiOperation(value = "Recherche multi-critères d'un ou plusieurs types de proposition", response = TypeProposition.class)  
-	  @ApiResponses(value = {
-	  @ApiResponse(code = 200, message = 
-			  "La recherche a été réalisée avec succés"), })
-	  
-	  @GetMapping(value="/admin/typepropositions/Page", produces="application/json") 
-	  public ResponseEntity<Page<TypeProposition>> getAllTypePropositionsByCriteria(
-			  @RequestParam(name = "page", defaultValue= "0") int page, @RequestParam(name="size", defaultValue= "10") int size) { 
-	  	  
-	  	  Page<TypeProposition> typePropositionsPage = typePropositionService.getAllTypePropositionsPaginated(PageRequest.of(page, size)); 	
-		  return new ResponseEntity<Page<TypeProposition>>(typePropositionsPage, HttpStatus.OK); 
-	  }
-	 
-	 @ApiOperation(value = "Recherche de tous les types de propositions", response = TypeDocument.class)  
-	  @ApiResponses(value = {
-	  @ApiResponse(code = 200, message = 
-			  "La recherche a été réalisée avec succés"), })
-	  
-	  @GetMapping(value="/typepropositions", produces="application/json") 
-	  public ResponseEntity<List<TypeProposition>> getAllTypePropositions() { 
-	  	  List<TypeProposition> typePropositions = typePropositionService.getAllTypePropositions(); 	
-		  return new ResponseEntity<List<TypeProposition>>(typePropositions, HttpStatus.OK); 
-	  }
- 
-	 @ApiOperation(value = "Consultation du contenu d'un type de proposition", response = TypeProposition.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Le type de proposition recherché a été trouvé"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "Le type de proposition que vous voulez consulter n'existe pas"), })
-	 
-	  @GetMapping("/typepropositions/{id}")
-	  public ResponseEntity<TypeProposition> readTypeProposition(@PathVariable @Valid Long id) throws EntityNotFoundException {
-		return new ResponseEntity<TypeProposition>(typePropositionService.readTypeProposition(id), HttpStatus.OK);  
-	  }
-	 
-	 @ApiOperation(value = "Consultation du contenu d'un type de proposition à partir de son typeName", response = TypeProposition.class)  
-	  @ApiResponses(value = {
-		  @ApiResponse(code = 201, message =
-		  "Le type de proposition recherché a été trouvé"),
-		  @ApiResponse(code = 400, message =
-		  "Les informations fournies ne sont pas correctes"),
-		  @ApiResponse(code = 413, message = 
-		  "Le type de proposition que vous voulez consulter n'existe pas"), })
-	 
-	  @GetMapping("/typepropositions/{typeName}")
-	  public ResponseEntity<TypeProposition> readTypePropositionByTypeName(@PathVariable @Valid String typeName) throws EntityNotFoundException {
-		return new ResponseEntity<TypeProposition>(typePropositionService.readTypePropositionByTypeName(typeName), HttpStatus.OK);  
-	  }
+
+	@ApiOperation(value = "Recherche multi-critères d'un ou plusieurs types de proposition", response = TypeProposition.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "La recherche a été réalisée avec succés"), })
+
+	@GetMapping(value = "/admin/typepropositions/Page", produces = "application/json")
+	public ResponseEntity<Page<TypeProposition>> getAllTypePropositionsByCriteria(
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "10") int size) {
+
+		Page<TypeProposition> typePropositionsPage = typePropositionService
+				.getAllTypePropositionsPaginated(PageRequest.of(page, size));
+		return new ResponseEntity<Page<TypeProposition>>(typePropositionsPage, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "Recherche de tous les types de propositions", response = TypeDocument.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "La recherche a été réalisée avec succés"), })
+
+	@GetMapping(value = "/typepropositions", produces = "application/json")
+	public ResponseEntity<List<TypeProposition>> getAllTypePropositions() {
+		List<TypeProposition> typePropositions = typePropositionService.getAllTypePropositions();
+		return new ResponseEntity<List<TypeProposition>>(typePropositions, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "Consultation du contenu d'un type de proposition", response = TypeProposition.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le type de proposition recherché a été trouvé"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "Le type de proposition que vous voulez consulter n'existe pas"), })
+
+	@GetMapping("/typepropositions/{id}")
+	public ResponseEntity<TypeProposition> readTypeProposition(@PathVariable @Valid Long id)
+			throws EntityNotFoundException {
+		return new ResponseEntity<TypeProposition>(typePropositionService.readTypeProposition(id), HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "Consultation du contenu d'un type de proposition à partir de son typeName", response = TypeProposition.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le type de proposition recherché a été trouvé"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 413, message = "Le type de proposition que vous voulez consulter n'existe pas"), })
+
+	@GetMapping("/typepropositions/{typeName}")
+	public ResponseEntity<TypeProposition> readTypePropositionByTypeName(@PathVariable @Valid String typeName)
+			throws EntityNotFoundException {
+		return new ResponseEntity<TypeProposition>(typePropositionService.readTypePropositionByTypeName(typeName),
+				HttpStatus.OK);
+	}
 
 }

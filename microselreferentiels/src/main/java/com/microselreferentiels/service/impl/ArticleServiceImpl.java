@@ -1,7 +1,6 @@
 package com.microselreferentiels.service.impl;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -59,7 +58,7 @@ public class ArticleServiceImpl implements IArticleService {
 			UserBean auteurArticle = adherentsProxy.consulterCompteAdherent(articleDTO.getAuteurId());
 			if (!auteurArticle.getId().equals(articleDTO.getAuteurId()))
 				throw new EntityNotFoundException("Vous n'êtes pas identifié comme adhérent de l'association");
-			
+
 			Article articleCreated = articleMapper.articleDTOToArticle(articleDTO);
 
 			articleCreated.setAuteurUsername(auteurArticle.getUsername());
@@ -97,7 +96,7 @@ public class ArticleServiceImpl implements IArticleService {
 
 		return articleToRead.get();
 	}
-	
+
 	@Override
 	public Article publierArticle(@Valid Long id) throws EntityNotFoundException, DeniedAccessException {
 		Optional<Article> articleToPublish = articleRepository.findById(id);
@@ -105,7 +104,8 @@ public class ArticleServiceImpl implements IArticleService {
 			throw new EntityNotFoundException("L'article que vous souhaitez publier n'existe pas.");
 
 		if (!articleToPublish.get().getStatutDocument().equals(EnumStatutDocument.ENCOURS))
-			throw new DeniedAccessException("Vous ne pouvez pas publié un article qui est déjà publié, modéré ou archivé");
+			throw new DeniedAccessException(
+					"Vous ne pouvez pas publié un article qui est déjà publié, modéré ou archivé");
 
 		articleToPublish.get().setDatePublication(LocalDate.now());
 		articleToPublish.get().setStatutDocument(EnumStatutDocument.PUBLIE);
@@ -156,17 +156,11 @@ public class ArticleServiceImpl implements IArticleService {
 
 	@Override
 	public Article modifierArticleStandard(ArticleDTO articleDTO) {
-		
+
 		Article articleStandardUpdated = articleMapper.articleDTOToArticle(articleDTO);
 		articleStandardUpdated.setId((long) 1);
 		return articleRepository.save(articleStandardUpdated);
-		
+
 	}
-
-	
-	
-	
-
-	
 
 }

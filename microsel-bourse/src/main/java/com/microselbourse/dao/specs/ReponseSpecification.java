@@ -9,6 +9,11 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.microselbourse.entities.Reponse;
 
+/**
+ * * Classe qui implémentate la JPA Spécification pour le requêtage de la classe Réponse
+ * @author jeanl
+ *
+ */
 public class ReponseSpecification implements Specification<Reponse> {
 
 	@Override

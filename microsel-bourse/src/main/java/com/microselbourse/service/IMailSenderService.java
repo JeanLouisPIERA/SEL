@@ -24,10 +24,4 @@ public interface IMailSenderService {
 	void sendMailAnnulationBlocage(Blocage blocage, UserBean destinataire, String subject,
 			String microselBourseMailTemplate) throws UnsupportedEncodingException, MessagingException;
 
-	/*
-	 * void sendMessageMailEchangeCreation(Reponse reponse, Long destinataireId,
-	 * String subject, String microselBourseMailTemplate) throws MessagingException,
-	 * UnsupportedEncodingException;
-	 */
-
 }

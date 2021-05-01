@@ -17,13 +17,10 @@ import com.microselbourse.criteria.BlocageCriteria;
 import com.microselbourse.dao.IBlocageRepository;
 import com.microselbourse.dao.IEchangeRepository;
 import com.microselbourse.dao.specs.BlocageSpecification;
-import com.microselbourse.dao.specs.PropositionSpecification;
 import com.microselbourse.entities.Blocage;
 import com.microselbourse.entities.Echange;
 import com.microselbourse.entities.EnumStatutBlocage;
 import com.microselbourse.entities.MessageMailDeblocage;
-import com.microselbourse.entities.MessageMailEchange;
-import com.microselbourse.entities.Proposition;
 import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.proxies.IMicroselUsersProxy;
 import com.microselbourse.service.IBlocageService;
@@ -40,38 +37,13 @@ public class BlocageServiceImpl implements IBlocageService {
 
 	@Autowired
 	private IBlocageRepository blocageRepository;
-	
+
 	@Autowired
 	RabbitMQSender rabbitMQSender;
 
-	
 	@Override
-	public Blocage createBlocage(Long echangeId, String adherentId, String adherentUsername) throws EntityNotFoundException {
-
-		Optional<Echange> echangeToCheck = echangeRepository.findById(echangeId);
-		if (!echangeToCheck.isPresent())
-			throw new EntityNotFoundException("L'échange à l'origine du blocage n'existe pas");
-
-		/*
-		 * UserBean adherentToBlock = usersProxy.consulterCompteAdherent(adherentId); if
-		 * (adherentToBlock == null) throw new
-		 * EntityNotFoundException("L'identifiant de l'adhérent que vous souhaitez bloquer n'existe pas"
-		 * );
-		 */
-
-		Blocage blocageToCreate = new Blocage();
-		blocageToCreate.setAdherentId(adherentId);
-		blocageToCreate.setAdherentUsername(adherentUsername);
-		blocageToCreate.setDateDebutBlocage(LocalDate.now());
-		blocageToCreate.setEchange(echangeToCheck.get());
-		blocageToCreate.setStatutBlocage(EnumStatutBlocage.ENCOURS);
-
-		return blocageRepository.save(blocageToCreate);
-
-	}
-	
-	@Override
-	public Blocage createBlocageFromConflit(Long echangeId, String adherentId, String adherentUsername) throws EntityNotFoundException {
+	public Blocage createBlocage(Long echangeId, String adherentId, String adherentUsername)
+			throws EntityNotFoundException {
 
 		Optional<Echange> echangeToCheck = echangeRepository.findById(echangeId);
 		if (!echangeToCheck.isPresent())
@@ -87,7 +59,25 @@ public class BlocageServiceImpl implements IBlocageService {
 		return blocageRepository.save(blocageToCreate);
 
 	}
-	
+
+	@Override
+	public Blocage createBlocageFromConflit(Long echangeId, String adherentId, String adherentUsername)
+			throws EntityNotFoundException {
+
+		Optional<Echange> echangeToCheck = echangeRepository.findById(echangeId);
+		if (!echangeToCheck.isPresent())
+			throw new EntityNotFoundException("L'échange à l'origine du blocage n'existe pas");
+
+		Blocage blocageToCreate = new Blocage();
+		blocageToCreate.setAdherentId(adherentId);
+		blocageToCreate.setAdherentUsername(adherentUsername);
+		blocageToCreate.setDateDebutBlocage(LocalDate.now());
+		blocageToCreate.setEchange(echangeToCheck.get());
+		blocageToCreate.setStatutBlocage(EnumStatutBlocage.ENCOURS);
+
+		return blocageRepository.save(blocageToCreate);
+
+	}
 
 	@Override
 	public Blocage readBlocage(String adherentId) throws EntityNotFoundException {
@@ -114,21 +104,15 @@ public class BlocageServiceImpl implements IBlocageService {
 
 		blocageToAnnuler.get().setDateFinBlocage(LocalDate.now());
 		blocageToAnnuler.get().setStatutBlocage(EnumStatutBlocage.ANNULE);
-		
+
 		UserBean adherent = usersProxy.consulterCompteAdherent(blocageToAnnuler.get().getAdherentId());
-				
-		/*
-		 * mailSender.sendMailEchangeConfirmation(blocageToAnnuler,adherent,
-		 * "Deblocage de votre compte",
-		 * "11_AdherentBlocage_BlocageAnnulation");
-		 */
-		
+
 		MessageMailDeblocage messageMailDeblocage = new MessageMailDeblocage();
 		messageMailDeblocage.setBlocage(blocageToAnnuler.get());
 		messageMailDeblocage.setAdherent(adherent);
 		messageMailDeblocage.setSubject("Deblocage de votre compte");
 		messageMailDeblocage.setMicroselBourseMailTemplate("11_AdherentBlocage_BlocageAnnulation");
-		rabbitMQSender.sendMessageMailDeblocage(messageMailDeblocage);//---------------------------------------------------------->RMQ
+		rabbitMQSender.sendMessageMailDeblocage(messageMailDeblocage);// ---------------------------------------------------------->RMQ
 
 		return blocageRepository.save(blocageToAnnuler.get());
 	}

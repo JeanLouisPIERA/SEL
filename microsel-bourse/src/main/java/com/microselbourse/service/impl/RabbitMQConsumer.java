@@ -3,11 +3,9 @@ package com.microselbourse.service.impl;
 import java.io.UnsupportedEncodingException;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import com.microselbourse.beans.UserBean;
@@ -21,7 +19,6 @@ import com.microselbourse.entities.MessageMailEchangeEvaluation;
 import com.microselbourse.entities.MessageMailReponse;
 import com.microselbourse.entities.MessageMailScheduler;
 import com.microselbourse.entities.Reponse;
-import com.microselbourse.entities.Transaction;
 import com.microselbourse.entities.Wallet;
 import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
@@ -42,16 +39,15 @@ public class RabbitMQConsumer {
 
 	@Autowired
 	private IEchangeService echangeService;
-	
+
 	@Autowired
 	private IEchangeRepository echangeRepository;
-	
+
 	@Autowired
 	private ITransactionService transactionService;
-	
+
 	@Autowired
 	private IMailService mailService;
-
 
 	@RabbitListener(queues = "${microselbourse.rabbitmq.queue1}")
 	public void recievedMessageMailReponse(MessageMailReponse messageMailReponse) {
@@ -97,55 +93,55 @@ public class RabbitMQConsumer {
 
 	}
 
-	
-	
 	@RabbitListener(queues = "${microselbourse.rabbitmq.queue4}")
 	public void recievedMessageMailEchangeEvaluation(MessageMailEchangeEvaluation messageMailEchangeEvaluation)
-			throws EntityAlreadyExistsException, EntityNotFoundException, UnsupportedEncodingException, MessagingException {
+			throws EntityAlreadyExistsException, EntityNotFoundException, UnsupportedEncodingException,
+			MessagingException {
 
 		System.out.println("Recieved MessageMailEchangeEvaluation From RabbitMQ: " + messageMailEchangeEvaluation);
 		Evaluation evaluation = messageMailEchangeEvaluation.getEvaluation();
-		UserBean destinataire=messageMailEchangeEvaluation.getDestinataire();
-		String subject =messageMailEchangeEvaluation.getSubject();
-		String microselBourseMailTemplate=messageMailEchangeEvaluation.getMicroselBourseMailTemplate();
-		
-		mailSender.sendMailEchangeEvaluation(evaluation, destinataire,subject, microselBourseMailTemplate);
-		
-		System.out.println("Recieved MessageMailEchangeEvaluation Success From RabbitMQ: " + messageMailEchangeEvaluation);
+		UserBean destinataire = messageMailEchangeEvaluation.getDestinataire();
+		String subject = messageMailEchangeEvaluation.getSubject();
+		String microselBourseMailTemplate = messageMailEchangeEvaluation.getMicroselBourseMailTemplate();
+
+		mailSender.sendMailEchangeEvaluation(evaluation, destinataire, subject, microselBourseMailTemplate);
+
+		System.out.println(
+				"Recieved MessageMailEchangeEvaluation Success From RabbitMQ: " + messageMailEchangeEvaluation);
 
 	}
-	
+
 	@RabbitListener(queues = "${microselbourse.rabbitmq.queue5}")
 	public void recievedMessageMailScheduler(MessageMailScheduler messageMailScheduler)
-			throws EntityAlreadyExistsException, EntityNotFoundException, UnsupportedEncodingException, MessagingException {
+			throws EntityAlreadyExistsException, EntityNotFoundException, UnsupportedEncodingException,
+			MessagingException {
 
 		System.out.println("Recieved MessageMailScheduler From RabbitMQ: " + messageMailScheduler);
-		
+
 		String to = messageMailScheduler.getTo();
 		String name = messageMailScheduler.getName();
 		String subject = messageMailScheduler.getSubject();
 		String htmlBody = messageMailScheduler.getHtmlBody();
-		
+
 		mailService.sendHtmlMessage(to, name, subject, htmlBody);
-		
+
 		System.out.println("Recieved MessageMailScheduler Success From RabbitMQ: " + messageMailScheduler);
 
 	}
-	
+
 	@RabbitListener(queues = "${microselbourse.rabbitmq.queue6}")
 	public void recievedMessageMailDeblocage(MessageMailDeblocage messageMailDeblocage)
-			throws EntityAlreadyExistsException, EntityNotFoundException, UnsupportedEncodingException, MessagingException {
+			throws EntityAlreadyExistsException, EntityNotFoundException, UnsupportedEncodingException,
+			MessagingException {
 
 		System.out.println("Recieved MessageMailDeblocage From RabbitMQ: " + messageMailDeblocage);
 		Blocage blocageToAnnuler = messageMailDeblocage.getBlocage();
-		UserBean destinataire=messageMailDeblocage.getAdherent();
-		String subject =messageMailDeblocage.getSubject();
-		String microselBourseMailTemplate=messageMailDeblocage.getMicroselBourseMailTemplate();
-		
-		
-		mailSender.sendMailAnnulationBlocage(blocageToAnnuler,destinataire, subject, microselBourseMailTemplate);
-		 
-		
+		UserBean destinataire = messageMailDeblocage.getAdherent();
+		String subject = messageMailDeblocage.getSubject();
+		String microselBourseMailTemplate = messageMailDeblocage.getMicroselBourseMailTemplate();
+
+		mailSender.sendMailAnnulationBlocage(blocageToAnnuler, destinataire, subject, microselBourseMailTemplate);
+
 		System.out.println("Recieved MessageMailEchangeEvaluation Success From RabbitMQ: " + messageMailDeblocage);
 
 	}

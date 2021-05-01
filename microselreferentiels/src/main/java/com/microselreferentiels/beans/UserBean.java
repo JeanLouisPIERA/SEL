@@ -2,39 +2,32 @@ package com.microselreferentiels.beans;
 
 import java.time.LocalDate;
 
-
-
 public class UserBean {
-	
-	
+
 	private String id;
-	
-	/*
-	 * Long sel;
-	 */
-	
+
 	private String username;
-	
+
 	private String password;
-	
+
 	private String passwordConfirm;
-	
+
 	private String email;
-	
+
 	private UserStatutEnum statut;
-	
+
 	private LocalDate dateAdhesion;
-	
+
 	private LocalDate dateClotureDebut;
-	
+
 	private LocalDate dateClotureFin;
-	
+
 	private LocalDate dateBlocageDebut;
-	
+
 	private LocalDate dateBlocageFin;
-	
+
 	private LocalDate dateBureauDebut;
-	
+
 	private LocalDate dateBureauFin;
 
 	private LocalDate dateAdminDebut;
@@ -45,19 +38,13 @@ public class UserBean {
 		super();
 	}
 
-	
-
 	public String getId() {
 		return id;
 	}
 
-
-
 	public void setId(String id) {
 		this.id = id;
 	}
-
-
 
 	public String getUsername() {
 		return username;
@@ -90,8 +77,6 @@ public class UserBean {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	
 
 	public UserStatutEnum getStatut() {
 		return statut;
@@ -172,10 +157,5 @@ public class UserBean {
 	public void setDateAdminFin(LocalDate dateAdminFin) {
 		this.dateAdminFin = dateAdminFin;
 	}
-
-	
-
-	
-	
 
 }

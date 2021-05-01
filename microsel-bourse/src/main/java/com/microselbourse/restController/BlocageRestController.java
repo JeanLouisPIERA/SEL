@@ -1,8 +1,5 @@
 package com.microselbourse.restController;
 
-import java.io.UnsupportedEncodingException;
-
-import javax.mail.MessagingException;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
@@ -20,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.microselbourse.criteria.BlocageCriteria;
-import com.microselbourse.criteria.PropositionCriteria;
 import com.microselbourse.entities.Blocage;
-import com.microselbourse.entities.Proposition;
 import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.service.IBlocageService;
 
@@ -37,8 +32,7 @@ public class BlocageRestController {
 
 	@Autowired
 	private IBlocageService blocageService;
-	
-	
+
 	@ApiOperation(value = "Recherche multi-critères d'un ou plusieurs blocages", response = Blocage.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "La recherche a été réalisée avec succés"), })
 
@@ -52,8 +46,6 @@ public class BlocageRestController {
 				PageRequest.of(page, size));
 		return new ResponseEntity<Page<Blocage>>(blocages, HttpStatus.OK);
 	}
-	
-	
 
 	@ApiOperation(value = " Annulation d'un blocage d'adherent suite à un échange en anomalie", response = Blocage.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le blocage recherché a été annulé"),

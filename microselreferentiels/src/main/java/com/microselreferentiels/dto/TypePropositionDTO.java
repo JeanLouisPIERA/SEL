@@ -1,11 +1,11 @@
 package com.microselreferentiels.dto;
 
 public class TypePropositionDTO {
-	
+
 	private String typeName;
 	private String description;
 	private String entete;
-	
+
 	public TypePropositionDTO() {
 		super();
 	}
@@ -33,11 +33,5 @@ public class TypePropositionDTO {
 	public void setEntete(String entete) {
 		this.entete = entete;
 	}
-	
-	
-	
-	
-	
-	
 
 }

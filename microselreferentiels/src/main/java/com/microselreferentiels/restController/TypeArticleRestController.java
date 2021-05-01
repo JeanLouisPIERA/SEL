@@ -36,47 +36,40 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/sel/referentiels")
 @Validated
 public class TypeArticleRestController {
-	
+
 	@Autowired
 	private ITypeArticleService typeArticleService;
-	
-	@ApiOperation(value = "Enregistrement d'un type d'article par un admin",  response = TypeArticle.class)
-	  @ApiResponses(value = {
-	  @ApiResponse(code = 201, message = 
-			  "Le type d'article a été créée"),
-	  @ApiResponse(code = 400, message = 
-			  "Les informations fournies ne sont pas correctes"),
-	  @ApiResponse(code = 409, message = 
-			  "Un autre type d'article existe déjà avec ces attributs"), })
+
+	@ApiOperation(value = "Enregistrement d'un type d'article par un admin", response = TypeArticle.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le type d'article a été créée"),
+			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
+			@ApiResponse(code = 409, message = "Un autre type d'article existe déjà avec ces attributs"), })
 
 	@PostMapping("/admin/typearticles")
-	public ResponseEntity<TypeArticle> createTypeArticle(@Valid @RequestBody TypeArticleDTO typeArticleDTO) throws EntityAlreadyExistsException {
-	  return new ResponseEntity<TypeArticle>(typeArticleService.createTypeArticle(typeArticleDTO), HttpStatus.OK);
+	public ResponseEntity<TypeArticle> createTypeArticle(@Valid @RequestBody TypeArticleDTO typeArticleDTO)
+			throws EntityAlreadyExistsException {
+		return new ResponseEntity<TypeArticle>(typeArticleService.createTypeArticle(typeArticleDTO), HttpStatus.OK);
 	}
-	
-	 @ApiOperation(value = "Recherche multi-critères d'un ou plusieurs types d'articles", response = TypeArticle.class)  
-	  @ApiResponses(value = {
-	  @ApiResponse(code = 200, message = 
-			  "La recherche a été réalisée avec succés"), })
-	  
-	  @GetMapping(value="/admin/typearticles/Page", produces="application/json") 
-	  public ResponseEntity<Page<TypeArticle>> getAllTypeArticlesByCriteria(
-			  @RequestParam(name = "page", defaultValue= "0") int page, @RequestParam(name="size", defaultValue= "10") int size) { 
-	  	  
-	  	  Page<TypeArticle> typeArticlesPage = typeArticleService.getAllTypeArticlesPaginated(PageRequest.of(page, size)); 	
-		  return new ResponseEntity<Page<TypeArticle>>(typeArticlesPage, HttpStatus.OK); 
-	  }
-	 
-	 @ApiOperation(value = "Recherche de tous les types d'article", response = TypeDocument.class)  
-	  @ApiResponses(value = {
-	  @ApiResponse(code = 200, message = 
-			  "La recherche a été réalisée avec succés"), })
-	  
-	  @GetMapping(value="/typearticles", produces="application/json") 
-	  public ResponseEntity<List<TypeArticle>> getAllTypeArticles() { 
-	  	  List<TypeArticle> typeArticles = typeArticleService.getAllTypeArticles(); 	
-		  return new ResponseEntity<List<TypeArticle>>(typeArticles, HttpStatus.OK); 
-	  }
- 
+
+	@ApiOperation(value = "Recherche multi-critères d'un ou plusieurs types d'articles", response = TypeArticle.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "La recherche a été réalisée avec succés"), })
+
+	@GetMapping(value = "/admin/typearticles/Page", produces = "application/json")
+	public ResponseEntity<Page<TypeArticle>> getAllTypeArticlesByCriteria(
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "10") int size) {
+
+		Page<TypeArticle> typeArticlesPage = typeArticleService.getAllTypeArticlesPaginated(PageRequest.of(page, size));
+		return new ResponseEntity<Page<TypeArticle>>(typeArticlesPage, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "Recherche de tous les types d'article", response = TypeDocument.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "La recherche a été réalisée avec succés"), })
+
+	@GetMapping(value = "/typearticles", produces = "application/json")
+	public ResponseEntity<List<TypeArticle>> getAllTypeArticles() {
+		List<TypeArticle> typeArticles = typeArticleService.getAllTypeArticles();
+		return new ResponseEntity<List<TypeArticle>>(typeArticles, HttpStatus.OK);
+	}
 
 }

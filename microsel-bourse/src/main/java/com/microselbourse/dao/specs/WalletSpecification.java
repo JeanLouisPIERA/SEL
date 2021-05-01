@@ -10,6 +10,11 @@ import org.springframework.data.jpa.domain.Specification;
 import com.microselbourse.criteria.WalletCriteria;
 import com.microselbourse.entities.Wallet;
 
+/**
+ * * Classe qui implémentate la JPA Spécification pour le requêtage de la classe Wallet
+ * @author jeanl
+ *
+ */
 public class WalletSpecification implements Specification<Wallet> {
 
 	private WalletCriteria walletCriteria;

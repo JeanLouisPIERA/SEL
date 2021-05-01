@@ -15,7 +15,6 @@ import com.microselbourse.entities.Blocage;
 import com.microselbourse.entities.Echange;
 import com.microselbourse.entities.Evaluation;
 import com.microselbourse.entities.Reponse;
-import com.microselbourse.proxies.IMicroselAdherentsProxy;
 import com.microselbourse.proxies.IMicroselUsersProxy;
 import com.microselbourse.service.IMailSenderService;
 import com.microselbourse.service.IMailService;
@@ -73,7 +72,7 @@ public class MailSenderServiceImpl implements IMailSenderService {
 
 	@Override
 	public void sendMailEchangeConfirmation(Echange echange, UserBean destinataire, String subject,
-			String microselBourseMailTemplate) throws UnsupportedEncodingException, MessagingException  {
+			String microselBourseMailTemplate) throws UnsupportedEncodingException, MessagingException {
 
 		String mailTo = destinataire.getEmail();
 		String nomUser = destinataire.getUsername();
@@ -98,7 +97,6 @@ public class MailSenderServiceImpl implements IMailSenderService {
 		this.populateModel("recepteur_id", echange.getRecepteurId());
 		this.populateModel("recepteur_username", echange.getRecepteurUsername());
 		this.populateModel("statut_echange", echange.getStatutEchange().getText());
-		// this.populateModel("transaction_", echange.getTransaction());
 
 		this.populateModel("destinataire_username", nomUser);
 
@@ -131,13 +129,9 @@ public class MailSenderServiceImpl implements IMailSenderService {
 		mailService.sendMessageUsingThymeleafTemplate(mailTo, nomUser, subject, model, microselBourseMailTemplate);
 
 	}
-	
-	
-	
-	
 
 	@Override
-	public void sendMailAnnulationBlocage(Blocage blocage, UserBean destinataire,String subject,
+	public void sendMailAnnulationBlocage(Blocage blocage, UserBean destinataire, String subject,
 			String microselBourseMailTemplate) throws UnsupportedEncodingException, MessagingException {
 
 		String mailTo = destinataire.getEmail();
@@ -153,49 +147,5 @@ public class MailSenderServiceImpl implements IMailSenderService {
 		mailService.sendMessageUsingThymeleafTemplate(mailTo, nomUser, subject, model, microselBourseMailTemplate);
 
 	}
-
-	/*
-	 * @Override public void sendMessageMailEchangeCreation(Reponse reponse, Long
-	 * destinataireId, String subject, String microselBourseMailTemplate) throws
-	 * MessagingException, UnsupportedEncodingException {
-	 * 
-	 * UserBean destinataire =
-	 * microselAdherentsProxy.consulterCompteAdherent(destinataireId);
-	 * 
-	 * String mailTo = destinataire.getEmail(); String nomUser =
-	 * destinataire.getUsername();
-	 * 
-	 * this.populateModel("codePostal", reponse.getCodePostal());
-	 * this.populateModel("dateEcheance", reponse.getDateEcheance());
-	 * this.populateModel("dateReponse", reponse.getDateReponse());
-	 * this.populateModel("description", reponse.getDescription());
-	 * this.populateModel("enum_trade_type_reponse",
-	 * reponse.getEnumTradeType().toString()); this.populateModel("reponse_id",
-	 * reponse.getId()); this.populateModel("image", reponse.getImage());
-	 * this.populateModel("recepteurId", reponse.getRecepteurId());
-	 * this.populateModel("titre_reponse", reponse.getTitre());
-	 * this.populateModel("valeur", reponse.getValeur());
-	 * this.populateModel("ville", reponse.getVille());
-	 * this.populateModel("categorie",
-	 * reponse.getProposition().getCategorie().getName().toString());
-	 * this.populateModel("dateFinPublication",
-	 * reponse.getProposition().getDateFin()); this.populateModel("emetteurId",
-	 * reponse.getProposition().getEmetteurId());
-	 * this.populateModel("enum_trade_type_proposition",
-	 * reponse.getProposition().getEnumTradeType().toString());
-	 * this.populateModel("proposition_id", reponse.getProposition().getId());
-	 * this.populateModel("proposition_statut",
-	 * reponse.getProposition().getStatut().toString());
-	 * this.populateModel("titre_proposition", reponse.getProposition().getTitre());
-	 * this.populateModel("dateDebutPublication",
-	 * reponse.getProposition().getDateDebut());
-	 * 
-	 * this.populateModel("destinataire_username", nomUser);
-	 * 
-	 * mailService.sendMessageUsingThymeleafTemplate(mailTo, nomUser, subject,
-	 * model, microselBourseMailTemplate);
-	 * 
-	 * }
-	 */
 
 }
