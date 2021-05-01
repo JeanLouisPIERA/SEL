@@ -1,67 +1,225 @@
-version: '3'
+version: "2"
 
-services: 
-
-  mysqladherent:
-   image: mysql:latest
-   environment:
-    MYSQL_DATABASE: microsel_adherent
-    MYSQL_ROOT_PASSWORD: mysql
-    MYSQL_USER: root
-    MYSQL_PASSWORD: mysql
-   ports:
-   - "1306:3306"
-   volumes:
-   - ./data/:/var/lib/mysql
-   networks: 
-   - microsel-network
-   restart: always
-
-  adherent:
-    image: microsel-adherent:latest  
-    ports:
-      - "8080:9001"
-    networks: 
-      - microsel-network
-    restart: always
-    depends_on: 
-      - mysqladherent # This service depends on mysql. Start that first.
-      - eureka-server
-      - zuul-server
-      - config-server  
-    environment: # Pass environment variables to the service
-      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/microsel_adherent?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: mysql     
-
-   
-  eureka-server:
-      image: eureka-server:latest
-      networks: 
-         - microsel-network
-      ports:
-         - 8761:9102
-
-  zuul-server:
-      image: zuul-server:latest  
-      networks: 
-         - microsel-network
-      ports:
-         - 8765:9004
-      depends_on:
-         - eureka-server
-      logging :
-         driver : json-file    
-     
-
-  config-server:
-      image: config-server:latest  
-      networks: 
-         - microsel-network
-      ports:
-         - 8888:9101
-      
+volumes:
+  mysql_adherent_data:
+      driver: local
+  mysql_keycloak_data:
+    driver: local
+  mysql_bourse_data:
+    driver: local  
+  mysql_referentiels_data:
+    driver: local
+  rabbitmq_data:
+  rabbitmq_log:
+  keycloak_data:  
 
 networks:
-   microsel-network:
-      driver : bridge
+  keycloak-network:
+    driver: bridge   
+  
+services: 
+
+  mysql_keycloak:
+    image: mysql:5.7
+    container_name: mysql_keycloak
+    environment:
+     MYSQL_DATABASE: mysql_keycloak
+    #  MYSQL_ROOT_PASSWORD:  mysql
+     MYSQL_USER: keycloak
+     MYSQL_PASSWORD: password
+    ports:
+      - "3309:3306"
+    volumes:
+      - mysql_keycloak_data:/var/lib/mysql_keycloak
+    restart: always
+    networks:
+      - keycloak-network
+
+  mysql_adherent:
+    image: mysql:8.0.19
+    container_name: mysql_adherent
+    environment:
+     MYSQL_DATABASE: "mysql_adherent"
+     MYSQL_ROOT_PASSWORD:  "mysql"
+     MYSQL_USER: "root"
+     MYSQL_PASSWORD: "mysql"
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_adherent_data:/var/lib/mysql_adherent
+    restart: always
+
+  keycloak-service:
+    image: quay.io/keycloak/keycloak:12.0.4
+    depends_on:
+      - mysql_keycloak
+    links:
+      - mysql_keycloak
+    image: quay.io/keycloak/keycloak:7.0.0
+    command: 
+      -Djboss.socket.binding.port-offset=200
+      -Djboss.as.management.blocking.timeout=1200
+    container_name: keycloak-service
+    environment:
+      KEYCLOAK_LOGLEVEL: DEBUG
+      DB_VENDOR: MYSQL
+      DB_ADDR: mysql_keycloak
+      DB_DATABASE: mysql_keycloak?createDatabaseIfNotExist=true
+      # DB_ROOT_PASSWORD:  mysql
+      DB_USER: keycloak
+      DB_PORT: "3309"
+      DB_PASSWORD: password
+      KEYCLOAK_PORT: "8280"
+      KEYCLOAK_USER: admin1
+      KEYCLOAK_PASSWORD: admin1234
+      # JDBC_PARAMS: "useSSL=false&allowPublicKeyRetrieval=true"
+    ports:
+      - 8280:8280
+    volumes:
+      - mysql_keycloak_data:/opt/jboss/keycloak/mysql_data
+
+  
+
+  mysql_bourse:
+    image: mysql:8.0.19
+    container_name: mysql_bourse
+    environment:
+      MYSQL_DATABASE: mysql_bourse
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: mysql
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_bourse_data:/var/lib/mysql_bourse
+    restart: always
+  
+  mysql_referentiels:
+    image: mysql:8.0.19
+    container_name: mysql_referentiels
+    environment:
+      MYSQL_DATABASE: referentiels
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: mysql
+    ports:
+      - "3310:3306"
+    volumes:
+      - mysql_referentiels_data:/var/lib/mysql_referentiels
+    restart: always 
+    
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - rabbitmq_data:/var/lib/rabbitmq
+        - rabbitmq_log:/var/log/rabbitmq
+    restart: always      
+
+  config-server:
+    build:
+      context: config-server
+      dockerfile: Dockerfile
+    container_name: config-server
+    environment:
+      - SERVER_PORT=9101
+      - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=https://github.com/JeanLouisPIERA/config-server-repo-docker.git
+    ports:
+      - "9101:9101"
+
+  eureka-server:
+    build:
+      context: eureka-server
+      dockerfile: Dockerfile
+    container_name: eureka-server
+    environment:
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:9101
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:9102/eureka/
+      - SERVER_PORT=9102
+    depends_on:
+      - config-server
+    links:
+      - config-server 
+    ports:
+      - "9102:9102" 
+
+  zuul-server:
+    build:
+      context: zuul-server
+      dockerfile: Dockerfile
+    container_name: zuul-server
+    environment:
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:9101
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:9102/eureka/
+      - KEYCLOAK_AUTH_SERVER_URL=http://keycloak-service:8280/auth
+      - ZUUL_ROUTES_MICROSELBOURSE_SERVICEID= microsel-adherents
+      - ZUUL_ROUTES_MICROSELBOURSE_SERVICEID= microselbourse
+      - SERVER_PORT=9004
+    depends_on:
+      - eureka-server
+      - config-server
+      - keycloak-service
+    links:
+      - eureka-server
+      - config-server
+      - keycloak-service
+    ports:
+      - "9004:9004"
+
+  microseladherent:
+    build:
+      context: microseladherent
+      dockerfile: Dockerfile
+    container_name: microseladherent
+    environment:
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:9101
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:9102/eureka/
+      - SPRING_DATASOURCE_URL= jdbc:mysql://mysql_adherent:3306/mysql_adherent?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME= root
+      - SPRING_DATASOURCE_PASSWORD= mysql
+      - SERVER_PORT=9001
+    depends_on:
+      - zuul-server 
+      - eureka-server
+      - config-server
+      - mysql_adherent
+      - keycloak-service
+    links:
+      - zuul-server
+      - eureka-server
+      - config-server
+      - mysql_adherent
+      - keycloak-service
+    ports:
+      - "9001:9001" 
+
+  microsel-bourse:
+    build:
+      context: microsel-bourse
+      dockerfile: Dockerfile
+    container_name: microsel-bourse
+    environment:
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:9101
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:9102/eureka/
+      - SPRING_DATASOURCE_URL= jdbc:mysql://mysql_bourse:3306/mysql_bourse?createDatabaseIfNotExist=true
+      - SERVER_PORT=9002
+    depends_on:
+      - zuul-server 
+      - eureka-server
+      - config-server
+      - mysql_bourse
+      - keycloak-service
+      - rabbitmq
+    links:
+      - zuul-server
+      - eureka-server
+      - config-server
+      - mysql_bourse
+      - keycloak-service
+      - rabbitmq
+    ports:
+      - "9002:9002"    
+    

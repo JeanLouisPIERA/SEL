@@ -1,3 +1,0 @@
-# ignore or exclude build directory
-*/build*
-*/*/build*
