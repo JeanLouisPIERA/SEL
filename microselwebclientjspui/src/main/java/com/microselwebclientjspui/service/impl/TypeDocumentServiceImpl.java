@@ -1,6 +1,5 @@
 package com.microselwebclientjspui.service.impl;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -35,20 +33,18 @@ public class TypeDocumentServiceImpl implements ITypeDocumentService {
 	@Autowired
 	private RestTemplate restTemplate;
 
-
 	@Value("${application.uRLTypeDocument}")
 	private String uRLTypeDocument;
-	
+
 	@Value("${application.uRLTypeDocumentAdmin}")
 	private String uRLTypeDocumentAdmin;
-
 
 	@Override
 	public Object createTypeDocument(TypeDocumentDTO typeDocumentDTO) {
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 		HttpEntity<TypeDocumentDTO> requestEntity = new HttpEntity<>(typeDocumentDTO, headers);
-		ResponseEntity<TypeDocument> response = restTemplate.exchange(uRLTypeDocumentAdmin, HttpMethod.POST, requestEntity,
-				TypeDocument.class);
+		ResponseEntity<TypeDocument> response = restTemplate.exchange(uRLTypeDocumentAdmin, HttpMethod.POST,
+				requestEntity, TypeDocument.class);
 
 		return response.getBody();
 	}

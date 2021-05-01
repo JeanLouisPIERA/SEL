@@ -50,21 +50,16 @@ public class BlocageServiceImpl implements IBlocageService {
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLBlocageAdmin)
-				.queryParam("id", blocageCriteria.getId())
-				.queryParam("adherentId", blocageCriteria.getAdherentId())
+				.queryParam("id", blocageCriteria.getId()).queryParam("adherentId", blocageCriteria.getAdherentId())
 				.queryParam("adherentUsername", blocageCriteria.getAdherentUsername())
 				.queryParam("statutBlocage", blocageCriteria.getStatutBlocage())
-				.queryParam("page", pageable.getPageNumber())
-				.queryParam("size", pageable.getPageSize());
-				
+				.queryParam("page", pageable.getPageNumber()).queryParam("size", pageable.getPageSize());
 
 		ResponseEntity<RestResponsePage<Blocage>> blocages = restTemplate.exchange(builder.build().toUriString(),
 				HttpMethod.GET, entity, new ParameterizedTypeReference<RestResponsePage<Blocage>>() {
 				});
-		
-	
+
 		Page<Blocage> pageBlocage = blocages.getBody();
 
 		return pageBlocage;

@@ -2,7 +2,6 @@ package com.microselwebclientjspui.criteria;
 
 public class DocumentCriteria {
 
-	
 	private String statutDocument;
 	private String typeDocument;
 
@@ -26,9 +25,4 @@ public class DocumentCriteria {
 		this.typeDocument = typeDocument;
 	}
 
-	
-
-	
-
-	
 }

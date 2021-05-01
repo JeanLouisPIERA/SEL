@@ -1,8 +1,5 @@
 package com.microselwebclientjspui.beans;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class RoleBean {
 
 	String id;
@@ -29,8 +26,5 @@ public class RoleBean {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	
-	
 
 }

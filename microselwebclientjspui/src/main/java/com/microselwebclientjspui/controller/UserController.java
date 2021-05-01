@@ -96,13 +96,6 @@ public class UserController {
 				numberOfArticles = articles.size();
 				System.out.println("la liste A" + numberOfArticles);
 			} catch (Exception e) {
-				System.out.println("la liste B" + numberOfArticles);
-				/*
-				 * try { List<Document> documents =
-				 * documentService.selectDocumentToCompleteArticles(numberOfArticles);
-				 * if(numberOfArticles==1) { model.addAttribute("article4", documents.get(0)); }
-				 * } catch (Exception e1) { }
-				 */
 				
 			}
 

@@ -20,31 +20,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.microselwebclientjspui.criteria.ArticleCriteria;
-import com.microselwebclientjspui.criteria.DocumentCriteria;
 import com.microselwebclientjspui.dto.ArticleDTO;
-import com.microselwebclientjspui.dto.DocumentDTO;
-import com.microselwebclientjspui.dto.PropositionUpdateDTO;
 import com.microselwebclientjspui.errors.ConvertToExceptionMessage;
 import com.microselwebclientjspui.objets.Article;
-import com.microselwebclientjspui.objets.Document;
 import com.microselwebclientjspui.objets.EnumStatutDocument;
 import com.microselwebclientjspui.objets.TypeArticle;
-import com.microselwebclientjspui.objets.TypeDocument;
 import com.microselwebclientjspui.service.IArticleService;
 import com.microselwebclientjspui.service.ITypeArticleService;
 
 @Controller
 public class ArticleController {
-	
+
 	@Autowired
 	private ITypeArticleService typeArticleService;
-	
+
 	@Autowired
 	private IArticleService articleService;
-	
+
 	@Autowired
 	private ConvertToExceptionMessage convertToExceptionMessage;
-	
+
 	/**
 	 * Permet d'afficher le formulaire de création d'un article
 	 */
@@ -89,8 +84,7 @@ public class ArticleController {
 	 * Permet d'afficher une sélection d'articles sous forme de page
 	 */
 	@GetMapping(value = "/articles")
-	public String searchByCriteria(Model model,
-			@PathParam(value = "articleCriteria") ArticleCriteria articleCriteria,
+	public String searchByCriteria(Model model, @PathParam(value = "articleCriteria") ArticleCriteria articleCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
 
@@ -129,9 +123,10 @@ public class ArticleController {
 		}
 		return "articles/articleView";
 	}
-	
+
 	/**
-	 * Permet de publier un article. Le statut publié permet de sélectionner l'article pour l'afficher en page d'accueil
+	 * Permet de publier un article. Le statut publié permet de sélectionner
+	 * l'article pour l'afficher en page d'accueil
 	 */
 	@GetMapping("/articles/publication/{id}")
 	public String publierArticle(Model model, @PathVariable("id") Long id) {
@@ -146,7 +141,7 @@ public class ArticleController {
 		}
 		return "articles/articlePublicationConfirmation";
 	}
-	
+
 	/**
 	 * Permet de modérer la publication d'un article
 	 */
@@ -163,9 +158,10 @@ public class ArticleController {
 		}
 		return "articles/articleModerationConfirmation";
 	}
-	
+
 	/**
-	 * Permet d'archiver un article. L'archivage d'un article empêche qu'il soit sélectionné pour être affiché en page d'accueil
+	 * Permet d'archiver un article. L'archivage d'un article empêche qu'il soit
+	 * sélectionné pour être affiché en page d'accueil
 	 */
 	@GetMapping("/articles/archivage/{id}")
 	public String archiverArticle(Model model, @PathVariable("id") Long id) {
@@ -180,7 +176,7 @@ public class ArticleController {
 		}
 		return "articles/articleArchivageConfirmation";
 	}
-	
+
 	/**
 	 * Permet d'afficher le formulaire de modification de l'article standard
 	 */
@@ -188,25 +184,23 @@ public class ArticleController {
 	public String afficherArticleStandard(Model model) {
 
 		model.addAttribute("articleDTO", new ArticleDTO());
-		
+
 		Article article = articleService.searchById((long) 1);
 		model.addAttribute("article", article);
 
 		return "articles/articleEdit";
 	}
-	
-	
+
 	/**
 	 * Permet à l'administrateur de modifier le contenu de l'article standard
 	 */
 	@PostMapping("/articles/standard")
-	public String modifierArticleStandard(Model model, @Valid @ModelAttribute("articleDTO") ArticleDTO articleDTO  , BindingResult result) {
-		
-	
+	public String modifierArticleStandard(Model model, @Valid @ModelAttribute("articleDTO") ArticleDTO articleDTO,
+			BindingResult result) {
+
 		try {
 			Article articleStardUpdated = articleService.modifierArticleStandard(articleDTO);
 			model.addAttribute("article", articleStardUpdated);
-			
 
 		} catch (HttpClientErrorException e) {
 			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
@@ -215,6 +209,5 @@ public class ArticleController {
 		}
 		return "articles/articleConfirmation";
 	}
-
 
 }

@@ -64,19 +64,22 @@ public class EchangeController {
 		return "echanges/echangesPage";
 
 	}
-	
+
 	/**
-	 * Permet d'afficher à un adhérent d'afficher une sélection de ses échanges où il est récepteur sous forme de page
+	 * Permet d'afficher à un adhérent d'afficher une sélection de ses échanges où
+	 * il est récepteur sous forme de page
 	 */
 	@GetMapping(value = "/echanges/recepteur")
-	public String searchByCriteriaByAdherentRecepteur(Model model, @PathParam(value = "echangeCriteria") EchangeCriteria echangeCriteria,
+	public String searchByCriteriaByAdherentRecepteur(Model model,
+			@PathParam(value = "echangeCriteria") EchangeCriteria echangeCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
 
 		model.addAttribute("echangeCriteria", new EchangeCriteria());
 		model.addAttribute("enumStatutEchangeList", EnumStatutEchange.getListEnumStatutEchange());
 
-		Page<Echange> echanges = echangeService.searchByCriteriaByAdherentRecepteur(echangeCriteria, PageRequest.of(page, size));
+		Page<Echange> echanges = echangeService.searchByCriteriaByAdherentRecepteur(echangeCriteria,
+				PageRequest.of(page, size));
 
 		model.addAttribute("echanges", echanges.getContent());
 		model.addAttribute("page", Integer.valueOf(page));
@@ -88,19 +91,22 @@ public class EchangeController {
 		return "echanges/echangesPageAdherentRecepteur";
 
 	}
-	
+
 	/**
-	 * Permet d'afficher à un adhérent d'afficher une sélection de ses échanges où il est émetteur sous forme de page
+	 * Permet d'afficher à un adhérent d'afficher une sélection de ses échanges où
+	 * il est émetteur sous forme de page
 	 */
 	@GetMapping(value = "/echanges/emetteur")
-	public String searchByCriteriaByAdherentEmetteur(Model model, @PathParam(value = "echangeCriteria") EchangeCriteria echangeCriteria,
+	public String searchByCriteriaByAdherentEmetteur(Model model,
+			@PathParam(value = "echangeCriteria") EchangeCriteria echangeCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
 
 		model.addAttribute("echangeCriteria", new EchangeCriteria());
 		model.addAttribute("enumStatutEchangeList", EnumStatutEchange.getListEnumStatutEchange());
 
-		Page<Echange> echanges = echangeService.searchByCriteriaByAdherentEmetteur(echangeCriteria, PageRequest.of(page, size));
+		Page<Echange> echanges = echangeService.searchByCriteriaByAdherentEmetteur(echangeCriteria,
+				PageRequest.of(page, size));
 
 		model.addAttribute("echanges", echanges.getContent());
 		model.addAttribute("page", Integer.valueOf(page));
@@ -112,7 +118,6 @@ public class EchangeController {
 		return "echanges/echangesPageAdherentEmetteur";
 
 	}
-
 
 	/**
 	 * Permet de lire les évaluations d'un échange
@@ -129,12 +134,6 @@ public class EchangeController {
 			model.addAttribute("evaluations", evaluations);
 
 		} catch (HttpClientErrorException e) {
-			/*
-			 * String errorMessage =
-			 * echangeExceptionMessage.convertCodeStatusToExceptionMessage(e.
-			 * getRawStatusCode()); model.addAttribute("error", errorMessage); return
-			 * "/error";
-			 */
 			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
@@ -153,16 +152,10 @@ public class EchangeController {
 			Echange echangeAConfirmer = echangeService.confirmerEchange(id);
 			model.addAttribute("echange", echangeAConfirmer);
 		} catch (HttpClientErrorException e) {
-			/*
-			 * String errorMessage =
-			 * echangeExceptionMessage.convertCodeStatusToExceptionMessage(e.
-			 * getRawStatusCode()); model.addAttribute("error", errorMessage); return
-			 * "/error";
-			 */
 			String errorMessage = convertToExceptionMessage.convertHttpClientErrorExceptionToExceptionMessage(e);
 			model.addAttribute("error", errorMessage);
 			return "/error";
-			
+
 		}
 
 		return "echanges/echangeConfirmation";
@@ -247,7 +240,7 @@ public class EchangeController {
 		}
 		return "echanges/echangeRefus";
 	}
-	
+
 	/**
 	 * Permet à l'emetteur ou au récepteur de valider un echange
 	 */
@@ -263,7 +256,7 @@ public class EchangeController {
 		}
 		return "echanges/echangeValidation";
 	}
-	
+
 	/**
 	 * Permet à l'emetteur ou au récepteur de refuser un echange
 	 */

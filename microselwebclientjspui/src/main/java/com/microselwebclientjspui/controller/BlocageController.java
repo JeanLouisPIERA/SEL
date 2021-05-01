@@ -13,42 +13,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.microselwebclientjspui.criteria.BlocageCriteria;
-import com.microselwebclientjspui.criteria.PropositionCriteria;
 import com.microselwebclientjspui.errors.ConvertToExceptionMessage;
 import com.microselwebclientjspui.objets.Blocage;
-import com.microselwebclientjspui.objets.EnumCategorie;
 import com.microselwebclientjspui.objets.EnumStatutBlocage;
-import com.microselwebclientjspui.objets.EnumStatutProposition;
-import com.microselwebclientjspui.objets.EnumTradeType;
-import com.microselwebclientjspui.objets.Proposition;
 import com.microselwebclientjspui.service.IBlocageService;
 
 @Controller
 public class BlocageController {
-	
+
 	@Autowired
 	private IBlocageService blocageService;
-	
+
 	@Autowired
 	private ConvertToExceptionMessage convertToExceptionMessage;
-	
-	
+
 	/**
 	 * Permet d'afficher une sélection de propositions sous forme de page
 	 * 
 	 * @throws NotAuthorizedException
 	 */
 	@GetMapping(value = "/blocages")
-	public String searchByCriteria(Model model,
-			@PathParam(value = "blocageCriteria") BlocageCriteria blocageCriteria,
+	public String searchByCriteria(Model model, @PathParam(value = "blocageCriteria") BlocageCriteria blocageCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
 
 		model.addAttribute("blocageCriteria", new BlocageCriteria());
 		model.addAttribute("enumStatutBlocageList", EnumStatutBlocage.getListEnumStatutBlocage());
-		
-		Page<Blocage> blocages = blocageService.searchByCriteria(blocageCriteria,
-				PageRequest.of(page, size));
+
+		Page<Blocage> blocages = blocageService.searchByCriteria(blocageCriteria, PageRequest.of(page, size));
 
 		model.addAttribute("blocages", blocages.getContent());
 		model.addAttribute("page", Integer.valueOf(page));
@@ -60,8 +52,7 @@ public class BlocageController {
 		return "blocages/blocagesPage";
 
 	}
-	
-	
+
 	/**
 	 * permet de clôturer une proposition avant sa date de fin de publication
 	 */

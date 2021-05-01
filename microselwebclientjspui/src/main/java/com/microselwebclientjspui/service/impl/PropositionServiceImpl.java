@@ -199,13 +199,11 @@ public class PropositionServiceImpl implements IPropositionService {
 		HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 
 		String url = uRLPropositionUser + "/proposition/close/" + id + "/adherent/" + emetteurId;
-		
+
 		ResponseEntity<Proposition> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity,
 				Proposition.class);
 
 		return response.getBody();
-
-		
 
 	}
 

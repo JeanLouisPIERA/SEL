@@ -45,8 +45,6 @@ public class DocumentDTO {
 	public void setContenu(String contenu) {
 		this.contenu = contenu;
 	}
-	
-	
 
 	public String getAuteurUsername() {
 		return auteurUsername;

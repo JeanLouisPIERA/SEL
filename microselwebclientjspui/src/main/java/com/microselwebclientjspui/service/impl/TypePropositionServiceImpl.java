@@ -1,7 +1,5 @@
 package com.microselwebclientjspui.service.impl;
 
-import java.util.Arrays;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -30,14 +27,13 @@ public class TypePropositionServiceImpl implements ITypePropositionService {
 
 	@Autowired
 	private HttpServletRequest request;
-	
-	
+
 	@Autowired
 	private RestTemplate restTemplate;
 
 	@Value("${application.uRLTypeProposition}")
 	private String uRLTypeProposition;
-	
+
 	@Value("${application.uRLTypePropositionAdmin}")
 	private String uRLTypePropositionAdmin;
 

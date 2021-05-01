@@ -144,10 +144,6 @@ public class DocumentServiceImpl implements IDocumentService {
 		return response.getBody();
 	}
 
-	@Override
-	public List<Document> selectDocumentToCompleteArticles(Integer numberOfArticles) {
-		// FIXME Auto-generated method stub
-		return null;
-	}
+	
 
 }

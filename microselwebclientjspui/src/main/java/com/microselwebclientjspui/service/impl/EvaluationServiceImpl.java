@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -20,9 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.microselwebclientjspui.criteria.EvaluationCriteria;
 import com.microselwebclientjspui.dto.EvaluationDTO;
-import com.microselwebclientjspui.objets.Article;
 import com.microselwebclientjspui.objets.Evaluation;
-import com.microselwebclientjspui.objets.Proposition;
 import com.microselwebclientjspui.service.IEvaluationService;
 import com.microselwebclientjspui.service.IUserService;
 
@@ -31,7 +28,7 @@ public class EvaluationServiceImpl implements IEvaluationService {
 
 	@Autowired
 	private RestTemplate restTemplate;
-	
+
 	@Autowired
 	private IUserService userService;
 
@@ -40,7 +37,7 @@ public class EvaluationServiceImpl implements IEvaluationService {
 
 	@Value("${application.uRLEvaluationUser}")
 	private String uRLEvaluationUser;
-	
+
 	@Value("${application.uRLEvaluationAdmin}")
 	private String uRLEvaluationAdmin;
 
@@ -52,10 +49,10 @@ public class EvaluationServiceImpl implements IEvaluationService {
 
 	@Override
 	public Evaluation createEvaluation(Long echangeId, EvaluationDTO evaluationDTO) {
-		
+
 		String userId = userService.identifyPrincipalId();
 		String userUsername = userService.identifyPrincipalUsername();
-		
+
 		evaluationDTO.setAdherentId(userId);
 		evaluationDTO.setAdherentUsername(userUsername);
 
@@ -64,7 +61,7 @@ public class EvaluationServiceImpl implements IEvaluationService {
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<EvaluationDTO> requestEntity = new HttpEntity<>(evaluationDTO, headers);
-		
+
 		ResponseEntity<Evaluation> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
 				Evaluation.class);
 
@@ -75,7 +72,7 @@ public class EvaluationServiceImpl implements IEvaluationService {
 	public List<Evaluation> findAllByEchangeId(Long id) {
 
 		String url = uRLEvaluationUser + "/echange/" + id;
-		
+
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<EvaluationDTO> entity = new HttpEntity<>(headers);
@@ -90,8 +87,7 @@ public class EvaluationServiceImpl implements IEvaluationService {
 		return evaluationsList;
 
 	}
-	
-	
+
 	@Override
 	public Evaluation modererById(Long id) {
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
@@ -100,7 +96,8 @@ public class EvaluationServiceImpl implements IEvaluationService {
 
 		String url = uRLEvaluationAdmin + "/moderation/" + id;
 
-		ResponseEntity<Evaluation> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Evaluation.class);
+		ResponseEntity<Evaluation> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity,
+				Evaluation.class);
 
 		return response.getBody();
 	}
@@ -110,15 +107,13 @@ public class EvaluationServiceImpl implements IEvaluationService {
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<String> entity = new HttpEntity<>(headers);
-		
+
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLEvaluationAdmin)
 				.queryParam("id", evaluationCriteria.getId())
 				.queryParam("adherentUsername", evaluationCriteria.getAdherentUsername());
-				
 
-		ResponseEntity<RestResponsePage<Evaluation>> evaluations = restTemplate.exchange(
-				builder.build().toUriString(), HttpMethod.GET, entity,
-				new ParameterizedTypeReference<RestResponsePage<Evaluation>>() {
+		ResponseEntity<RestResponsePage<Evaluation>> evaluations = restTemplate.exchange(builder.build().toUriString(),
+				HttpMethod.GET, entity, new ParameterizedTypeReference<RestResponsePage<Evaluation>>() {
 				});
 
 		Page<Evaluation> pageEvaluation = evaluations.getBody();

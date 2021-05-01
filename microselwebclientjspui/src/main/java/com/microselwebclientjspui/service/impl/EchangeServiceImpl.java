@@ -1,7 +1,5 @@
 package com.microselwebclientjspui.service.impl;
 
-import java.util.Arrays;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -34,7 +31,7 @@ public class EchangeServiceImpl implements IEchangeService {
 
 	@Autowired
 	private HttpServletRequest request;
-	
+
 	@Autowired
 	private IUserService userService;
 
@@ -50,7 +47,6 @@ public class EchangeServiceImpl implements IEchangeService {
 	@Value("${application.uRLEchangeAll}")
 	private String uRLEchangeAll;
 
-	
 	@Override
 	public Page<Echange> searchByCriteria(EchangeCriteria echangeCriteria, Pageable pageable) {
 
@@ -73,29 +69,27 @@ public class EchangeServiceImpl implements IEchangeService {
 
 		return pageEchange;
 	}
-	
+
 	@Override
 	public Page<Echange> searchByCriteriaByAdherentRecepteur(EchangeCriteria echangeCriteria, Pageable pageable) {
 		HttpHeaders headers = new HttpHeaders();
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
+
 		String userId = userService.identifyPrincipalId();
 		echangeCriteria.setRecepteurId(userId);
-		
+
 		String userUsername = userService.identifyPrincipalUsername();
 		echangeCriteria.setRecepteurUsername(userUsername);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLEchangeAll)
-				.queryParam("id", echangeCriteria.getId())
-				.queryParam("emetteurId", echangeCriteria.getEmetteurId())
+				.queryParam("id", echangeCriteria.getId()).queryParam("emetteurId", echangeCriteria.getEmetteurId())
 				.queryParam("recepteurId", echangeCriteria.getRecepteurId())
 				.queryParam("titre", echangeCriteria.getTitre())
 				.queryParam("statutEchange", echangeCriteria.getStatutEchange())
 				.queryParam("emetteurUsername", echangeCriteria.getEmetteurUsername())
 				.queryParam("recepteurUsername", echangeCriteria.getRecepteurUsername())
-				.queryParam("page", pageable.getPageNumber())
-				.queryParam("size", pageable.getPageSize());
+				.queryParam("page", pageable.getPageNumber()).queryParam("size", pageable.getPageSize());
 
 		ResponseEntity<RestResponsePage<Echange>> echanges = restTemplate.exchange(builder.build().toUriString(),
 				HttpMethod.GET, entity, new ParameterizedTypeReference<RestResponsePage<Echange>>() {
@@ -105,30 +99,28 @@ public class EchangeServiceImpl implements IEchangeService {
 
 		return pageEchange;
 	}
-	
+
 	@Override
 	public Page<Echange> searchByCriteriaByAdherentEmetteur(EchangeCriteria echangeCriteria, Pageable pageable) {
-		
+
 		HttpHeaders headers = new HttpHeaders();
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
+
 		String userId = userService.identifyPrincipalId();
 		echangeCriteria.setEmetteurId(userId);
-		
+
 		String userUsername = userService.identifyPrincipalUsername();
 		echangeCriteria.setEmetteurUsername(userUsername);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(uRLEchangeAll)
-				.queryParam("id", echangeCriteria.getId())
-				.queryParam("emetteurId", echangeCriteria.getEmetteurId())
+				.queryParam("id", echangeCriteria.getId()).queryParam("emetteurId", echangeCriteria.getEmetteurId())
 				.queryParam("recepteurId", echangeCriteria.getRecepteurId())
 				.queryParam("titre", echangeCriteria.getTitre())
 				.queryParam("statutEchange", echangeCriteria.getStatutEchange())
 				.queryParam("emetteurUsername", echangeCriteria.getEmetteurUsername())
 				.queryParam("recepteurUsername", echangeCriteria.getRecepteurUsername())
-				.queryParam("page", pageable.getPageNumber())
-				.queryParam("size", pageable.getPageSize());
+				.queryParam("page", pageable.getPageNumber()).queryParam("size", pageable.getPageSize());
 
 		ResponseEntity<RestResponsePage<Echange>> echanges = restTemplate.exchange(builder.build().toUriString(),
 				HttpMethod.GET, entity, new ParameterizedTypeReference<RestResponsePage<Echange>>() {
@@ -170,7 +162,7 @@ public class EchangeServiceImpl implements IEchangeService {
 
 	@Override
 	public Echange annulerEchange(Long id) {
-		
+
 		String intervenantId = userService.identifyPrincipalId();
 
 		String url = uRLEchangeUser + "/annuler/" + id;
@@ -186,9 +178,9 @@ public class EchangeServiceImpl implements IEchangeService {
 
 	@Override
 	public Echange emetteurValiderEchange(Long id) {
-		
+
 		String url = uRLEchangeUser + "/emetteurValider/" + id;
-		
+
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -200,9 +192,9 @@ public class EchangeServiceImpl implements IEchangeService {
 
 	@Override
 	public Echange recepteurRefuserEchange(Long id) {
-		
+
 		String url = uRLEchangeUser + "/recepteurRefuser/" + id;
-		
+
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -214,9 +206,9 @@ public class EchangeServiceImpl implements IEchangeService {
 
 	@Override
 	public Echange emetteurRefuserEchange(Long id) {
-		
+
 		String url = uRLEchangeUser + "/emetteurRefuser/" + id;
-		
+
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -228,9 +220,9 @@ public class EchangeServiceImpl implements IEchangeService {
 
 	@Override
 	public Echange recepteurValiderEchange(Long id) {
-		
+
 		String url = uRLEchangeUser + "/recepteurValider/" + id;
-		
+
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<?> requestEntity = new HttpEntity<>(headers);
@@ -243,9 +235,9 @@ public class EchangeServiceImpl implements IEchangeService {
 	@Override
 	public Echange validerEchange(Long id) {
 		String intervenantId = userService.identifyPrincipalId();
-		
+
 		String url = uRLEchangeUser + "/valider/" + id;
-		
+
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<?> requestEntity = new HttpEntity<>(intervenantId, headers);
@@ -253,15 +245,15 @@ public class EchangeServiceImpl implements IEchangeService {
 		ResponseEntity<Echange> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Echange.class);
 
 		return response.getBody();
-		
+
 	}
 
 	@Override
 	public Echange refuserEchange(Long id) {
 		String intervenantId = userService.identifyPrincipalId();
-		
+
 		String url = uRLEchangeUser + "/refuser/" + id;
-		
+
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<?> requestEntity = new HttpEntity<>(intervenantId, headers);
@@ -269,10 +261,7 @@ public class EchangeServiceImpl implements IEchangeService {
 		ResponseEntity<Echange> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Echange.class);
 
 		return response.getBody();
-		
+
 	}
 
-	
-
-	
 }

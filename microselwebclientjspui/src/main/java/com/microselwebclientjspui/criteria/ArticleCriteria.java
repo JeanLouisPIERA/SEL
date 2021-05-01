@@ -2,10 +2,8 @@ package com.microselwebclientjspui.criteria;
 
 public class ArticleCriteria {
 
-	
 	private String statutDocument;
 	private String typeArticle;
-	
 
 	public ArticleCriteria() {
 		super();
@@ -27,11 +25,4 @@ public class ArticleCriteria {
 		this.typeArticle = typeArticle;
 	}
 
-	
-
-	
-
-	
-
-	
 }

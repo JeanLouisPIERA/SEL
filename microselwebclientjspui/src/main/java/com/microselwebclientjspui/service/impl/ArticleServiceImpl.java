@@ -163,103 +163,88 @@ public class ArticleServiceImpl implements IArticleService {
 		return response.getBody();
 	}
 
-	
 	@Override
 	public List<Article> select4ArticlesToBePublished() {
-		
+
 		List<Article> articleToBePublishedList = new ArrayList();
 
 		ArticleCriteria articleCriteria = new ArticleCriteria();
 		articleCriteria.setStatutDocument(EnumStatutDocument.PUBLIE.getCode());
 		Page<Article> articlePublishablePage = this.searchByCriteria(articleCriteria, PageRequest.of(0, 10));
-		
-		Article articleByDefault = this.searchById((long)1);
-		
+
+		Article articleByDefault = this.searchById((long) 1);
+
 		Integer number = articlePublishablePage.getContent().size();
-		
-		if(number==4) {
+
+		if (number == 4) {
 
 			for (int nombre = 1; nombre <= number; nombre++) {
 				Article articleToBePublished = articlePublishablePage.getContent().get(number - nombre);
 				articleToBePublishedList.add(articleToBePublished);
 			}
-					
-		}else if(number == 3) {
-			
+
+		} else if (number == 3) {
+
 			for (int nombre = 1; nombre <= number; nombre++) {
 				Article articleToBePublished = articlePublishablePage.getContent().get(number - nombre);
 				articleToBePublishedList.add(articleToBePublished);
 			}
-				articleToBePublishedList.add(articleByDefault);
-				
-		}else if(number == 2) {
-			
+			articleToBePublishedList.add(articleByDefault);
+
+		} else if (number == 2) {
+
 			for (int nombre = 1; nombre <= number; nombre++) {
 				Article articleToBePublished = articlePublishablePage.getContent().get(number - nombre);
 				articleToBePublishedList.add(articleToBePublished);
 			}
-				articleToBePublishedList.add(articleByDefault);
-				articleToBePublishedList.add(articleByDefault);
-			
-			
-		}else if(number ==1) {
-			
+			articleToBePublishedList.add(articleByDefault);
+			articleToBePublishedList.add(articleByDefault);
+
+		} else if (number == 1) {
+
 			for (int nombre = 1; nombre <= number; nombre++) {
 				Article articleToBePublished = articlePublishablePage.getContent().get(number - nombre);
 				articleToBePublishedList.add(articleToBePublished);
 			}
-				articleToBePublishedList.add(articleByDefault);
-				articleToBePublishedList.add(articleByDefault);
-				articleToBePublishedList.add(articleByDefault);
-			
-			
-		}else if (number == 0){
-			
-			
+			articleToBePublishedList.add(articleByDefault);
+			articleToBePublishedList.add(articleByDefault);
+			articleToBePublishedList.add(articleByDefault);
+
+		} else if (number == 0) {
+
 			for (int nombre = 1; nombre <= number; nombre++) {
 				Article articleToBePublished = articlePublishablePage.getContent().get(number - nombre);
 				articleToBePublishedList.add(articleToBePublished);
 			}
-				articleToBePublishedList.add(articleByDefault);
-				articleToBePublishedList.add(articleByDefault);
-				articleToBePublishedList.add(articleByDefault);
-				articleToBePublishedList.add(articleByDefault);
-			
-			
+			articleToBePublishedList.add(articleByDefault);
+			articleToBePublishedList.add(articleByDefault);
+			articleToBePublishedList.add(articleByDefault);
+			articleToBePublishedList.add(articleByDefault);
+
 		}
-			
+
 		return articleToBePublishedList;
 	}
 
-	
-	
 	@Override
 	public Article modifierArticleStandard(ArticleDTO articleDTO) {
-		
+
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
-		
+
 		String emetteurId = userService.identifyPrincipalUsername();
 		articleDTO.setAuteurId(emetteurId);
-		
+
 		String emetteurUsername = userService.identifyPrincipalUsername();
 		articleDTO.setAuteurUsername(emetteurUsername);
-		
+
 		HttpEntity<ArticleDTO> requestEntity = new HttpEntity<>(articleDTO, headers);
 
 		String url = uRLArticleAdmin + "/standard";
-		
-	
-		
-		
-		
-		
 
 		ResponseEntity<Article> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Article.class);
 
 		return response.getBody();
-		
+
 	}
-	
-	
 
 }

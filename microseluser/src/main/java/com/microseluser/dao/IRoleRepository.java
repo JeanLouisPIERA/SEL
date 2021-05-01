@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.microseluser.entities.Role;
 
 @Repository
-public interface IRoleRepository extends JpaRepository<Role, String>{
+public interface IRoleRepository extends JpaRepository<Role, String> {
 
-	
 }

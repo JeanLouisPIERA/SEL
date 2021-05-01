@@ -32,10 +32,10 @@ public class TransactionServiceImpl implements ITransactionService {
 
 	@Autowired
 	private HttpServletRequest request;
-	
+
 	@Autowired
 	private IUserService userService;
-	
+
 	@Autowired
 	private IWalletService walletService;
 
@@ -44,7 +44,7 @@ public class TransactionServiceImpl implements ITransactionService {
 
 	@Value("${application.uRLTransactionBureau}")
 	private String uRLTransactionBureau;
-	
+
 	@Value("${application.uRLTransactionUser}")
 	private String uRLTransactionUser;
 
@@ -69,14 +69,14 @@ public class TransactionServiceImpl implements ITransactionService {
 		return pageTransaction;
 
 	}
-	
+
 	@Override
-	public Page<Transaction> findAllByWalletIdByAdherent(Long walletId, Pageable pageable)  {
+	public Page<Transaction> findAllByWalletIdByAdherent(Long walletId, Pageable pageable) {
 
 		Wallet wallet = walletService.searchById(walletId);
-		
+
 		String userId = userService.identifyPrincipalId();
-		
+
 		String url = uRLTransactionUser + "/wallet/" + walletId;
 
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);

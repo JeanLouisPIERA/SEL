@@ -1,7 +1,7 @@
 package com.microselwebclientjspui.dto;
 
 public class MessageDTO {
-	
+
 	private String message;
 
 	/**

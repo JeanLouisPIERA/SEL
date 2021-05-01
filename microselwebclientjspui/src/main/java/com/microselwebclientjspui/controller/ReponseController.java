@@ -32,7 +32,7 @@ public class ReponseController {
 	@Autowired
 	private ObjectMapper mapper;
 	@Autowired
-	private ConvertToExceptionMessage convertToExceptionMessage; 
+	private ConvertToExceptionMessage convertToExceptionMessage;
 
 //CREATE PROPOSITION *****************************************************************************************************
 

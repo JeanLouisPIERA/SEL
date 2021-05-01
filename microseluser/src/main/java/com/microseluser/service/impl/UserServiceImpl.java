@@ -16,51 +16,51 @@ import com.microseluser.entities.User;
 import com.microseluser.exceptions.EntityNotFoundException;
 import com.microseluser.service.IUserService;
 
-
 @Service
 public class UserServiceImpl implements IUserService {
-	
+
 	@Autowired
 	private IUserRepository userRepository;
-	
+
 	/**
-	 * Cette méthode permet à un adhérent de consulter son compte
-	 * Seul un adhérent peut consulter les données de son compte 
-	 * RGPD COMPLIANT
-	 * @throws EntityNotFoundException 
+	 * Cette méthode permet à un adhérent de consulter son compte Seul un adhérent
+	 * peut consulter les données de son compte RGPD COMPLIANT
+	 * 
+	 * @throws EntityNotFoundException
 	 */
 	@Override
 	public User readAccount(String id) throws EntityNotFoundException {
-		
+
 		Optional<User> userFound = userRepository.findById(id);
-		if(!userFound.isPresent())
+		if (!userFound.isPresent())
 			throw new EntityNotFoundException("Ce compte n'existe pas");
-		
+
 		return userFound.get();
-		
+
 	}
-	
+
 	/**
-     * Cette méthode permet à un membre du bureau d'obtenir la liste de tous les utilisateurs
-	  * Seul un membre du bureau peut consulter cette liste
-	 */	
-	  @Override public List<User> showAllUsers() {
-	  
-	  List<User> listUsers = userRepository.findAll();
-	  
-	  return listUsers; }
-	  
-	  /**
-	     * Cette méthode permet à un membre du bureau d'obtenir un tri de la liste de tous les utilisateurs
-		  * Seul un membre du bureau peut consulter cette liste
-		 */	
-	  @Override
-		public Page<User> searchAllUsersByCriteria(UserCriteria userCriteria,
-				Pageable pageable) {
-			Specification<User> userSpecification = new UserSpecification(userCriteria);
-			Page<User> users = userRepository.findAll(userSpecification, pageable);
-			
-			return users;
-		}
+	 * Cette méthode permet à un membre du bureau d'obtenir la liste de tous les
+	 * utilisateurs Seul un membre du bureau peut consulter cette liste
+	 */
+	@Override
+	public List<User> showAllUsers() {
+
+		List<User> listUsers = userRepository.findAll();
+
+		return listUsers;
+	}
+
+	/**
+	 * Cette méthode permet à un membre du bureau d'obtenir un tri de la liste de
+	 * tous les utilisateurs Seul un membre du bureau peut consulter cette liste
+	 */
+	@Override
+	public Page<User> searchAllUsersByCriteria(UserCriteria userCriteria, Pageable pageable) {
+		Specification<User> userSpecification = new UserSpecification(userCriteria);
+		Page<User> users = userRepository.findAll(userSpecification, pageable);
+
+		return users;
+	}
 
 }

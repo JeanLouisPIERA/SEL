@@ -44,13 +44,10 @@ public class PropositionDTO {
 	@Range(min = 1, max = 999, message = "La valeur de votre proposition ne peut excéder 999 unités")
 	private Integer valeur;
 
-	/* @DateTimeFormat(pattern = "yyyy-MM-dd") */
-	//@Future(message = "Merci de saisir une date de fin de publication de votre proposition postérieure à la date du jour")
 	@NotNull(message = "Merci de saisir la date de fin de la publication de votre proposition")
 	private String dateFin;
 
-	/* @DateTimeFormat(pattern = "yyyy-MM-dd") */
-	//@Future(message = "Merci de saisir la date d'échance pour la réalisation de l'échange que vous proposez postérieure à la date du jour")
+	
 	@NotNull(message = "Merci de saisir la date d'échance pour la réalisation de l'échange que vous proposez")
 	private String dateEcheance;
 

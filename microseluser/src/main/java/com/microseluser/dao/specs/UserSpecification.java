@@ -3,14 +3,12 @@ package com.microseluser.dao.specs;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
 import com.microseluser.criteria.UserCriteria;
-import com.microseluser.entities.Role;
 import com.microseluser.entities.User;
 
 public class UserSpecification implements Specification<User> {
@@ -20,7 +18,6 @@ public class UserSpecification implements Specification<User> {
 	public UserSpecification(UserCriteria userCriteria) {
 		this.userCriteria = userCriteria;
 	}
-	
 
 	@Override
 	public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
@@ -57,14 +54,14 @@ public class UserSpecification implements Specification<User> {
 
 		if (!userCriteria.getRole().isEmpty()) {
 			Join join = root.join("roles");
-		
+
 			predicates.getExpressions().add(builder.like(join.get("name"), "%" + userCriteria.getRole() + "%"));
 
 		}
 
 		if (userCriteria.getRole().isEmpty()) {
 			Join join = root.join("roles");
-			
+
 			predicates.getExpressions().add(builder.like(join.get("name"), "%" + userCriteria.getDefaultRole() + "%"));
 
 		}

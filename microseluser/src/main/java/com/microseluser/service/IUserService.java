@@ -24,9 +24,7 @@ public interface IUserService {
 	 * utilisateurs Seul un membre du bureau peut consulter cette liste
 	 */
 	List<User> showAllUsers();
-	
-	
-	Page<User> searchAllUsersByCriteria(UserCriteria userCriteria,
-			Pageable pageable);
+
+	Page<User> searchAllUsersByCriteria(UserCriteria userCriteria, Pageable pageable);
 
 }

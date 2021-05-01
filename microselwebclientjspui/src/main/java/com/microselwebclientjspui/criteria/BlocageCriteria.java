@@ -1,7 +1,7 @@
 package com.microselwebclientjspui.criteria;
 
 public class BlocageCriteria {
-	
+
 	Long id;
 	String adherentId;
 	String adherentUsername;
@@ -10,20 +10,14 @@ public class BlocageCriteria {
 	public BlocageCriteria() {
 		super();
 	}
-	
-	
 
 	public Long getId() {
 		return id;
 	}
 
-
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-
 
 	public String getAdherentId() {
 		return adherentId;
@@ -41,18 +35,12 @@ public class BlocageCriteria {
 		this.adherentUsername = adherentUsername;
 	}
 
-
-
 	public String getStatutBlocage() {
 		return statutBlocage;
 	}
 
-
-
 	public void setStatutBlocage(String statutBlocage) {
 		this.statutBlocage = statutBlocage;
 	}
-
-	
 
 }

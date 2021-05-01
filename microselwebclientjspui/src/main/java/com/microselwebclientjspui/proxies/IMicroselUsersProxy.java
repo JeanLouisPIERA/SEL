@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.microselwebclientjspui.beans.UserBean;
 
-//@FeignClient(name = "microsel-adherent", url = "localhost:9001")
+
 @FeignClient(name = "zuul-server")
 @RibbonClient(name = "microseluser")
 public interface IMicroselUsersProxy {

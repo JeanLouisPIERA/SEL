@@ -1,10 +1,5 @@
 package com.microselwebclientjspui.beans;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.microselwebclientjspui.objets.Role;
-
 public class UserBean {
 
 	String id;
@@ -16,7 +11,7 @@ public class UserBean {
 	String lastName;
 
 	String username;
-	
+
 	String role;
 
 	public UserBean() {
@@ -71,7 +66,5 @@ public class UserBean {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
-	
 
 }

@@ -51,8 +51,6 @@ public class ArticleDTO {
 	public void setContenu(String contenu) {
 		this.contenu = contenu;
 	}
-	
-	
 
 	public String getAuteurUsername() {
 		return auteurUsername;
@@ -77,7 +75,5 @@ public class ArticleDTO {
 	public void setTypeArticle(String typeArticle) {
 		this.typeArticle = typeArticle;
 	}
-
-	
 
 }

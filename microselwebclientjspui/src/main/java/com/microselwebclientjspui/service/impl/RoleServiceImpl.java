@@ -77,7 +77,6 @@ public class RoleServiceImpl implements IRoleService {
 	@Override
 	public List<Role> getRolesByUserId(String id) {
 
-
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);

@@ -35,9 +35,7 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
-		<!-- <dependency> <groupId>javax.xml.bind</groupId> <artifactId>jaxb-api</artifactId> 
-			</dependency> -->
-
+		
 		<dependency>
 			<groupId>jakarta.xml.ws</groupId>
 			<artifactId>jakarta.xml.ws-api</artifactId>
@@ -75,13 +73,7 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 		</dependency>
 
-		<!-- <dependency> -->
-		<!-- <groupId>com.h2database</groupId> -->
-		<!-- <artifactId>h2</artifactId> -->
-		<!-- <version>1.4.200</version> -->
-		<!-- <scope>runtime</scope> -->
-		<!-- </dependency> -->
-
+		
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -89,8 +81,7 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- <dependency> <groupId>org.liquibase</groupId> <artifactId>liquibase-maven-plugin</artifactId> 
-			<version>3.8.0</version> </dependency> -->
+		
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
@@ -114,8 +105,8 @@
 			<artifactId>maven-model</artifactId>
 			<version>3.3.9</version>
 		</dependency>
-		
-		
+
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -128,8 +119,6 @@
 			<artifactId>spring-cloud-starter-config</artifactId>
 		</dependency>
 
-		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-security</artifactId> 
-			</dependency> -->
 
 		<!-- Validation du @RequestBody DTO Jakarta BeanValidation API JSR 380 
 			Annotation de l'argumentation de la méthode mappée @Valid -->
@@ -222,8 +211,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
-		<!-- <dependency> <groupId>org.json</groupId> <artifactId>json</artifactId> 
-			</dependency> -->
+		
 
 
 		<!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-spring-boot-starter -->
@@ -233,9 +221,7 @@
 			<version>12.0.4</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
-		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-security</artifactId> 
-			<version>2.4.0</version> </dependency> -->
+		
 	</dependencies>
 
 	<dependencyManagement>
@@ -250,8 +236,7 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<!-- <build> <plugins> <plugin> <groupId>org.springframework.boot</groupId> 
-		<artifactId>spring-boot-maven-plugin</artifactId> </plugin> </plugins> </build> -->
+	
 
 	<build>
 		<plugins>
@@ -297,10 +282,7 @@
 
 					<verbose>true</verbose>
 
-					<!-- Needed if pushing to DockerHub: preferred to store these in local 
-						environment (see the course) -->
-					<!-- <authConfig> <username>YOUR-USERNAME</username> <password>YOUR-PASSWORD</password> 
-						</authConfig> -->
+					
 
 					<images>
 						<image>

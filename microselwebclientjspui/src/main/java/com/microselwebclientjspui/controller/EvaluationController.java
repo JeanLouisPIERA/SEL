@@ -76,7 +76,7 @@ public class EvaluationController {
 
 		return "evaluations/evaluationConfirmation";
 	}
-	
+
 	/**
 	 * Permet de modérer la publication d'une évaluation
 	 */
@@ -93,7 +93,7 @@ public class EvaluationController {
 		}
 		return "evaluations/evaluationModerationConfirmation";
 	}
-	
+
 	/**
 	 * Permet d'afficher une sélection des evaluations sous forme de page
 	 * 
@@ -107,7 +107,8 @@ public class EvaluationController {
 
 		model.addAttribute("evaluationCriteria", new EvaluationCriteria());
 
-		Page<Evaluation> evaluations = evaluationService.searchByCriteria(evaluationCriteria,PageRequest.of(page, size));
+		Page<Evaluation> evaluations = evaluationService.searchByCriteria(evaluationCriteria,
+				PageRequest.of(page, size));
 
 		model.addAttribute("evaluations", evaluations.getContent());
 		model.addAttribute("page", Integer.valueOf(page));

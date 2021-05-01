@@ -53,13 +53,11 @@ public class UserRestController {
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le compte recherché a été trouvé"),
 			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"), })
 	@GetMapping("/admin/accounts")
-	public ResponseEntity<Page<User>> searchAllUsersByCriteria(
-			@PathParam("userCriteria") UserCriteria userCriteria,
+	public ResponseEntity<Page<User>> searchAllUsersByCriteria(@PathParam("userCriteria") UserCriteria userCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
 
-		Page<User> users = userService.searchAllUsersByCriteria(userCriteria,
-				PageRequest.of(page, size));
+		Page<User> users = userService.searchAllUsersByCriteria(userCriteria, PageRequest.of(page, size));
 		return new ResponseEntity<Page<User>>(users, HttpStatus.OK);
 	}
 
@@ -96,14 +94,15 @@ public class UserRestController {
 			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
 			@ApiResponse(code = 413, message = "Ce compte n'existe pas"), })
 	@GetMapping("/user/accounts/account")
-	public ResponseEntity<User> securisedDisplayAccount(@RequestParam @Valid String adherentMyId) throws EntityNotFoundException {
+	public ResponseEntity<User> securisedDisplayAccount(@RequestParam @Valid String adherentMyId)
+			throws EntityNotFoundException {
 		User userFound = userService.readAccount(adherentMyId);
 		return new ResponseEntity<User>(userFound, HttpStatus.OK);
 
 	}
-	
+
 	/**
-	 * Ce endpoint permet à un admin d'accéder au détail d'un compte adherent 
+	 * Ce endpoint permet à un admin d'accéder au détail d'un compte adherent
 	 * 
 	 * @param id
 	 * @return
@@ -114,7 +113,8 @@ public class UserRestController {
 			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
 			@ApiResponse(code = 413, message = "Ce compte n'existe pas"), })
 	@GetMapping("/admin/accounts/{id}")
-	public ResponseEntity<User> securisedDisplayAccountToAdmin(@PathVariable @Valid String id) throws EntityNotFoundException {
+	public ResponseEntity<User> securisedDisplayAccountToAdmin(@PathVariable @Valid String id)
+			throws EntityNotFoundException {
 		User userFound = userService.readAccount(id);
 		return new ResponseEntity<User>(userFound, HttpStatus.OK);
 

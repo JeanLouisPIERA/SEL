@@ -23,6 +23,6 @@ public interface IDocumentService {
 
 	Document searchByTypeDocumentId(Long typedocumentId);
 
-	List<Document> selectDocumentToCompleteArticles(Integer numberOfArticles);
+	
 
 }

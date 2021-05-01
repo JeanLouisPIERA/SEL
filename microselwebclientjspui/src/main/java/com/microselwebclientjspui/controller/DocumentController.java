@@ -97,7 +97,7 @@ public class DocumentController {
 		model.addAttribute("typeDocumentsList", typeDocuments);
 
 		Page<Document> documents = documentService.searchByCriteria(documentCriteria, PageRequest.of(page, size));
-		
+
 		System.out.println("resultatCount = " + documents.getContent().size());
 
 		model.addAttribute("documents", documents.getContent());
@@ -127,9 +127,10 @@ public class DocumentController {
 		}
 		return "documents/documentView";
 	}
-	
+
 	/**
-	 * Permet de lire le contenu d'un document statique par la référence à son type de document (document publié unique)
+	 * Permet de lire le contenu d'un document statique par la référence à son type
+	 * de document (document publié unique)
 	 */
 	@GetMapping("/documents/static/{id}")
 	public String readDocumentStatic(Model model, @PathVariable("id") Long typedocumentId) {
@@ -144,7 +145,7 @@ public class DocumentController {
 		}
 		return "documents/documentView";
 	}
-	
+
 	/**
 	 * Permet de publier le contenu d'un document
 	 */
@@ -161,7 +162,7 @@ public class DocumentController {
 		}
 		return "documents/documentPublicationConfirmation";
 	}
-	
+
 	/**
 	 * Permet d'archiver le contenu d'un document
 	 */

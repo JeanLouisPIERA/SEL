@@ -15,10 +15,10 @@ import com.microseluser.service.IRoleService;
 
 @Service
 public class RoleServiceImpl implements IRoleService {
-	
+
 	@Autowired
 	private IRoleRepository roleRepository;
-	
+
 	@Autowired
 	private IUserRepository userRepository;
 
@@ -30,16 +30,14 @@ public class RoleServiceImpl implements IRoleService {
 
 	@Override
 	public List<Role> showAllRolesByUserId(String userId) throws EntityNotFoundException {
-		
+
 		Optional<User> user = userRepository.findById(userId);
-		if(!user.isPresent())
+		if (!user.isPresent())
 			throw new EntityNotFoundException("Il n'existe aucun compte correspond à votre recherche");
-		
+
 		List<Role> listRolesByUserId = user.get().getRoles();
-		
+
 		return listRolesByUserId;
 	}
-	
-	
 
 }

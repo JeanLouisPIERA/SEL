@@ -92,12 +92,12 @@ public class WalletController {
 	 */
 	@GetMapping("/wallets/adherent")
 	public String readWalletByAdherent(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "6") int size)  {
+			@RequestParam(name = "size", defaultValue = "6") int size) {
 
 		try {
 			Wallet consultedWallet = walletService.consultWalletByAdherent();
 			model.addAttribute("consultedWallet", consultedWallet);
-			
+
 			Page<Transaction> transactions = transactionService.findAllByWalletIdByAdherent(consultedWallet.getId(),
 					PageRequest.of(page, size));
 

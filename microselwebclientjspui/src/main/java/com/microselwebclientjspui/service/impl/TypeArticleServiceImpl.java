@@ -20,11 +20,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.microselwebclientjspui.dto.TypeArticleDTO;
-import com.microselwebclientjspui.dto.TypeDocumentDTO;
 import com.microselwebclientjspui.objets.TypeArticle;
-import com.microselwebclientjspui.objets.TypeDocument;
 import com.microselwebclientjspui.service.ITypeArticleService;
-import com.microselwebclientjspui.service.ITypeDocumentService;
 
 @Service
 public class TypeArticleServiceImpl implements ITypeArticleService {
@@ -38,20 +35,18 @@ public class TypeArticleServiceImpl implements ITypeArticleService {
 	@Autowired
 	private RestTemplate restTemplate;
 
-
 	@Value("${application.uRLTypeArticle}")
 	private String uRLTypeArticle;
-	
+
 	@Value("${application.uRLTypeArticleAdmin}")
 	private String uRLTypeArticleAdmin;
-
 
 	@Override
 	public Object createTypeArticle(TypeArticleDTO typeArticleDTO) {
 		HttpHeaders headers = httpHeadersFactory.createHeaders(request);
 		HttpEntity<TypeArticleDTO> requestEntity = new HttpEntity<>(typeArticleDTO, headers);
-		ResponseEntity<TypeArticle> response = restTemplate.exchange(uRLTypeArticleAdmin, HttpMethod.POST, requestEntity,
-				TypeArticle.class);
+		ResponseEntity<TypeArticle> response = restTemplate.exchange(uRLTypeArticleAdmin, HttpMethod.POST,
+				requestEntity, TypeArticle.class);
 
 		return response.getBody();
 	}
@@ -83,7 +78,6 @@ public class TypeArticleServiceImpl implements ITypeArticleService {
 
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
