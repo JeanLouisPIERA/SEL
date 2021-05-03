@@ -97,7 +97,7 @@ public class ReponseServiceImpl implements IReponseService {
 
 		Optional<Proposition> propositionToRespond = propositionRepository.findById(propositionId);
 		if (propositionToRespond.isEmpty())
-			throw new EntityNotFoundException("L'offre ou la demande à laquelle vous vouslez répondre n'existe pas");
+			throw new EntityNotFoundException("L'offre ou la demande à laquelle vous voulez répondre n'existe pas");
 		if (!propositionToRespond.get().getStatut().equals(EnumStatutProposition.ENCOURS))
 			throw new DeniedAccessException("Vous ne pouvez répondre qu'à une offre ou une demande en cours");
 		if (propositionToRespond.get().getEmetteurId().equals(recepteurProposition.getId()))
@@ -105,8 +105,8 @@ public class ReponseServiceImpl implements IReponseService {
 
 		Reponse reponseToCreate = reponseMapper.reponseDTOToReponse(reponseDTO);
 
-		reponseToCreate.setDateEcheance(propositionToRespond.get().getDateEcheance());
-		reponseToCreate.setDateReponse(LocalDate.now().plusDays(dateTimezone));
+		reponseToCreate.setDateEcheance(LocalDate.parse(reponseDTO.getDateEcheance()));
+		reponseToCreate.setDateReponse(LocalDate.now().plusDays(1));
 		reponseToCreate.setProposition(propositionToRespond.get());
 
 		if (propositionToRespond.get().getEnumTradeType().equals(EnumTradeType.OFFRE)) {
@@ -210,4 +210,5 @@ public class ReponseServiceImpl implements IReponseService {
 		return reponses;
 	}
 
+	
 }

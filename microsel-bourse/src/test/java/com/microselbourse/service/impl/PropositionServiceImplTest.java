@@ -258,24 +258,6 @@ public class PropositionServiceImplTest {
 	
 	
 	
-	@Test
-	public void testUpdateProposition_withoutException() throws EntityNotFoundException, DeniedAccessException, EntityAlreadyExistsException {
-		
-		proposition.setEmetteurId("A");
-		proposition.setDateFin(LocalDate.now().plusDays(10));
-		proposition.setStatut(EnumStatutProposition.ENCOURS);
-		proposition.setTitre("A");
-		propositionUpdateDTO.setTitre("A");
-		
-		
-		propositionUpdated.setDateFin(LocalDate.now().plusDays(15));
-		propositionUpdated.setDateFin(LocalDate.now().plusDays(15));
-		
-		propositionTest = propositionService.updateProposition((long)1, "A", propositionUpdateDTO);
-		verify(propositionRepository, times(1)).save(any(Proposition.class));
-		Assert.assertTrue(propositionTest.equals(proposition));
-	}
-	
 	
 
 	// TESTS CREATE PROPOSITION
@@ -470,6 +452,7 @@ public class PropositionServiceImplTest {
 		Assert.assertTrue(propositionTest.equals(proposition));
 	}
 
+	
 	
 	
 	

@@ -25,10 +25,12 @@ import com.microselbourse.entities.Echange;
 import com.microselbourse.entities.EnumStatutEchange;
 import com.microselbourse.entities.Proposition;
 import com.microselbourse.entities.Reponse;
+import com.microselbourse.exceptions.EntityAlreadyExistsException;
 import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.mapper.IPropositionMapper;
 import com.microselbourse.mapper.IReponseMapper;
 import com.microselbourse.proxies.IMicroselUsersProxy;
+
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -87,6 +89,38 @@ public class EchangeServiceImplTest {
 		when(echangeRepository.save(any(Echange.class))).thenReturn(echange);
 
 	}
+	
+	// TESTS CREATE ECHANGE
+		// ***************************************************************************************
+
+		@Test
+		public void testCreateEchange_whenEntityAlreadyException() {
+			
+			echange.setId((long) 1);
+			
+			try {
+				echangeTest = echangeService.createEchange((long) 1);
+			} catch (Exception e) {
+				assertThat(e).isInstanceOf(EntityAlreadyExistsException.class)
+						.hasMessage("Un échange existe déjà pour cette réponse à cette proposition");
+			}
+			
+		}
+		
+		@Test
+		public void testCreateEchange_whenEntityNotFoundException() {
+			
+			echange.setId((long) 0);
+			reponse.setId((long) 0);
+
+			try {
+				echangeTest = echangeService.createEchange((long) 0);
+			} catch (Exception e) {
+				assertThat(e).isInstanceOf(EntityNotFoundException.class)
+						.hasMessage("Un échange ne peut pas être créé s'il n'existe pas déjà une réponse à une proposition");
+			}
+			
+		}
 
 	// TESTS READ ECHANGE
 	// ***********************************************************************************************
@@ -128,37 +162,9 @@ public class EchangeServiceImplTest {
 		Assert.assertTrue(echangeTest.equals(echange));
 	}
 
-	@Test
-	public void testReadEchange_withoutException_withNotAlreadyExistingEchange() throws Exception {
+	
 
-		echange.setId((long) 2);
-		echange.setStatutEchange(EnumStatutEchange.ENREGISTRE);
-		echange.setDateEcheance(LocalDate.of(2000, 01, 01));
-		reponse.setId((long) 2);
-		reponse.setDateEcheance(LocalDate.now());
-		proposition.setEmetteurId((String) "A");
-		reponse.setProposition(proposition);
-		reponse.setRecepteurId((String) "B");
-		emetteur1.setUsername("emetteur1");
-		recepteur2.setUsername("recepteur2");
-
-		echangeTest = echangeService.readEchange((long) 2);
-		Assert.assertTrue(echangeTest.equals(echange));
-
-		echange.setStatutEchange(EnumStatutEchange.ENREGISTRE);
-		echange.setDateEcheance(LocalDate.of(2100, 01, 01));
-
-		echangeTest = echangeService.readEchange((long) 2);
-		Assert.assertTrue(echangeTest.equals(echange));
-
-		echange.setStatutEchange(EnumStatutEchange.CONFIRME);
-		echange.setDateEcheance(LocalDate.of(2000, 01, 01));
-
-		echangeTest = echangeService.readEchange((long) 2);
-		Assert.assertTrue(echangeTest.equals(echange));
-	}
-
-	// TESTS CONFIRMER ECHANGE
-	// ***************************************************************************************
-
+	
+	
+	
 }

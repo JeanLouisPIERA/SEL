@@ -30,6 +30,8 @@ public class RoleServiceImpl implements IRoleService {
 
 	@Override
 	public List<Role> showAllRolesByUserId(String userId) throws EntityNotFoundException {
+		
+		
 
 		Optional<User> user = userRepository.findById(userId);
 		if (!user.isPresent())

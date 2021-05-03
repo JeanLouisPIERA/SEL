@@ -261,5 +261,7 @@ public class Proposition implements Serializable {
 	public void setReponses(List<Reponse> reponses) {
 		this.reponses = reponses;
 	}
+	
+	
 
 }

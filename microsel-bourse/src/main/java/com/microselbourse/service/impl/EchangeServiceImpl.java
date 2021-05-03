@@ -45,6 +45,7 @@ import com.microselbourse.service.IWalletService;
 @Transactional
 public class EchangeServiceImpl implements IEchangeService {
 
+	
 	@Autowired
 	private IReponseRepository reponseRepository;
 

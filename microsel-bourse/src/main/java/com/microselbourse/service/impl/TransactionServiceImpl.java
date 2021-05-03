@@ -59,14 +59,14 @@ public class TransactionServiceImpl implements ITransactionService {
 			throw new EntityNotFoundException(
 					"L'échange qui sert de base à la création de votre transaction n'existe pas");
 
-		Optional<Transaction> transactionAlreadyCreated = transactionRepository.findById(echangeId);
-		if (!transactionAlreadyCreated.isEmpty())
-			throw new EntityAlreadyExistsException("La transaction que vous voulez enregistrer existe déjà");
-
 		Optional<Reponse> reponseFromEchange = reponseRepository.findById(echangeId);
 		if (reponseFromEchange.isEmpty())
 			throw new EntityNotFoundException(
 					"Le détail des informations concernant votre transaction n'est pas accessible");
+		
+		Optional<Transaction> transactionAlreadyCreated = transactionRepository.findById(echangeId);
+		if (!transactionAlreadyCreated.isEmpty())
+			throw new EntityAlreadyExistsException("La transaction que vous voulez enregistrer existe déjà");
 
 		Transaction transactionToCreate = new Transaction();
 		transactionToCreate.setId(echangeId);
@@ -149,7 +149,7 @@ public class TransactionServiceImpl implements ITransactionService {
 								.createWallet(echangeToTransaction.get().getRecepteurId());
 
 						Optional<Wallet> walletEmetteur = walletRepository.readByTitulaireId((String) "000.000.000");
-						if (walletRecepteur.isEmpty())
+						if (walletEmetteur.isEmpty())                       ///////----------------------------------------------->
 							throw new EntityNotFoundException(
 									"Transaction impossible : le portefeuille COUNTERPART n'existe pas ");
 
@@ -389,3 +389,5 @@ public class TransactionServiceImpl implements ITransactionService {
 	}
 
 }
+
+

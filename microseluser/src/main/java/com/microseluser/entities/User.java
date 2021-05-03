@@ -134,4 +134,20 @@ public class User implements Serializable {
 		return roles;
 	}
 
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+	
+	
+
 }
