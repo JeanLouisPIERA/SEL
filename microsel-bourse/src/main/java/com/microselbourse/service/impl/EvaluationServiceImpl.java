@@ -80,7 +80,7 @@ public class EvaluationServiceImpl implements IEvaluationService {
 
 		Evaluation evaluationCreated = evaluationRepository.save(evaluationToCreate);
 
-		if (evaluationDTO.getAdherentId() == echangeToEvaluate.get().getEmetteurId()) {
+		if (evaluationDTO.getAdherentId().equals(echangeToEvaluate.get().getEmetteurId())) {
 
 			UserBean recepteur = usersProxy.consulterCompteAdherent(echangeToEvaluate.get().getRecepteurId());
 
