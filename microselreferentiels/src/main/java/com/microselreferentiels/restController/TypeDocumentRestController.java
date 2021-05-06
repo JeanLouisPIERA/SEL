@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +35,8 @@ public class TypeDocumentRestController {
 
 	@Autowired
 	private ITypeDocumentService typeDocumentService;
+	
+	Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
 	@ApiOperation(value = "Enregistrement d'un type de document par un admin", response = TypeDocument.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le type de document a été créée"),
@@ -42,6 +46,7 @@ public class TypeDocumentRestController {
 	@PostMapping("/admin/typedocuments")
 	public ResponseEntity<TypeDocument> createTypeDocument(@Valid @RequestBody TypeDocumentDTO typeDocumentDTO)
 			throws EntityAlreadyExistsException {
+		log.info("Enregistrement d'un type de document par un admin");
 		return new ResponseEntity<TypeDocument>(typeDocumentService.createTypeDocument(typeDocumentDTO), HttpStatus.OK);
 	}
 
@@ -52,7 +57,7 @@ public class TypeDocumentRestController {
 	public ResponseEntity<Page<TypeDocument>> getAllTypeDocumentsByCriteria(
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-
+		log.info("Recherche multi-critères d'un ou plusieurs types de documents");
 		Page<TypeDocument> typeDocumentsPage = typeDocumentService
 				.getAllTypeDocumentsPaginated(PageRequest.of(page, size));
 		return new ResponseEntity<Page<TypeDocument>>(typeDocumentsPage, HttpStatus.OK);
@@ -63,6 +68,7 @@ public class TypeDocumentRestController {
 
 	@GetMapping(value = "/admin/typedocuments", produces = "application/json")
 	public ResponseEntity<List<TypeDocument>> getAllTypeDocuments() {
+		log.info("Recherche de tous les types de documents");
 		List<TypeDocument> typeDocuments = typeDocumentService.getAllTypeDocuments();
 		return new ResponseEntity<List<TypeDocument>>(typeDocuments, HttpStatus.OK);
 	}

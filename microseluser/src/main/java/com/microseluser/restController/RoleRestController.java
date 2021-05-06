@@ -2,6 +2,8 @@ package com.microseluser.restController;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,8 @@ public class RoleRestController {
 
 	@Autowired
 	private IRoleService roleService;
+	
+	Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
 	/**
 	 * Ce endpoint permet à un membre du bureau d'obtenir la liste de tous les roles
@@ -38,6 +42,7 @@ public class RoleRestController {
 			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"), })
 	@GetMapping("/admin/roles")
 	public ResponseEntity<List<Role>> showAllRoles() {
+		log.info("Affichage des données de son compte pour un adhérent)");
 		return new ResponseEntity<List<Role>>(roleService.showAllRoles(), HttpStatus.OK);
 	}
 
@@ -55,6 +60,7 @@ public class RoleRestController {
 	@GetMapping("/user/roles/{id}")
 	public ResponseEntity<List<Role>> showAllRolesByUserId(@PathVariable("id") String userId)
 			throws EntityNotFoundException {
+		log.info("Affichage de tous les roles par un membre du bureau");
 		return new ResponseEntity<List<Role>>(roleService.showAllRolesByUserId(userId), HttpStatus.OK);
 	}
 

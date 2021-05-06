@@ -5,6 +5,8 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,6 +43,8 @@ public class TypePropositionRestController {
 
 	@Autowired
 	private ITypePropositionService typePropositionService;
+	
+	Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
 	@ApiOperation(value = "Enregistrement d'un type de proposition par un admin", response = TypeProposition.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le type de proposition a été créé"),
@@ -50,6 +54,7 @@ public class TypePropositionRestController {
 	@PostMapping("/admin/typepropositions")
 	public ResponseEntity<TypeProposition> createTypeProposition(
 			@Valid @RequestBody TypePropositionDTO typePropositionDTO) throws EntityAlreadyExistsException {
+		log.info("Enregistrement d'un type de proposition par un admin");
 		return new ResponseEntity<TypeProposition>(typePropositionService.createTypeProposition(typePropositionDTO),
 				HttpStatus.OK);
 	}
@@ -61,7 +66,7 @@ public class TypePropositionRestController {
 	public ResponseEntity<Page<TypeProposition>> getAllTypePropositionsByCriteria(
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-
+		log.info("Recherche multi-critères d'un ou plusieurs types de proposition");
 		Page<TypeProposition> typePropositionsPage = typePropositionService
 				.getAllTypePropositionsPaginated(PageRequest.of(page, size));
 		return new ResponseEntity<Page<TypeProposition>>(typePropositionsPage, HttpStatus.OK);
@@ -72,6 +77,7 @@ public class TypePropositionRestController {
 
 	@GetMapping(value = "/typepropositions", produces = "application/json")
 	public ResponseEntity<List<TypeProposition>> getAllTypePropositions() {
+		log.info("Recherche de tous les types de propositions");
 		List<TypeProposition> typePropositions = typePropositionService.getAllTypePropositions();
 		return new ResponseEntity<List<TypeProposition>>(typePropositions, HttpStatus.OK);
 	}
@@ -84,6 +90,7 @@ public class TypePropositionRestController {
 	@GetMapping("/typepropositions/{id}")
 	public ResponseEntity<TypeProposition> readTypeProposition(@PathVariable @Valid Long id)
 			throws EntityNotFoundException {
+		log.info("Consultation du contenu d'un type de proposition");
 		return new ResponseEntity<TypeProposition>(typePropositionService.readTypeProposition(id), HttpStatus.OK);
 	}
 
@@ -95,6 +102,7 @@ public class TypePropositionRestController {
 	@GetMapping("/typepropositions/{typeName}")
 	public ResponseEntity<TypeProposition> readTypePropositionByTypeName(@PathVariable @Valid String typeName)
 			throws EntityNotFoundException {
+		log.info("Consultation du contenu d'un type de proposition à partir de son typeName");
 		return new ResponseEntity<TypeProposition>(typePropositionService.readTypePropositionByTypeName(typeName),
 				HttpStatus.OK);
 	}

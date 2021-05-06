@@ -3,6 +3,8 @@ package com.microselreferentiels.restController;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +39,8 @@ public class DocumentRestController {
 
 	@Autowired
 	private IDocumentService documentService;
+	
+	Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
 	@ApiOperation(value = "Enregistrement d'un document statique par un admin", response = Document.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le document a été créée"),
@@ -46,6 +50,7 @@ public class DocumentRestController {
 	@PostMapping("/admin/documents")
 	public ResponseEntity<Document> createStaticDocument(@Valid @RequestBody DocumentDTO documentDTO)
 			throws EntityAlreadyExistsException, EntityNotFoundException {
+		log.info("Enregistrement d'un document statique par un admin");
 		return new ResponseEntity<Document>(documentService.createStaticDocument(documentDTO), HttpStatus.OK);
 	}
 
@@ -57,7 +62,7 @@ public class DocumentRestController {
 			@PathParam("documentCriteria") DocumentCriteria documentCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-
+		log.info("Recherche multi-critères d'un ou plusieurs documents");
 		Page<Document> documents = documentService.searchAllDocumentsByCriteria(documentCriteria,
 				PageRequest.of(page, size));
 		return new ResponseEntity<Page<Document>>(documents, HttpStatus.OK);
@@ -67,9 +72,10 @@ public class DocumentRestController {
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le document recherché a été trouvé"),
 			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
 			@ApiResponse(code = 413, message = "Le document que vous voulez consulter n'existe pas"), })
-
+	
 	@GetMapping("/admin/documents/{id}")
 	public ResponseEntity<Document> readDocument(@PathVariable("id") @Valid Long id) throws EntityNotFoundException {
+		log.info("Consultation du contenu d'un document");
 		return new ResponseEntity<Document>(documentService.readDocument(id), HttpStatus.OK);
 	}
 
@@ -81,6 +87,7 @@ public class DocumentRestController {
 	@PutMapping("/admin/documents/publication/{id}")
 	public ResponseEntity<Document> publishDocument(@PathVariable("id") @Valid Long id)
 			throws EntityNotFoundException, DeniedAccessException {
+		log.info("Publication du contenu d'un document");
 		return new ResponseEntity<Document>(documentService.publierDocument(id), HttpStatus.OK);
 	}
 
@@ -92,6 +99,7 @@ public class DocumentRestController {
 	@PutMapping("/admin/documents/archivage/{id}")
 	public ResponseEntity<Document> archiverDocument(@PathVariable("id") @Valid Long id)
 			throws EntityNotFoundException, DeniedAccessException {
+		log.info("Archivage du contenu d'un document");
 		return new ResponseEntity<Document>(documentService.archiverDocument(id), HttpStatus.OK);
 	}
 
@@ -103,6 +111,7 @@ public class DocumentRestController {
 	@GetMapping("/documents/{id}")
 	public ResponseEntity<Document> readDocumentByTypeDocument(@PathVariable("id") @Valid Long typedocumentId)
 			throws EntityNotFoundException {
+		log.info("Consultation du contenu d'un document");
 		return new ResponseEntity<Document>(documentService.readDocumentByTypeDocument(typedocumentId), HttpStatus.OK);
 	}
 

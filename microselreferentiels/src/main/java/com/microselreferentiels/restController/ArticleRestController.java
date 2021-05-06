@@ -3,6 +3,8 @@ package com.microselreferentiels.restController;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +39,8 @@ public class ArticleRestController {
 
 	@Autowired
 	private IArticleService articleService;
+	
+	Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
 	@ApiOperation(value = "Enregistrement d'un article", response = Article.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "L'article a été créée"),
@@ -46,6 +50,7 @@ public class ArticleRestController {
 	@PostMapping("/articles")
 	public ResponseEntity<Article> createArticle(@Valid @RequestBody ArticleDTO articleDTO)
 			throws EntityAlreadyExistsException, EntityNotFoundException {
+		log.info("Enregistrement d'un article");
 		return new ResponseEntity<Article>(articleService.createArticle(articleDTO), HttpStatus.OK);
 	}
 
@@ -57,7 +62,7 @@ public class ArticleRestController {
 			@PathParam("articleCriteria") ArticleCriteria articleCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-
+		log.info("Recherche multi-critères d'un ou plusieurs articles");
 		Page<Article> articles = articleService.searchAllArticlesByCriteria(articleCriteria,
 				PageRequest.of(page, size));
 		return new ResponseEntity<Page<Article>>(articles, HttpStatus.OK);
@@ -70,6 +75,7 @@ public class ArticleRestController {
 
 	@GetMapping("/articles/{id}")
 	public ResponseEntity<Article> readArticle(@PathVariable("id") @Valid Long id) throws EntityNotFoundException {
+		log.info("Consultation du contenu d'un article");
 		return new ResponseEntity<Article>(articleService.readArticle(id), HttpStatus.OK);
 	}
 
@@ -81,6 +87,7 @@ public class ArticleRestController {
 	@PutMapping("/admin/articles/publication/{id}")
 	public ResponseEntity<Article> publierArticle(@PathVariable("id") @Valid Long id)
 			throws EntityNotFoundException, DeniedAccessException {
+		log.info("Publication d'un article");
 		return new ResponseEntity<Article>(articleService.publierArticle(id), HttpStatus.OK);
 	}
 
@@ -92,6 +99,7 @@ public class ArticleRestController {
 	@PutMapping("/admin/articles/moderation/{id}")
 	public ResponseEntity<Article> modererArticle(@PathVariable("id") @Valid Long id)
 			throws EntityNotFoundException, DeniedAccessException {
+		log.info("Modération d'un article");
 		return new ResponseEntity<Article>(articleService.modererArticle(id), HttpStatus.OK);
 	}
 
@@ -103,6 +111,7 @@ public class ArticleRestController {
 	@PutMapping("/admin/articles/archivage/{id}")
 	public ResponseEntity<Article> archiverArticle(@PathVariable("id") @Valid Long id)
 			throws EntityNotFoundException, DeniedAccessException {
+		log.info("Archivage d'un article");
 		return new ResponseEntity<Article>(articleService.archiverArticle(id), HttpStatus.OK);
 	}
 
@@ -114,6 +123,7 @@ public class ArticleRestController {
 	@GetMapping("/articles/typeArticle/{id}")
 	public ResponseEntity<Article> readArticleByTypeArticle(@PathVariable("id") @Valid Long typearticleId)
 			throws EntityNotFoundException {
+		log.info("Consultation du contenu d'un article");
 		return new ResponseEntity<Article>(articleService.readArticleByTypeArticle(typearticleId), HttpStatus.OK);
 	}
 
@@ -125,6 +135,7 @@ public class ArticleRestController {
 	@PutMapping("/admin/articles/standard")
 	public ResponseEntity<Article> modifierArticleStandard(@RequestBody ArticleDTO articleDTO)
 			throws EntityNotFoundException, DeniedAccessException {
+		log.info("Modification de l'article standard par l'administrateur");
 		return new ResponseEntity<Article>(articleService.modifierArticleStandard(articleDTO), HttpStatus.OK);
 	}
 

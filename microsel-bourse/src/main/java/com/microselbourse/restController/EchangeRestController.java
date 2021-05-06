@@ -6,6 +6,8 @@ import javax.mail.MessagingException;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,6 +47,8 @@ public class EchangeRestController {
 
 	@Autowired
 	private IReponseService reponseService;
+	
+	Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
 	@ApiOperation(value = "Recherche multi-critères d'un ou plusieurs echanges", response = Echange.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "La recherche a été réalisée avec succés"), })
@@ -54,6 +58,7 @@ public class EchangeRestController {
 			@PathParam("echangeCriteria") EchangeCriteria echangeCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
+		log.info("Recherche multi-critères d'un ou plusieurs echanges");
 		Page<Echange> echanges = echangeService.searchAllEchangesByCriteria(echangeCriteria,
 				PageRequest.of(page, size));
 		return new ResponseEntity<Page<Echange>>(echanges, HttpStatus.OK);
@@ -66,7 +71,7 @@ public class EchangeRestController {
 
 	@GetMapping("/user/echanges/{id}")
 	public ResponseEntity<Echange> readEchange(@PathVariable @Valid Long id) throws EntityNotFoundException {
-
+		log.info("Consultation d'un echange par un adhérent");
 		return new ResponseEntity<Echange>(echangeService.readEchange(id), HttpStatus.OK);
 	}
 
@@ -77,7 +82,7 @@ public class EchangeRestController {
 
 	@GetMapping("/user/echanges/details/{id}")
 	public ResponseEntity<Reponse> readDetailsEchange(@PathVariable @Valid Long id) throws EntityNotFoundException {
-
+		log.info("Consultation du détail d'un echange par un adhérent");
 		return new ResponseEntity<Reponse>(reponseService.readReponse(id), HttpStatus.OK);
 	}
 
@@ -88,6 +93,7 @@ public class EchangeRestController {
 	@PostMapping("/user/echanges/confirmer/{id}")
 	public ResponseEntity<Echange> confirmerEchange(@PathVariable @Valid Long id, @RequestBody String intervenantId)
 			throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException {
+		log.info("Confirmation d'un echange par l'adhérent émetteur de la proposition initiale");
 		return new ResponseEntity<Echange>(echangeService.confirmerEchange(id, intervenantId), HttpStatus.OK);
 	}
 
@@ -98,6 +104,7 @@ public class EchangeRestController {
 	@PutMapping("/user/echanges/annuler/{id}")
 	public ResponseEntity<Echange> annulerEchange(@PathVariable @Valid Long id, @RequestBody String intervenantId)
 			throws EntityNotFoundException, DeniedAccessException, UnsupportedEncodingException, MessagingException {
+		log.info("Annulation d'un echange par l'adhérent émetteur de la proposition initiale");
 		return new ResponseEntity<Echange>(echangeService.annulerEchange(id, intervenantId), HttpStatus.OK);
 	}
 
@@ -109,6 +116,7 @@ public class EchangeRestController {
 	public ResponseEntity<Echange> validerEchange(@PathVariable @Valid Long id, @RequestBody String intervenantId)
 			throws UnsupportedEncodingException, EntityNotFoundException, DeniedAccessException, MessagingException,
 			EntityAlreadyExistsException {
+		log.info("Validation d'un echange par l'adhérent émetteur de la proposition initiale ou l'adhérent récepteur");
 		return new ResponseEntity<Echange>(echangeService.validerEchange(id, intervenantId), HttpStatus.OK);
 	}
 
@@ -120,6 +128,7 @@ public class EchangeRestController {
 	public ResponseEntity<Echange> refuserEchange(@PathVariable @Valid Long id, @RequestBody String intervenantId)
 			throws UnsupportedEncodingException, EntityNotFoundException, DeniedAccessException, MessagingException,
 			EntityAlreadyExistsException {
+		log.info("Refus de valider un echange par l'adhérent émetteur de la proposition initiale ou l'adherent récepteur");
 		return new ResponseEntity<Echange>(echangeService.refuserEchange(id, intervenantId), HttpStatus.OK);
 	}
 

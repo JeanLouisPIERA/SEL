@@ -3,6 +3,8 @@ package com.microselbourse.restController;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +34,8 @@ public class WalletRestController {
 
 	@Autowired
 	private IWalletService walletService;
+	
+	Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
 	@ApiOperation(value = "Recherche multi-critères d'un ou plusieurs portefeuilles", response = Proposition.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "La recherche a été réalisée avec succés"), })
@@ -41,6 +45,7 @@ public class WalletRestController {
 			@PathParam("walletCriteria") WalletCriteria walletCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "6") int size) {
+		log.info("Recherche multi-critères d'un ou plusieurs portefeuilles");
 		Page<Wallet> wallets = walletService.searchAllWalletsByCriteria(walletCriteria, PageRequest.of(page, size));
 		return new ResponseEntity<Page<Wallet>>(wallets, HttpStatus.OK);
 	}
@@ -53,6 +58,7 @@ public class WalletRestController {
 	@GetMapping("/user/wallets/adherent")
 	public ResponseEntity<Wallet> readWalletByUserId(@PathParam("userId") String userId)
 			throws EntityNotFoundException {
+		log.info("Consultation d'un portefeuille par un adhérent");
 		return new ResponseEntity<Wallet>(walletService.readByUserId(userId), HttpStatus.OK);
 	}
 
@@ -63,6 +69,7 @@ public class WalletRestController {
 
 	@GetMapping("/user/wallets/{id}")
 	public ResponseEntity<Wallet> readWalletById(@PathVariable @Valid Long id) throws EntityNotFoundException {
+		log.info("Consultation d'un portefeuille par son N° identifiant");
 		return new ResponseEntity<Wallet>(walletService.readById(id), HttpStatus.OK);
 	}
 

@@ -7,6 +7,8 @@ import javax.mail.MessagingException;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,6 +44,8 @@ public class EvaluationRestController {
 
 	@Autowired
 	private IEvaluationService evaluationService;
+	
+	Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
 	@ApiOperation(value = "Enregistrement d'une évaluation par un adhérent", response = Evaluation.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "L'évaluation a été créée"),
@@ -52,6 +56,7 @@ public class EvaluationRestController {
 	public ResponseEntity<Evaluation> createEvaluation(@PathVariable Long echangeId,
 			@Valid @RequestBody EvaluationDTO evaluationDTO) throws EntityNotFoundException,
 			EntityAlreadyExistsException, UnsupportedEncodingException, MessagingException {
+		log.info("Enregistrement d'une évaluation par un adhérent");
 		return new ResponseEntity<Evaluation>(evaluationService.createEvaluation(echangeId, evaluationDTO),
 				HttpStatus.OK);
 	}
@@ -61,6 +66,7 @@ public class EvaluationRestController {
 
 	@GetMapping(value = "/user/evaluations/echange/{id}", produces = "application/json")
 	public ResponseEntity<List<Evaluation>> searchAllByEchangeId(@PathVariable Long id) {
+		log.info("Recherche des évaluations d'un échange");
 		List<Evaluation> evaluations = evaluationService.findAllByEchangeIdAndNotModerated(id);
 		return new ResponseEntity<List<Evaluation>>(evaluations, HttpStatus.OK);
 	}
@@ -73,6 +79,7 @@ public class EvaluationRestController {
 	@PutMapping("/admin/evaluations/moderation/{id}")
 	public ResponseEntity<Evaluation> modererEvaluation(@PathVariable("id") @Valid Long id)
 			throws EntityNotFoundException, DeniedAccessException {
+		log.info("Modération d'une évaluation");
 		return new ResponseEntity<Evaluation>(evaluationService.modererEvaluation(id), HttpStatus.OK);
 	}
 
@@ -84,7 +91,7 @@ public class EvaluationRestController {
 			@PathParam("evaluationCriteria") EvaluationCriteria evaluationCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-
+		log.info("Recherche multi-critères d'une ou plusieurs evaluations");
 		Page<Evaluation> evaluations = evaluationService.searchAllEvaluationsByCriteria(evaluationCriteria,
 				PageRequest.of(page, size));
 		return new ResponseEntity<Page<Evaluation>>(evaluations, HttpStatus.OK);

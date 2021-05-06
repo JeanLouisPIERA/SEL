@@ -5,6 +5,8 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,6 +41,8 @@ public class TypeArticleRestController {
 
 	@Autowired
 	private ITypeArticleService typeArticleService;
+	
+	Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
 	@ApiOperation(value = "Enregistrement d'un type d'article par un admin", response = TypeArticle.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le type d'article a été créée"),
@@ -48,6 +52,7 @@ public class TypeArticleRestController {
 	@PostMapping("/admin/typearticles")
 	public ResponseEntity<TypeArticle> createTypeArticle(@Valid @RequestBody TypeArticleDTO typeArticleDTO)
 			throws EntityAlreadyExistsException {
+		log.info("Enregistrement d'un type d'article par un admin");
 		return new ResponseEntity<TypeArticle>(typeArticleService.createTypeArticle(typeArticleDTO), HttpStatus.OK);
 	}
 
@@ -58,7 +63,7 @@ public class TypeArticleRestController {
 	public ResponseEntity<Page<TypeArticle>> getAllTypeArticlesByCriteria(
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-
+		log.info("Recherche multi-critères d'un ou plusieurs types d'articles");
 		Page<TypeArticle> typeArticlesPage = typeArticleService.getAllTypeArticlesPaginated(PageRequest.of(page, size));
 		return new ResponseEntity<Page<TypeArticle>>(typeArticlesPage, HttpStatus.OK);
 	}
@@ -68,6 +73,7 @@ public class TypeArticleRestController {
 
 	@GetMapping(value = "/typearticles", produces = "application/json")
 	public ResponseEntity<List<TypeArticle>> getAllTypeArticles() {
+		log.info("Recherche de tous les types d'article");
 		List<TypeArticle> typeArticles = typeArticleService.getAllTypeArticles();
 		return new ResponseEntity<List<TypeArticle>>(typeArticles, HttpStatus.OK);
 	}

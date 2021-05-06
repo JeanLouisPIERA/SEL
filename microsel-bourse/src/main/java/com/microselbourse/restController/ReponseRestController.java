@@ -5,6 +5,8 @@ import java.io.UnsupportedEncodingException;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,11 +40,14 @@ public class ReponseRestController {
 
 	@Autowired
 	IReponseService reponseService;
+	
+	Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
 	@PostMapping("/user/reponses/{id}")
 	public ResponseEntity<Reponse> createReponse(@PathVariable @Valid Long id,
 			@Valid @RequestBody ReponseDTO reponseDTO) throws EntityNotFoundException, DeniedAccessException,
 			UnsupportedEncodingException, MessagingException, EntityAlreadyExistsException {
+		log.info("Création d'une réponse");
 		return new ResponseEntity<Reponse>(reponseService.createReponse(id, reponseDTO), HttpStatus.OK);
 	}
 
@@ -54,6 +59,7 @@ public class ReponseRestController {
 
 	@GetMapping("/user/reponses/{id}")
 	public ResponseEntity<Reponse> readReponse(@PathVariable @Valid Long id) throws EntityNotFoundException {
+		log.info("Consultation d'une reponse par un adhérent");
 		return new ResponseEntity<Reponse>(reponseService.readReponse(id), HttpStatus.OK);
 	}
 
@@ -64,6 +70,7 @@ public class ReponseRestController {
 	public ResponseEntity<Page<Reponse>> searchAllByPropositionId(@PathVariable Long id,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "6") int size) throws EntityNotFoundException {
+		log.info("Recherche de toutes les réponses à une proposition");
 		Page<Reponse> reponses = reponseService.findAllByWalletId(id, PageRequest.of(page, size));
 		return new ResponseEntity<Page<Reponse>>(reponses, HttpStatus.OK);
 	}

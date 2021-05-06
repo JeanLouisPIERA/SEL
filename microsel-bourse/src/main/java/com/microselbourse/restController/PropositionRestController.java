@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Page;
@@ -34,6 +36,7 @@ import com.microselbourse.exceptions.EntityNotFoundException;
 import com.microselbourse.service.IPropositionService;
 import com.microselbourse.service.impl.RabbitMQSender;
 
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -48,7 +51,9 @@ public class PropositionRestController {
 
 	@Autowired
 	RabbitMQSender rabbitMQSender;
-
+	
+	Logger log = LoggerFactory.getLogger(this.getClass().getName());
+	
 	@ApiOperation(value = "Enregistrement d'une proposition par un adhérent", response = Proposition.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "La proposition a été créée"),
 			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
@@ -57,7 +62,7 @@ public class PropositionRestController {
 	@PostMapping("/user/propositions/create")
 	public ResponseEntity<Proposition> createProposition(@Valid @RequestBody PropositionDTO propositionDTO)
 			throws EntityAlreadyExistsException, EntityNotFoundException, DeniedAccessException {
-		// rabbitMQSender.send(propositionDTO);
+		log.info("Enregistrement d'une proposition par un adhérent");
 		return new ResponseEntity<Proposition>(propositionService.createProposition(propositionDTO), HttpStatus.OK);
 	}
 
@@ -69,7 +74,9 @@ public class PropositionRestController {
 			@PathParam("propositionCriteria") PropositionCriteria propositionCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-
+		
+		log.info("Recherche multi-critères d'une ou plusieurs propositions");
+		
 		Page<Proposition> propositions = propositionService.searchAllPropositionsByCriteria(propositionCriteria,
 				PageRequest.of(page, size));
 		return new ResponseEntity<Page<Proposition>>(propositions, HttpStatus.OK);
@@ -82,10 +89,11 @@ public class PropositionRestController {
 
 	@GetMapping("/user/propositions/{id}")
 	public ResponseEntity<Proposition> readProposition(@PathVariable @Valid Long id) throws EntityNotFoundException {
+		log.info("Consultation d'une proposition par un adhérent");
 		return new ResponseEntity<Proposition>(propositionService.readProposition(id), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "Mise à jour d'une proposition par son émetteur)", response = Proposition.class)
+	@ApiOperation(value = "Mise à jour d'une proposition par son émetteur", response = Proposition.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "La proposition à modifier a été trouvée"),
 			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
 			@ApiResponse(code = 409, message = "Mise à jour impossible : une autre proposition existe déjà avec ces attributs"),
@@ -95,12 +103,13 @@ public class PropositionRestController {
 	public ResponseEntity<Proposition> updateProposition(@PathVariable @Valid Long propositionId,
 			@PathVariable String emetteurId, @Valid @RequestBody PropositionUpdateDTO propositionUpdateDTO)
 			throws EntityNotFoundException, DeniedAccessException, EntityAlreadyExistsException {
+		log.info("Mise à jour d'une proposition par son émetteur");
 		return new ResponseEntity<Proposition>(
 				propositionService.updateProposition(propositionId, emetteurId, propositionUpdateDTO), HttpStatus.OK);
 
 	}
 
-	@ApiOperation(value = "Clôture d'une proposition par son émetteur avant la date de fin de publication)", response = Proposition.class)
+	@ApiOperation(value = "Clôture d'une proposition par son émetteur avant la date de fin de publication", response = Proposition.class)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "La proposition à clôturer a été trouvée"),
 			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"),
 			@ApiResponse(code = 413, message = "L'offre ou la demande que vous voulez clôturer n'existe pas"),
@@ -110,6 +119,7 @@ public class PropositionRestController {
 	@PutMapping(value = "/user/propositions/proposition/close/{id}/adherent/{emetteurId}")
 	public ResponseEntity<Proposition> closeProposition(@PathVariable @Valid Long id, @PathVariable String emetteurId)
 			throws EntityNotFoundException, DeniedAccessException, EntityAlreadyExistsException {
+		log.info("Clôture d'une proposition par son émetteur avant la date de fin de publication");
 		return new ResponseEntity<Proposition>(propositionService.closeProposition(id, emetteurId), HttpStatus.OK);
 	}
 

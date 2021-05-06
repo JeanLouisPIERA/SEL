@@ -5,6 +5,8 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +36,8 @@ public class UserRestController {
 
 	@Autowired
 	private IUserService userService;
+	
+	Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
 	/**
 	 * Ce endpoint permet à un membre du bureau d'obtenir la liste de tous les
@@ -45,7 +49,8 @@ public class UserRestController {
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Le compte recherché a été trouvé"),
 			@ApiResponse(code = 400, message = "Les informations fournies ne sont pas correctes"), })
 	@GetMapping("/admin/listaccounts")
-	public ResponseEntity<List<User>> showAllUsers() {
+	public ResponseEntity<List<User>> showAllUsers() {	
+		log.info("Affichage de tous les comptes par un membre du bureau");
 		return new ResponseEntity<List<User>>(userService.showAllUsers(), HttpStatus.OK);
 	}
 
@@ -56,7 +61,7 @@ public class UserRestController {
 	public ResponseEntity<Page<User>> searchAllUsersByCriteria(@PathParam("userCriteria") UserCriteria userCriteria,
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "10") int size) {
-
+		log.info("Affichage de tous les comptes par un membre du bureau");
 		Page<User> users = userService.searchAllUsersByCriteria(userCriteria, PageRequest.of(page, size));
 		return new ResponseEntity<Page<User>>(users, HttpStatus.OK);
 	}
@@ -76,6 +81,7 @@ public class UserRestController {
 			@ApiResponse(code = 413, message = "Ce compte n'existe pas"), })
 	@GetMapping("/accounts/{id}")
 	public ResponseEntity<User> displayAccount(@PathVariable @Valid String id) throws EntityNotFoundException {
+		log.info("Affichage des données d'un compte d'adhérent pour un microservice)");
 		User userFound = userService.readAccount(id);
 		return new ResponseEntity<User>(userFound, HttpStatus.OK);
 
@@ -96,6 +102,7 @@ public class UserRestController {
 	@GetMapping("/user/accounts/account")
 	public ResponseEntity<User> securisedDisplayAccount(@RequestParam @Valid String adherentMyId)
 			throws EntityNotFoundException {
+		log.info("Affichage des données de son compte pour un adhérent");
 		User userFound = userService.readAccount(adherentMyId);
 		return new ResponseEntity<User>(userFound, HttpStatus.OK);
 
@@ -115,6 +122,7 @@ public class UserRestController {
 	@GetMapping("/admin/accounts/{id}")
 	public ResponseEntity<User> securisedDisplayAccountToAdmin(@PathVariable @Valid String id)
 			throws EntityNotFoundException {
+		log.info("Affichage des données de son compte pour un adhérent)");
 		User userFound = userService.readAccount(id);
 		return new ResponseEntity<User>(userFound, HttpStatus.OK);
 
